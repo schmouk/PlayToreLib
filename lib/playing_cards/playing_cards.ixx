@@ -40,6 +40,11 @@ export namespace pltr::cards
         typename ValueT = std::int32_t
     > struct PlayingCardT
     {
+        //-----   Types wrappers   -----//
+        using ident_type = IdentT;
+        using value_type = ValueT;
+
+
         //-----   Data   -----//
         IdentT ident{};
         ValueT value{};
@@ -54,7 +59,7 @@ export namespace pltr::cards
             const IdentT ident_,
             const ValueT value_
         ) noexcept                                                              //!< 2-valued constructor.
-            : ident(ident)
+            : ident(ident_)
             , value(value_)
         {}
 
@@ -64,7 +69,7 @@ export namespace pltr::cards
             const ValueT value_,
             const std::filesystem::path& image_path_
         ) noexcept                                                              //!< 3-valued constructor.
-            : ident(ident)
+            : ident(ident_)
             , value(value_)
             , image_path(image_path_)
         {}

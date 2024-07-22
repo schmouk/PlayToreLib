@@ -1,6 +1,6 @@
 /*
 GNU GENERAL PUBLIC LICENSE
- Version 3,  29 June 2007
+Version 3, 29 June 2007
 
 This is part of library PlayToreLib, a c++ generic library for coding games applications.
 

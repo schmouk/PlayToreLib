@@ -1,0 +1,16 @@
+#---  Visual Studio  ---#
+.vs
+*.vcxproj
+*.vcxproj.*
+*.sln
+x64
+x86
+Release
+Debug
+
+#---  External Documentation  ---#
+docs
+
+#---  This project specifics  ---#
+archive
+tests

@@ -158,4 +158,10 @@ export namespace pltr::cards
     
     };
 
+
+    //=======================================================================
+    /* \brief The class for standard cards - English localization.
+    */
+    using StandardClassEn = StandardCard;  // that's all!
+
 }

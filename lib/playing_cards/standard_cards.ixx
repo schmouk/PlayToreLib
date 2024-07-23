@@ -161,9 +161,37 @@ export namespace pltr::cards
 
 
     //=======================================================================
+    /* \brief The class for standard cards - German localization.
+    */
+    export class StandardCardDe : public StandardCard
+    {
+    protected:
+        static inline const std::string _CARDS_LETTERS{ "123456789BDKJ" };
+        static inline const std::string _COLORS_LETTERS{ "PHAR" };  // für Pik, Herz, kAro, kReuz
+        static inline const std::string _JOKERS_COLORS{ "RS" };
+
+    };
+
+
+
+    //=======================================================================
     /* \brief The class for standard cards - English localization.
     */
     export using StandardClassEn = StandardCard;  // that's all!
+
+
+
+    //=======================================================================
+    /* \brief The class for standard cards - Spanish localization.
+    */
+    export class StandardCardEs : public StandardCard
+    {
+    protected:
+        static inline const std::string _CARDS_LETTERS{ "123456789JARJ" };  // para Jota, reinA, Rey, Joker
+        static inline const std::string _COLORS_LETTERS{ "ECDT" };
+        static inline const std::string _JOKERS_COLORS{ "RN" };
+
+    };
 
 
 
@@ -182,27 +210,13 @@ export namespace pltr::cards
 
 
     //=======================================================================
-    /* \brief The class for standard cards - German localization.
+    /* \brief The class for standard cards - Italian localization.
     */
-    export class StandardCardDe : public StandardCard
+    export class StandardCardIt : public StandardCard
     {
     protected:
-        static inline const std::string _CARDS_LETTERS{ "123456789BDKJ" };
-        static inline const std::string _COLORS_LETTERS{ "PHAR" };  // für Pik, Herz, kAro, kReuz
-        static inline const std::string _JOKERS_COLORS{ "RS" };
-
-    };
-
-
-
-    //=======================================================================
-    /* \brief The class for standard cards - Spanish localization.
-    */
-    export class StandardCardEs : public StandardCard
-    {
-    protected:
-        static inline const std::string _CARDS_LETTERS{ "123456789JARJ" };  // por Jota, reinA, Rey, Joker
-        static inline const std::string _COLORS_LETTERS{ "ECDT" };
+        static inline const std::string _CARDS_LETTERS{ "123456789JARJ" };  // per Jack, Regina, Re, Joker
+        static inline const std::string _COLORS_LETTERS{ "PCQF" };
         static inline const std::string _JOKERS_COLORS{ "RN" };
 
     };

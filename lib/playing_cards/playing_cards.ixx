@@ -1,32 +1,33 @@
 /*
-GNU GENERAL PUBLIC LICENSE
-Version 3, 29 June 2007
+    GNU GENERAL PUBLIC LICENSE
+    Version 3, 29 June 2007
 
-This is part of library PlayToreLib, a c++ generic library for coding games applications.
+    This is part of library PlayToreLib, a c++ generic library for coding games applications.
 
-Copyright (C) 2024 Philippe Schmouker, ph.schmouker (at) gmail.com
+    Copyright (C) 2024 Philippe Schmouker, ph.schmouker (at) gmail.com
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 module;
 
 #include <cstdint>
 #include <filesystem>
+#include <string>
 
 
-export module pltr:cards;
+export module pltr:playing_cards;
 
 
 //===========================================================================
@@ -49,6 +50,7 @@ export namespace pltr::cards
         IdentT ident{};
         ValueT value{};
         std::filesystem::path image_path{};
+        std::string text{};
 
 
         //-----   Constructors / Desctructor   -----//
@@ -57,21 +59,25 @@ export namespace pltr::cards
 
         inline PlayingCardT(
             const IdentT ident_,
-            const ValueT value_
-        ) noexcept                                                              //!< 2-valued constructor.
+            const ValueT value_,
+            const std::string& text_ = std::string()
+        ) noexcept                                                              //!< 3-valued constructor.
             : ident(ident_)
             , value(value_)
+            , text(text_)
         {}
 
 
         inline PlayingCardT(
             const IdentT ident_,
             const ValueT value_,
-            const std::filesystem::path& image_path_
-        ) noexcept                                                              //!< 3-valued constructor.
+            const std::filesystem::path& image_path_,
+            const std::string& text_ = std::string()
+        ) noexcept                                                              //!< 4-valued constructor.
             : ident(ident_)
             , value(value_)
             , image_path(image_path_)
+            , text(text_)
         {}
 
         inline PlayingCardT(const PlayingCardT&) noexcept = default;            //!< default copy constructor.
@@ -85,12 +91,14 @@ export namespace pltr::cards
         inline PlayingCardT& operator=(PlayingCardT&&) noexcept = default;      //!< default move assignment.
 
 
+        [[nodiscard]]
         inline const bool operator< (const PlayingCardT& other) const noexcept  //!< less-than operator.
         {
             return this->value < other.value;
         }
 
 
+        [[nodiscard]]
         inline const bool operator== (const PlayingCardT& other) const noexcept  //!< equality operator.
         {
             return this->value == other.value;
@@ -112,6 +120,14 @@ export namespace pltr::cards
             ident = ident_;
             value = value_;
             image_path = image_path_;
+        }
+
+
+        //-----   Operations   -----//
+        virtual inline void draw()                                              //!< draws this card
+        {
+            // does nothing in this base class
+            // to be overridden in inheriting classes if this gets meaning.
         }
 
     };

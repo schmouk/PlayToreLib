@@ -159,9 +159,23 @@ export namespace pltr::cards
     };
 
 
+
     //=======================================================================
     /* \brief The class for standard cards - English localization.
     */
-    using StandardClassEn = StandardCard;  // that's all!
+    export using StandardClassEn = StandardCard;  // that's all!
 
+
+
+    //=======================================================================
+    /* \brief The class for standard cards - French localization.
+    */
+    export class StandardCardF : public StandardCard
+    {
+    protected:
+        static inline const std::string _CARDS_LETTERS{ "123456789VDRJ" };
+        static inline const std::string _COLORS_LETTERS{ "TKCP" };
+        static inline const std::string _JOKERS_COLORS{ "RN" };
+
+    };
 }

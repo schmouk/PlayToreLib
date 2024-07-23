@@ -193,4 +193,18 @@ export namespace pltr::cards
 
     };
 
+
+
+    //=======================================================================
+    /* \brief The class for standard cards - Spanish localization.
+    */
+    export class StandardCardEs : public StandardCard
+    {
+    protected:
+        static inline const std::string _CARDS_LETTERS{ "123456789JARJ" };  // por Jota, reinA, Rey, Joker
+        static inline const std::string _COLORS_LETTERS{ "ECDT" };
+        static inline const std::string _JOKERS_COLORS{ "RN" };
+
+    };
+
 }

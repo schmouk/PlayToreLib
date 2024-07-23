@@ -170,7 +170,7 @@ export namespace pltr::cards
     //=======================================================================
     /* \brief The class for standard cards - French localization.
     */
-    export class StandardCardF : public StandardCard
+    export class StandardCardFr : public StandardCard
     {
     protected:
         static inline const std::string _CARDS_LETTERS{ "123456789VDRJ" };
@@ -178,4 +178,19 @@ export namespace pltr::cards
         static inline const std::string _JOKERS_COLORS{ "RN" };
 
     };
+
+
+
+    //=======================================================================
+    /* \brief The class for standard cards - German localization.
+    */
+    export class StandardCardDe : public StandardCard
+    {
+    protected:
+        static inline const std::string _CARDS_LETTERS{ "123456789BDKJ" };
+        static inline const std::string _COLORS_LETTERS{ "PHAR" };  // für Pik, Herz, kAro, kReuz
+        static inline const std::string _JOKERS_COLORS{ "RS" };
+
+    };
+
 }

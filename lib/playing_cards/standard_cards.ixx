@@ -63,7 +63,7 @@ export namespace pltr::cards
 
 
         //-----   Constructors / Desctructor   -----//
-        inline StandardCard()                                                   //!< default empty constructor.
+        inline StandardCard()                                           //!< default empty constructor.
             : MyBaseClass()
         {
             _set_text();
@@ -73,7 +73,7 @@ export namespace pltr::cards
         inline StandardCard(
             const IdentT ident_,
             const ValueT value_
-        ) noexcept                                                              //!< 2-valued constructor.
+        ) noexcept                                                      //!< 2-valued constructor.
             : MyBaseClass(ident_, value_)
         {
             _set_text();
@@ -84,16 +84,16 @@ export namespace pltr::cards
             const IdentT ident_,
             const ValueT value_,
             const std::filesystem::path& image_path_
-        ) noexcept                                                              //!< 3-valued constructor.
+        ) noexcept                                                      //!< 3-valued constructor.
             : MyBaseClass(ident_, value_, image_path_)
         {
             _set_text();
         }
 
-        inline StandardCard(const StandardCard&) noexcept = default;            //!< default copy constructor.
-        inline StandardCard(StandardCard&&) noexcept = default;                 //!< default move constructor.
+        inline StandardCard(const StandardCard&) noexcept = default;    //!< default copy constructor.
+        inline StandardCard(StandardCard&&) noexcept = default;         //!< default move constructor.
 
-        inline virtual ~StandardCard() noexcept = default;                      //!< default destructor.
+        inline virtual ~StandardCard() noexcept = default;              //!< default destructor.
 
 
         //-----   Operators   -----//
@@ -117,7 +117,7 @@ export namespace pltr::cards
 
         //-----   Accessors / Mutators   -----//
         [[nodiscard]]
-        inline const EColor get_color() const noexcept                          //!< returns the enum color of this card
+        inline const EColor get_color() const noexcept                      //!< returns the enum color of this card
         {
             //return EColor(this->ident % IdentT(EColor::COLORS_COUNT));
             return EColor(this->ident % COLORS_COUNT);
@@ -125,12 +125,12 @@ export namespace pltr::cards
 
 
         [[nodiscard]]
-        inline const bool is_joker() const noexcept                             //!< returns true if this card is a Joker one
+        inline const bool is_joker() const noexcept                         //!< returns true if this card is a Joker one
         {
             return this->ident >= JOKERS_FIRST_IDENT;
         }
 
-        inline void set(const IdentT ident_, const ValueT value_) noexcept      //!< sets data.
+        inline void set(const IdentT ident_, const ValueT value_) noexcept  //!< sets data.
         {
             MyBaseClass::set(ident_, value_);
             _set_text();
@@ -140,7 +140,7 @@ export namespace pltr::cards
         inline void set(
             const IdentT ident_,
             const ValueT value_,
-            const std::filesystem::path& image_path_) noexcept                  //!< sets data.
+            const std::filesystem::path& image_path_) noexcept              //!< sets data.
         {
             MyBaseClass::set(ident_, value_, image_path_);
             _set_text();
@@ -154,7 +154,7 @@ export namespace pltr::cards
 
 
     private:
-        void _set_text() noexcept;                                              //!< internally sets the text of this card
+        void _set_text() noexcept;  //!< internally sets the text of this card
     
     };
 
@@ -167,7 +167,7 @@ export namespace pltr::cards
     {
     protected:
         static inline const std::string _CARDS_LETTERS{ "123456789BDKJ" };
-        static inline const std::string _COLORS_LETTERS{ "PHAR" };  // für Pik, Herz, kAro, kReuz
+        static inline const std::string _COLORS_LETTERS{ "RAHP" };  // für kReuz, kAro, Herz, Pik
         static inline const std::string _JOKERS_COLORS{ "RS" };
 
     };
@@ -187,7 +187,7 @@ export namespace pltr::cards
     export class StandardCardEs : public StandardCard
     {
     protected:
-        static inline const std::string _CARDS_LETTERS{ "123456789JARJ" };  // para Jota, reinA, Rey, Joker
+        static inline const std::string _CARDS_LETTERS{ "123456789JAYJ" };  // para Jota, reinA, reY, Joker
         static inline const std::string _COLORS_LETTERS{ "ECDT" };
         static inline const std::string _JOKERS_COLORS{ "RN" };
 
@@ -215,7 +215,7 @@ export namespace pltr::cards
     export class StandardCardIt : public StandardCard
     {
     protected:
-        static inline const std::string _CARDS_LETTERS{ "123456789JARJ" };  // per Jack, Regina, Re, Joker
+        static inline const std::string _CARDS_LETTERS{ "123456789JARJ" };  // per Jack, reginA, Re, Joker
         static inline const std::string _COLORS_LETTERS{ "PCQF" };
         static inline const std::string _JOKERS_COLORS{ "RN" };
 

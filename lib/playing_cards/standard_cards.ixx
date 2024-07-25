@@ -221,4 +221,71 @@ export namespace pltr::cards
 
     };
 
+
+
+    //=======================================================================
+    /* \brief The class for Windows console standard cards.
+    */
+    export class StandardWindowsConsoleCard : public StandardCard
+    {
+    protected:
+        static inline const std::string _COLORS_LETTERS{ "\005\004\003\006" };
+
+    };
+
+
+
+    //=======================================================================
+    /* \brief The class for Windows console standard cards - German localization.
+    */
+    export class StandardWindowsConsoleCardDe : public StandardWindowsConsoleCard
+    {
+    protected:
+        static inline const std::string _COLORS_LETTERS{ "\005\004\003\006" };
+
+    };
+
+
+
+    //=======================================================================
+    /* \brief The class for Windows console standard cards - English localization.
+    */
+    export using StandardWindowsConsoleClassEn = StandardWindowsConsoleCard;  // that's all!
+
+
+
+    //=======================================================================
+    /* \brief The class for Windows console standard cards - Spanish localization.
+    */
+    export class StandardWindowsConsoleCardEs : public StandardWindowsConsoleCard
+    {
+    protected:
+        static inline const std::string _COLORS_LETTERS{ "\005\004\003\006" };
+
+    };
+
+
+
+    //=======================================================================
+    /* \brief The class for Windows console standard cards - French localization.
+    */
+    export class StandardWindowsConsoleCardFr : public StandardWindowsConsoleCard
+    {
+    protected:
+        static inline const std::string _COLORS_LETTERS{ "\005\004\003\006" };
+
+    };
+
+
+
+    //=======================================================================
+    /* \brief The class for Windows console standard cards - Italian localization.
+    */
+    export class StandardWindowsConsoleCardIt : public StandardWindowsConsoleCard
+    {
+    protected:
+        static inline const std::string _COLORS_LETTERS{ "\005\004\003\006" };
+
+    };
+
 }

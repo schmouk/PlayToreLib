@@ -124,7 +124,7 @@ export namespace pltr::cards
 
 
         //-----   Operations   -----//
-        virtual inline void draw()                                              //!< draws this card
+        virtual inline void draw()                                              //!< draws this card (caution: this is a drawing action on screen, not from a deck!)
         {
             // does nothing in this base class
             // to be overridden in inheriting classes if this gets meaning.

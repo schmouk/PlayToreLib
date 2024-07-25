@@ -39,7 +39,7 @@ export namespace pltr::cards
     /* \brief The class of 54 standard cards decks.
     */
     export template<typename CardT>
-        requires std::is_base_of<pltr::cards::StandardCard, CardT>
+        requires std::is_base_of_v<pltr::cards::StandardCard, CardT>
     class CardsDeck54 : public CardsDeck<CardT>
     {
     public:
@@ -69,6 +69,40 @@ export namespace pltr::cards
         static inline constexpr std::uint32_t _CARDS_COUNT{ 54 };
     };
 
+    //=======================================================================
+    /* \brief The class of 52 standard cards decks.
+    */
+    export template<typename CardT>
+        requires std::is_base_of_v<pltr::cards::StandardCard, CardT>
+    class CardsDeck52 : public CardsDeck<CardT>
+    {
+    public:
+        //-----   Type wrappers   -----//
+        using MyBaseClass = CardsDeck<CardT>;
+
+
+        //-----   Constructors / Desctructor   -----//
+        CardsDeck52();                                      //!< empty constructor is disabled.
+
+        CardsDeck52(const CardsDeck52&) noexcept = default; //!< default copy constructor.
+        CardsDeck52(CardsDeck52&&) noexcept = default;      //!< default move constructor.
+
+        virtual ~CardsDeck52() noexcept = default;          //!< default destructor.
+
+
+        //-----   Operators   -----//
+        CardsDeck52& operator=(const CardsDeck52&) noexcept = default;  //!< default copy operator.
+        CardsDeck52& operator=(CardsDeck52&&) noexcept = default;       //!< default move operator.
+
+
+        //-----   Operations   -----//
+        inline virtual void refill_deck();  //!< fills this deck with all related playing cards. Does nothing in this base class, must be overridden in inheriting classes.
+
+
+    private:
+        static inline constexpr std::uint32_t _CARDS_COUNT{ 52 };
+    };
+
 
 
     //=======================================================================
@@ -76,15 +110,31 @@ export namespace pltr::cards
 
     //-----------------------------------------------------------------------
     template<typename CardT>
-        requires std::is_base_of<pltr::cards::StandardCard, CardT>
+        requires std::is_base_of_v<pltr::cards::StandardCard, CardT>
     CardsDeck54<CardT>::CardsDeck54()
         : MyBaseClass(_CARDS_COUNT)
     {}
 
     //-----------------------------------------------------------------------
     template<typename CardT>
-        requires std::is_base_of<pltr::cards::StandardCard, CardT>
+        requires std::is_base_of_v<pltr::cards::StandardCard, CardT>
     void CardsDeck54<CardT>::refill_deck()
+    {
+        for (typename CardT::IndexType ident = 0; ident < _CARDS_COUNT; ++ident)
+            append_card(ident, (ident / 4) + 1);
+    }
+
+    //-----------------------------------------------------------------------
+    template<typename CardT>
+        requires std::is_base_of_v<pltr::cards::StandardCard, CardT>
+    CardsDeck52<CardT>::CardsDeck52()
+        : MyBaseClass(_CARDS_COUNT)
+    {}
+
+    //-----------------------------------------------------------------------
+    template<typename CardT>
+        requires std::is_base_of_v<pltr::cards::StandardCard, CardT>
+    void CardsDeck52<CardT>::refill_deck()
     {
         for (typename CardT::IndexType ident = 0; ident < _CARDS_COUNT; ++ident)
             append_card(ident, (ident / 4) + 1);

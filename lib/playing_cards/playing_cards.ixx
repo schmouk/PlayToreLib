@@ -57,13 +57,67 @@ export namespace pltr::cards
         inline PlayingCardT() noexcept = default;                               //!< default empty constructor.
 
 
+        inline PlayingCardT(const IdentT ident_) noexcept                       //!< 1-arg constructor.
+            : ident(ident_)
+        {}
+
+
+        inline PlayingCardT(
+            const IdentT ident_,
+            const ValueT value_
+        ) noexcept                                                              //!< 2-args constructor with value.
+            : ident(ident_)
+            , value(value_)
+        {}
+
+
+        inline PlayingCardT(
+            const IdentT ident_,
+            const std::filesystem::path& image_path_
+        ) noexcept                                                              //!< 2-args constructor with image path.
+            : ident(ident_)
+            , image_path(image_path_)
+        {}
+
+
+        inline PlayingCardT(
+            const IdentT ident_,
+            const std::string& text_
+        ) noexcept                                                              //!< 2-args constructor with text.
+            : ident(ident_)
+            , text(text_)
+        {}
+
+
         inline PlayingCardT(
             const IdentT ident_,
             const ValueT value_,
-            const std::string& text_ = std::string()
-        ) noexcept                                                              //!< 3-valued constructor.
+            const std::filesystem::path& image_path_
+        ) noexcept                                                              //!< 3-args constructor with value and image path.
             : ident(ident_)
             , value(value_)
+            , image_path(image_path_)
+        {}
+
+
+        inline PlayingCardT(
+            const IdentT ident_,
+            const ValueT value_,
+            const std::string& text_
+        ) noexcept                                                              //!< 3-args constructor with value and text.
+            : ident(ident_)
+            , value(value_)
+            , text(text_)
+        {}
+
+
+        inline PlayingCardT(
+            const IdentT ident_,
+            const std::filesystem::path& image_path_,
+            const std::string& text_
+        ) noexcept                                                              //!< 3-args constructor with image path and text.
+            : ident(ident_)
+            , image_path(image_path_)
             , text(text_)
         {}
 
@@ -72,13 +126,14 @@ export namespace pltr::cards
             const IdentT ident_,
             const ValueT value_,
             const std::filesystem::path& image_path_,
-            const std::string& text_ = std::string()
-        ) noexcept                                                              //!< 4-valued constructor.
+            const std::string& text_
+        ) noexcept                                                              //!< 4-args constructor.
             : ident(ident_)
             , value(value_)
             , image_path(image_path_)
             , text(text_)
         {}
+
 
         inline PlayingCardT(const PlayingCardT&) noexcept = default;            //!< default copy constructor.
         inline PlayingCardT(PlayingCardT&&) noexcept = default;                 //!< default move constructor.

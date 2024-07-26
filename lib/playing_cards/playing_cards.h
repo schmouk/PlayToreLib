@@ -58,6 +58,7 @@ namespace pltr::cards
 
         inline PlayingCardT(const IdentT ident_) noexcept                       //!< 1-arg constructor.
             : ident(ident_)
+            , value(ValueT(ident_))
         {}
 
 
@@ -75,6 +76,7 @@ namespace pltr::cards
             const std::filesystem::path& image_path_
         ) noexcept                                                              //!< 2-args constructor with image path.
             : ident(ident_)
+            , value(ValueT(ident_))
             , image_path(image_path_)
         {}
 
@@ -84,6 +86,7 @@ namespace pltr::cards
             const std::string& text_
         ) noexcept                                                              //!< 2-args constructor with text.
             : ident(ident_)
+            , value(ValueT(ident_))
             , text(text_)
         {}
 
@@ -116,6 +119,7 @@ namespace pltr::cards
             const std::string& text_
         ) noexcept                                                              //!< 3-args constructor with image path and text.
             : ident(ident_)
+            , value(ValueT(ident_))
             , image_path(image_path_)
             , text(text_)
         {}
@@ -153,9 +157,37 @@ namespace pltr::cards
 
 
         [[nodiscard]]
+        inline const bool operator> (const PlayingCardT& other) const noexcept  //!< less-than operator.
+        {
+            return this->value > other.value;
+        }
+
+
+        [[nodiscard]]
+        inline const bool operator<= (const PlayingCardT& other) const noexcept  //!< less-than operator.
+        {
+            return this->value <= other.value;
+        }
+
+
+        [[nodiscard]]
+        inline const bool operator>= (const PlayingCardT& other) const noexcept  //!< less-than operator.
+        {
+            return this->value >= other.value;
+        }
+
+
+        [[nodiscard]]
         inline const bool operator== (const PlayingCardT& other) const noexcept  //!< equality operator.
         {
             return this->value == other.value;
+        }
+
+
+        [[nodiscard]]
+        inline const bool operator!= (const PlayingCardT& other) const noexcept  //!< equality operator.
+        {
+            return this->value != other.value;
         }
 
 
@@ -174,6 +206,18 @@ namespace pltr::cards
             ident = ident_;
             value = value_;
             image_path = image_path_;
+        }
+
+        inline void set(
+            const IdentT ident_,
+            const ValueT value_,
+            const std::filesystem::path& image_path_,
+            const std::string& text_) noexcept                  //!< sets data.
+        {
+            ident = ident_;
+            value = value_;
+            image_path = image_path_;
+            text = text_;
         }
 
 

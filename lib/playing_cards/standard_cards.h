@@ -62,7 +62,16 @@ namespace pltr::cards
 
         //-----   Constructors / Desctructor   -----//
         inline StandardCard()                                           //!< default empty constructor.
-            : MyBaseClass()
+            : MyBaseClass(0, 1)
+        {
+            _set_text();
+        }
+
+
+        inline StandardCard(
+            const IdentT ident_
+        ) noexcept                                                      //!< 1-valued constructor.
+            : MyBaseClass(ident_, ValueT(ident_ / 4 + 1))
         {
             _set_text();
         }
@@ -71,8 +80,18 @@ namespace pltr::cards
         inline StandardCard(
             const IdentT ident_,
             const ValueT value_
-        ) noexcept                                                      //!< 2-valued constructor.
+        ) noexcept                                                      //!< 2-valued constructor (1/2).
             : MyBaseClass(ident_, value_)
+        {
+            _set_text();
+        }
+
+
+        inline StandardCard(
+            const IdentT ident_,
+            const std::filesystem::path& image_path_
+        ) noexcept                                                      //!< 2-valued constructor (2/2).
+            : MyBaseClass(ident_, ValueT(ident_ / 4 + 1), image_path_)
         {
             _set_text();
         }
@@ -94,25 +113,6 @@ namespace pltr::cards
         inline virtual ~StandardCard() noexcept = default;              //!< default destructor.
 
 
-        //-----   Operators   -----//
-        inline StandardCard& operator=(const StandardCard&) noexcept = default; //!< default copy assignment.
-        inline StandardCard& operator=(StandardCard&&) noexcept = default;      //!< default move assignment.
-
-
-        [[nodiscard]]
-        inline const bool operator< (const StandardCard& other) const noexcept  //!< less-than operator.
-        {
-            return this->value < other.value;
-        }
-
-
-        [[nodiscard]]
-        inline const bool operator== (const StandardCard& other) const noexcept  //!< equality operator.
-        {
-            return this->value == other.value;
-        }
-
-
         //-----   Accessors / Mutators   -----//
         [[nodiscard]]
         inline const EColor get_color() const noexcept                      //!< returns the enum color of this card
@@ -128,7 +128,14 @@ namespace pltr::cards
             return this->ident >= JOKERS_FIRST_IDENT;
         }
 
-        inline void set(const IdentT ident_, const ValueT value_) noexcept  //!< sets data.
+
+        inline void set(const IdentT ident_) noexcept                       //!< sets data (1 arg).
+        {
+            set(ident_, ident_ / 4 + 1);
+        }
+
+
+        inline void set(const IdentT ident_, const ValueT value_) noexcept  //!< sets data (2 args).
         {
             MyBaseClass::set(ident_, value_);
             _set_text();
@@ -138,7 +145,7 @@ namespace pltr::cards
         inline void set(
             const IdentT ident_,
             const ValueT value_,
-            const std::filesystem::path& image_path_) noexcept              //!< sets data.
+            const std::filesystem::path& image_path_) noexcept              //!< sets data (3 args).
         {
             MyBaseClass::set(ident_, value_, image_path_);
             _set_text();
@@ -146,7 +153,7 @@ namespace pltr::cards
 
 
     protected:
-        static inline const std::string _CARDS_LETTERS{ "A23456789JQKJ" };
+        static inline const std::string _CARDS_LETTERS{ "A23456789XJQKJ" };
         static inline const std::string _COLORS_LETTERS{ "CDHS" };
         static inline const std::string _JOKERS_COLORS{ "RB" };
 
@@ -164,7 +171,7 @@ namespace pltr::cards
     class StandardCardDe : public StandardCard
     {
     protected:
-        static inline const std::string _CARDS_LETTERS{ "123456789BDKJ" };
+        static inline const std::string _CARDS_LETTERS{ "123456789XBDKJ" };
         static inline const std::string _COLORS_LETTERS{ "RAHP" };  // für kReuz, kAro, Herz, Pik
         static inline const std::string _JOKERS_COLORS{ "RS" };
 
@@ -185,7 +192,7 @@ namespace pltr::cards
     class StandardCardEs : public StandardCard
     {
     protected:
-        static inline const std::string _CARDS_LETTERS{ "123456789JAYJ" };  // para Jota, reinA, reY, Joker
+        static inline const std::string _CARDS_LETTERS{ "123456789XJAYJ" };  // para Jota, reinA, reY, Joker
         static inline const std::string _COLORS_LETTERS{ "ECDT" };
         static inline const std::string _JOKERS_COLORS{ "RN" };
 
@@ -199,7 +206,7 @@ namespace pltr::cards
     class StandardCardFr : public StandardCard
     {
     protected:
-        static inline const std::string _CARDS_LETTERS{ "123456789VDRJ" };
+        static inline const std::string _CARDS_LETTERS{ "123456789XVDRJ" };
         static inline const std::string _COLORS_LETTERS{ "TKCP" };
         static inline const std::string _JOKERS_COLORS{ "RN" };
 
@@ -213,7 +220,7 @@ namespace pltr::cards
     class StandardCardIt : public StandardCard
     {
     protected:
-        static inline const std::string _CARDS_LETTERS{ "123456789JARJ" };  // per Jack, reginA, Re, Joker
+        static inline const std::string _CARDS_LETTERS{ "123456789XJARJ" };  // per Jack, reginA, Re, Joker
         static inline const std::string _COLORS_LETTERS{ "PCQF" };
         static inline const std::string _JOKERS_COLORS{ "RN" };
 

@@ -157,21 +157,21 @@ namespace pltr::cards
 
 
         [[nodiscard]]
-        inline const bool operator> (const PlayingCardT& other) const noexcept  //!< less-than operator.
+        inline const bool operator> (const PlayingCardT& other) const noexcept  //!< greater-than operator.
         {
             return this->value > other.value;
         }
 
 
         [[nodiscard]]
-        inline const bool operator<= (const PlayingCardT& other) const noexcept  //!< less-than operator.
+        inline const bool operator<= (const PlayingCardT& other) const noexcept  //!< less-than-or-equal operator.
         {
             return this->value <= other.value;
         }
 
 
         [[nodiscard]]
-        inline const bool operator>= (const PlayingCardT& other) const noexcept  //!< less-than operator.
+        inline const bool operator>= (const PlayingCardT& other) const noexcept  //!< greater-than-or-equal operator.
         {
             return this->value >= other.value;
         }
@@ -185,7 +185,7 @@ namespace pltr::cards
 
 
         [[nodiscard]]
-        inline const bool operator!= (const PlayingCardT& other) const noexcept  //!< equality operator.
+        inline const bool operator!= (const PlayingCardT& other) const noexcept  //!< not-equality operator.
         {
             return this->value != other.value;
         }

@@ -43,7 +43,7 @@ namespace pltr::cards
             this->text = std::format(
                 "{:c}{:c}",
                 _CARDS_LETTERS[JOKERS_INDEX],
-                _JOKERS_COLORS[int(this->ident == JOKERS_FIRST_IDENT)]
+                (this->ident == JOKERS_FIRST_IDENT) ? _JOKERS_COLORS[0] : _JOKERS_COLORS[1]
             );
     }
 

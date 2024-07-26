@@ -1,3 +1,5 @@
+#pragma once
+
 /*
     GNU GENERAL PUBLIC LICENSE
     Version 3, 29 June 2007
@@ -20,25 +22,20 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-module;
-
+//===========================================================================
 #include <algorithm>
 #include <cstdint>
 #include <random>
 #include <vector>
 
 
-export module pltr:cards_deck;
-
-
-
 //===========================================================================
-export namespace pltr::cards
+namespace pltr::cards
 {
     //=======================================================================
     /* \brief The base class for decks of cards.
     */
-    export template<typename CardT>
+    template<typename CardT>
     class CardsDeck
     {
     public:
@@ -160,7 +157,7 @@ export namespace pltr::cards
 
 
     private:
-        std::uniform_real_distribution<float> _udistribution{1.0f};
+        std::uniform_real_distribution<float> _udistribution{ 1.0f };
         std::mt19937 _urand_generator{};
         CardsList _deck{};
         IndexType _max_cards_count{ 0 };
@@ -186,7 +183,7 @@ export namespace pltr::cards
         }
 
         void _set_deck(const IndexType max_cards_count);
-        
+
         void _set_randomness();
 
     };
@@ -204,7 +201,6 @@ export namespace pltr::cards
         _set_randomness();
     }
 
-
     //-----------------------------------------------------------------------
     template<typename CardT>
     void CardsDeck<CardT>::append_card(const CardT& card)
@@ -213,7 +209,6 @@ export namespace pltr::cards
         this->_deck.insert(this->_deck.begin(), card);
         this->_max_cards_count = std::max(this->_max_cards_count, this->_deck.size());
     }
-
 
     //-----------------------------------------------------------------------
     template<typename CardT>
@@ -268,7 +263,7 @@ export namespace pltr::cards
     void CardsDeck<CardT>::insert_random_card(const CardT& card)
     {
         // reminder: inserts a card at a random position in this deck. Deck max capacity may grow up then.
-        insert_card( _get_random_index(), card);
+        insert_card(_get_random_index(), card);
         this->_max_cards_count = std::max(this->_max_cards_count, this->_deck.size());
     }
 

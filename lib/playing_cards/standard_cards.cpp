@@ -20,14 +20,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-module;
 
+//===========================================================================
 #include <format>
 
-
-module pltr:standard_cards;
-
-import :playing_cards;
+#include "playing_cards/standard_cards.h"
 
 
 //===========================================================================

@@ -1,3 +1,5 @@
+#pragma once
+
 /*
     GNU GENERAL PUBLIC LICENSE
     Version 3, 29 June 2007
@@ -20,24 +22,20 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-module;
-
+//===========================================================================
 #include <cstdint>
 #include <filesystem>
 
-
-export module pltr:standard_cards;
-
-import :playing_cards;
+#include "playing_cards/playing_cards.h"
 
 
 //===========================================================================
-export namespace pltr::cards
+namespace pltr::cards
 {
     //=======================================================================
     /* \brief The base class for standard cards.
     */
-    export class StandardCard : public pltr::cards::PlayingCardT<std::uint8_t, std::uint32_t>
+    class StandardCard : public pltr::cards::PlayingCardT<std::uint8_t, std::uint32_t>
     {
     public:
 
@@ -155,7 +153,7 @@ export namespace pltr::cards
 
     private:
         void _set_text() noexcept;  //!< internally sets the text of this card
-    
+
     };
 
 
@@ -163,7 +161,7 @@ export namespace pltr::cards
     //=======================================================================
     /* \brief The class for standard cards - German localization.
     */
-    export class StandardCardDe : public StandardCard
+    class StandardCardDe : public StandardCard
     {
     protected:
         static inline const std::string _CARDS_LETTERS{ "123456789BDKJ" };
@@ -177,14 +175,14 @@ export namespace pltr::cards
     //=======================================================================
     /* \brief The class for standard cards - English localization.
     */
-    export using StandardClassEn = StandardCard;  // that's all!
+    using StandardClassEn = StandardCard;  // that's all!
 
 
 
     //=======================================================================
     /* \brief The class for standard cards - Spanish localization.
     */
-    export class StandardCardEs : public StandardCard
+    class StandardCardEs : public StandardCard
     {
     protected:
         static inline const std::string _CARDS_LETTERS{ "123456789JAYJ" };  // para Jota, reinA, reY, Joker
@@ -198,7 +196,7 @@ export namespace pltr::cards
     //=======================================================================
     /* \brief The class for standard cards - French localization.
     */
-    export class StandardCardFr : public StandardCard
+    class StandardCardFr : public StandardCard
     {
     protected:
         static inline const std::string _CARDS_LETTERS{ "123456789VDRJ" };
@@ -212,7 +210,7 @@ export namespace pltr::cards
     //=======================================================================
     /* \brief The class for standard cards - Italian localization.
     */
-    export class StandardCardIt : public StandardCard
+    class StandardCardIt : public StandardCard
     {
     protected:
         static inline const std::string _CARDS_LETTERS{ "123456789JARJ" };  // per Jack, reginA, Re, Joker
@@ -226,7 +224,7 @@ export namespace pltr::cards
     //=======================================================================
     /* \brief The class for Windows console standard cards.
     */
-    export class StandardWindowsConsoleCard : public StandardCard
+    class StandardWindowsConsoleCard : public StandardCard
     {
     protected:
         static inline const std::string _COLORS_LETTERS{ "\005\004\003\006" };
@@ -238,7 +236,7 @@ export namespace pltr::cards
     //=======================================================================
     /* \brief The class for Windows console standard cards - German localization.
     */
-    export class StandardWindowsConsoleCardDe : public StandardWindowsConsoleCard
+    class StandardWindowsConsoleCardDe : public StandardWindowsConsoleCard
     {
     protected:
         static inline const std::string _COLORS_LETTERS{ "\005\004\003\006" };
@@ -250,14 +248,14 @@ export namespace pltr::cards
     //=======================================================================
     /* \brief The class for Windows console standard cards - English localization.
     */
-    export using StandardWindowsConsoleClassEn = StandardWindowsConsoleCard;  // that's all!
+    using StandardWindowsConsoleClassEn = StandardWindowsConsoleCard;  // that's all!
 
 
 
     //=======================================================================
     /* \brief The class for Windows console standard cards - Spanish localization.
     */
-    export class StandardWindowsConsoleCardEs : public StandardWindowsConsoleCard
+    class StandardWindowsConsoleCardEs : public StandardWindowsConsoleCard
     {
     protected:
         static inline const std::string _COLORS_LETTERS{ "\005\004\003\006" };
@@ -269,7 +267,7 @@ export namespace pltr::cards
     //=======================================================================
     /* \brief The class for Windows console standard cards - French localization.
     */
-    export class StandardWindowsConsoleCardFr : public StandardWindowsConsoleCard
+    class StandardWindowsConsoleCardFr : public StandardWindowsConsoleCard
     {
     protected:
         static inline const std::string _COLORS_LETTERS{ "\005\004\003\006" };
@@ -281,7 +279,7 @@ export namespace pltr::cards
     //=======================================================================
     /* \brief The class for Windows console standard cards - Italian localization.
     */
-    export class StandardWindowsConsoleCardIt : public StandardWindowsConsoleCard
+    class StandardWindowsConsoleCardIt : public StandardWindowsConsoleCard
     {
     protected:
         static inline const std::string _COLORS_LETTERS{ "\005\004\003\006" };

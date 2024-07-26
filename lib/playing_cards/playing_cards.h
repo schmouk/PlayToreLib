@@ -1,3 +1,5 @@
+#pragma once
+
 /*
     GNU GENERAL PUBLIC LICENSE
     Version 3, 29 June 2007
@@ -20,23 +22,20 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-module;
 
+//===========================================================================
 #include <cstdint>
 #include <filesystem>
 #include <string>
 
 
-export module pltr:playing_cards;
-
-
 //===========================================================================
-export namespace pltr::cards
+namespace pltr::cards
 {
     //=======================================================================
     /* \brief The generic template for all playing cards.
     */
-    export template<
+    template<
         typename IdentT = char,
         typename ValueT = std::int32_t
     > struct PlayingCardT

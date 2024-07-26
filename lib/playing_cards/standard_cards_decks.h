@@ -1,3 +1,5 @@
+#pragma once
+
 /*
     GNU GENERAL PUBLIC LICENSE
     Version 3, 29 June 2007
@@ -20,25 +22,22 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-module;
 
+//===========================================================================
 #include <cstdint>
 #include <type_traits>
 
-
-export module pltr:standard_cards_decks;
-
-import :cards_deck;
-import :standard_cards;
+#include "playing_cards/cards_deck.h"
+#include "playing_cards/standard_cards.h"
 
 
 //===========================================================================
-export namespace pltr::cards
+namespace pltr::cards
 {
     //=======================================================================
     /* \brief The class of 54 standard cards decks.
     */
-    export template<typename CardT>
+    template<typename CardT>
         requires std::is_base_of_v<pltr::cards::StandardCard, CardT>
     class CardsDeck54 : public CardsDeck<CardT>
     {
@@ -76,7 +75,7 @@ export namespace pltr::cards
     //=======================================================================
     /* \brief The class of 52 standard cards decks.
     */
-    export template<typename CardT>
+    template<typename CardT>
         requires std::is_base_of_v<pltr::cards::StandardCard, CardT>
     class CardsDeck52 : public CardsDeck<CardT>
     {
@@ -114,7 +113,7 @@ export namespace pltr::cards
     //=======================================================================
     /* \brief The class of 32 standard cards decks.
     */
-    export template<typename CardT>
+    template<typename CardT>
         requires std::is_base_of_v<pltr::cards::StandardCard, CardT>
     class CardsDeck32 : public CardsDeck<CardT>
     {

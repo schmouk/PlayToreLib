@@ -112,6 +112,37 @@ namespace pltr::cards
 
         void append_cards(const CardsList& cards);                  //!< appends n cards at bottom of this deck. Deck max capacity may grow up then.
 
+        inline const bool contains(const CardT& card) const         //!< returns true if the card ident is found in this deck.
+        {
+            return get_index(card) != IndexType(-1);
+        }
+
+        inline const bool contains_all()  const                     //!< end of containment searching recursion of all cards in this deck. Should not be called by library user - always return true.
+        {
+            return true;
+        }
+
+        template<typename FirstT, typename... RestT>
+        inline const bool contains_all(const FirstT& first, const RestT&... rest)    //!< returns true if all cards in list are contained in this deck.
+        {
+            return contains(first) && contains_all(rest...);
+        }
+
+        const bool contains_all(const CardsList& cards) const;      //!< returns true if all of the passed cards are contained in this deck
+
+        inline const bool contains_any()  const                     //!< end of containment searching recursion of any cards in this deck. Should not be called by library user - always return true.
+        {
+            return true;
+        }
+
+        template<typename FirstT, typename... RestT>
+        inline const bool contains_any(const FirstT& first, const RestT&... rest)    //!< returns true if nay card in list is contained in this deck.
+        {
+            return contains(first) || contains_any(rest...);
+        }
+
+        const bool contains_any(const CardsList& cards) const;      //!< returns true if any of the passed cards is contained in this deck
+
         inline const CardT draw_card()                              //!< wrapper to pop_up_card(): removes and returns the card at the top of this deck.
         {
             return pop_up_card();
@@ -269,6 +300,28 @@ namespace pltr::cards
         // reminder: appends n cards at bottom of this deck. Deck max capacity may grow up then.
         this->_deck.insert_range(this->_deck.begin(), cards | std::views::reverse);
         this->_max_cards_count = std::max(this->_max_cards_count, std::uint32_t(this->_deck.size()));
+    }
+
+    //-----------------------------------------------------------------------
+    template<typename CardT>
+    const bool CardsDeck<CardT>::contains_all(const CardsList& cards) const
+    {
+        // reminder: returns true if all of the passed cards are contained in this deck
+        for (auto& card : cards)
+            if (!contains(card))
+                return false;
+        return true;
+    }
+
+    //-----------------------------------------------------------------------
+    template<typename CardT>
+    const bool CardsDeck<CardT>::contains_any(const CardsList& cards) const
+    {
+        // reminder: returns true if any of the passed cards is contained in this deck
+        for (auto& card : cards)
+            if (contains(card))
+                return true;
+        return false;
     }
 
     //-----------------------------------------------------------------------

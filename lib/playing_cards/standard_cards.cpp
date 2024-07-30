@@ -31,7 +31,12 @@
 namespace pltr::cards
 {
     //=======================================================================
-    void StandardCard::_set_text() noexcept
+    template<
+        const StringTemplateParameter _CARDS_LETTERS,
+        const StringTemplateParameter _COLORS_LETTERS,
+        const StringTemplateParameter _JOKERS_COLORS
+    >
+    void StandardCard<_CARDS_LETTERS, _COLORS_LETTERS, _JOKERS_COLORS>::_set_text() noexcept
     {
         if (!is_joker())
             this->text = std::format(

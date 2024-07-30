@@ -23,6 +23,7 @@
 */
 
 //===========================================================================
+#include <algorithm>
 #include <cstdint>
 #include <filesystem>
 
@@ -33,8 +34,32 @@
 namespace pltr::cards
 {
     //=======================================================================
+    /* \brief The strings structure for template parameters
+    */
+    template<const int STR_LENGTH>
+    struct StringTemplateParameter
+    {
+        char text[STR_LENGTH] {};
+
+        consteval StringTemplateParameter(const char(&txt_)[STR_LENGTH]){
+            std::copy_n(txt_, STR_LENGTH, text);
+        }
+
+        const char operator[] (const int index) const {
+            return text[index];
+        }
+
+    };
+    
+    
+    //=======================================================================
     /* \brief The base class for standard cards.
     */
+    template<
+        const StringTemplateParameter _CARDS_LETTERS = "A23456789XJQKJ",
+        const StringTemplateParameter _COLORS_LETTERS = "CDHS",
+        const StringTemplateParameter _JOKERS_COLORS = "RB"
+    >
     class StandardCard : public pltr::cards::PlayingCardT<std::uint8_t, std::uint32_t>
     {
     public:
@@ -113,6 +138,11 @@ namespace pltr::cards
         inline virtual ~StandardCard() noexcept = default;              //!< default destructor.
 
 
+        //-----   Operators   -----//
+        StandardCard& operator=(const StandardCard&) noexcept = default;      //!< default copy operator.
+        StandardCard& operator=(StandardCard&&) noexcept = default;           //!< default move operator.
+
+
         //-----   Accessors / Mutators   -----//
         [[nodiscard]]
         inline const EColor get_color() const noexcept                      //!< returns the enum color of this card
@@ -153,103 +183,65 @@ namespace pltr::cards
 
 
     protected:
-        static inline const std::string _CARDS_LETTERS{ "A23456789XJQKJ" };
-        static inline const std::string _COLORS_LETTERS{ "CDHS" };
-        static inline const std::string _JOKERS_COLORS{ "RB" };
-
-
-    private:
-        void _set_text() noexcept;  //!< internally sets the text of this card
+        void _set_text() noexcept  //!< internally sets the text of this card
+        {
+            if (!is_joker())
+                this->text = std::format(
+                    "{:c}{:c}",
+                    _CARDS_LETTERS[this->ident / COLORS_COUNT],
+                    _COLORS_LETTERS[this->ident % COLORS_COUNT]
+                );
+            else
+                this->text = std::format(
+                    "{:c}{:c}",
+                    _CARDS_LETTERS[JOKERS_INDEX],
+                    (this->ident == JOKERS_FIRST_IDENT) ? _JOKERS_COLORS[0] : _JOKERS_COLORS[1]
+                );
+        }
 
     };
-
 
 
     //=======================================================================
     /* \brief The class for standard cards - German localization.
     */
-    class StandardCardDe : public StandardCard
-    {
-    protected:
-        static inline const std::string _CARDS_LETTERS{ "123456789XBDKJ" };
-        static inline const std::string _COLORS_LETTERS{ "RAHP" };  // für kReuz, kAro, Herz, Pik
-        static inline const std::string _JOKERS_COLORS{ "RS" };
-
-    };
-
+    using StandardCardDe = StandardCard<"123456789XBDKJ", "RAHP", "RS">;  // notice: RAHP für kReuz, kAro, Herz, Pik
 
 
     //=======================================================================
     /* \brief The class for standard cards - English localization.
     */
-    using StandardClassEn = StandardCard;  // that's all!
-
+    using StandardClassEn = StandardCard<>;  // that's all!
 
 
     //=======================================================================
     /* \brief The class for standard cards - Spanish localization.
     */
-    class StandardCardEs : public StandardCard
-    {
-    protected:
-        static inline const std::string _CARDS_LETTERS{ "123456789XJAYJ" };  // para Jota, reinA, reY, Joker
-        static inline const std::string _COLORS_LETTERS{ "ECDT" };
-        static inline const std::string _JOKERS_COLORS{ "RN" };
-
-    };
-
+    using StandardCardEs = StandardCard<"123456789XJAYJ", "ECDT", "RN">;  // notice: ECDT para Jota, reinA, reY, Joker
 
 
     //=======================================================================
     /* \brief The class for standard cards - French localization.
     */
-    class StandardCardFr : public StandardCard
-    {
-    protected:
-        static inline const std::string _CARDS_LETTERS{ "123456789XVDRJ" };
-        static inline const std::string _COLORS_LETTERS{ "TKCP" };
-        static inline const std::string _JOKERS_COLORS{ "RN" };
-
-    };
-
+    using StandardCardFr = StandardCard<"123456789XVDRJ", "TKCP", "RN">;  // notice: TKCP pour Trèfle, (K)arreau, Coeur, Pique
 
 
     //=======================================================================
     /* \brief The class for standard cards - Italian localization.
     */
-    class StandardCardIt : public StandardCard
-    {
-    protected:
-        static inline const std::string _CARDS_LETTERS{ "123456789XJARJ" };  // per Jack, reginA, Re, Joker
-        static inline const std::string _COLORS_LETTERS{ "PCQF" };
-        static inline const std::string _JOKERS_COLORS{ "RN" };
-
-    };
-
+    using StandardCardIt = StandardCard<"123456789XJARJ", "PCQF", "RN">;  // notice: "PCQF"per Jack, reginA, Re, Joker
 
 
     //=======================================================================
     /* \brief The class for Windows console standard cards.
     */
-    class StandardWindowsConsoleCard : public StandardCard
-    {
-    protected:
-        static inline const std::string _COLORS_LETTERS{ "\005\004\003\006" };
-
-    };
-
+    using StandardWindowsConsoleCard = StandardCard<"A23456789XJQKJ", "\005\004\003\006", "RB">;
 
 
     //=======================================================================
     /* \brief The class for Windows console standard cards - German localization.
     */
-    class StandardWindowsConsoleCardDe : public StandardWindowsConsoleCard
-    {
-    protected:
-        static inline const std::string _COLORS_LETTERS{ "\005\004\003\006" };
-
-    };
-
+    using StandardWindowsConsoleCardDe = StandardCard<"123456789XBDKJ", "\005\004\003\006", "RS">;
 
 
     //=======================================================================
@@ -258,39 +250,21 @@ namespace pltr::cards
     using StandardWindowsConsoleClassEn = StandardWindowsConsoleCard;  // that's all!
 
 
-
     //=======================================================================
     /* \brief The class for Windows console standard cards - Spanish localization.
     */
-    class StandardWindowsConsoleCardEs : public StandardWindowsConsoleCard
-    {
-    protected:
-        static inline const std::string _COLORS_LETTERS{ "\005\004\003\006" };
-
-    };
-
+    using StandardWindowsConsoleCardEs = StandardCard<"123456789XJAYJ", "\005\004\003\006", "RN">;
 
 
     //=======================================================================
     /* \brief The class for Windows console standard cards - French localization.
     */
-    class StandardWindowsConsoleCardFr : public StandardWindowsConsoleCard
-    {
-    protected:
-        static inline const std::string _COLORS_LETTERS{ "\005\004\003\006" };
-
-    };
-
+    using StandardWindowsConsoleCardFr = StandardCard<"123456789XVDRJ", "\005\004\003\006", "RN">;
 
 
     //=======================================================================
     /* \brief The class for Windows console standard cards - Italian localization.
     */
-    class StandardWindowsConsoleCardIt : public StandardWindowsConsoleCard
-    {
-    protected:
-        static inline const std::string _COLORS_LETTERS{ "\005\004\003\006" };
-
-    };
+    using StandardWindowsConsoleCardIt = StandardCard<"123456789XJARJ", "\005\004\003\006", "RN">;
 
 }

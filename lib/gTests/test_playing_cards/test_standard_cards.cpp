@@ -34,15 +34,17 @@ TEST(TestSuitePlayingCards, TestStandardCard) {
     const std::string EMPTY_STRING;
     const std::wstring EMPTY_WSTRING;
 
+    using StandardCard = pltr::cards::StandardCard<>;
+
     // tests empty default constructor
-    pltr::cards::StandardCard card0;
+    StandardCard card0;
     EXPECT_EQ(0, card0.ident);
     EXPECT_EQ(1, card0.value);
     EXPECT_STREQ(EMPTY_WSTRING.c_str(), card0.image_path.c_str());
     EXPECT_STREQ("AC", card0.text.c_str());
 
     // tests all stuff for every card
-    pltr::cards::StandardCard card;
+    StandardCard card;
     int i = 0;
     for (char id : {'A', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K'}) {
         for (char color : {'C', 'D', 'H', 'S'}) {
@@ -73,16 +75,16 @@ TEST(TestSuitePlayingCards, TestStandardCard) {
             switch (color)
             {
             case 'C':
-                EXPECT_EQ(pltr::cards::StandardCard::EColor::E_CLUB, card.get_color());
+                EXPECT_EQ(StandardCard::EColor::E_CLUB, card.get_color());
                 break;
             case 'D':
-                EXPECT_EQ(pltr::cards::StandardCard::EColor::E_DIAMOND, card.get_color());
+                EXPECT_EQ(StandardCard::EColor::E_DIAMOND, card.get_color());
                 break;
             case 'H':
-                EXPECT_EQ(pltr::cards::StandardCard::EColor::E_HEART, card.get_color());
+                EXPECT_EQ(StandardCard::EColor::E_HEART, card.get_color());
                 break;
             case 'S':
-                EXPECT_EQ(pltr::cards::StandardCard::EColor::E_SPADE, card.get_color());
+                EXPECT_EQ(StandardCard::EColor::E_SPADE, card.get_color());
                 break;
             default:
                 ADD_FAILURE();

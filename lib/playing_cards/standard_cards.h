@@ -267,4 +267,67 @@ namespace pltr::cards
     */
     using StandardWindowsConsoleCardIt = StandardCard<"123456789XJARJ", "\005\004\003\006", "RN">;
 
+
+    //=======================================================================
+    // Local type traits concepts
+
+    template<typename T>
+    struct is_standard_card {
+        static inline constexpr bool value{ false };
+    };
+
+    template<typename T>
+    inline constexpr bool is_standard_card_v = is_standard_card<T>::value;
+
+
+    template<>
+    struct is_standard_card<StandardCard<>> {
+        static inline constexpr bool value{ true };
+    };
+
+    template<>
+    struct is_standard_card<StandardCardDe> {
+        static inline constexpr bool value{ true };
+    };
+
+    template<>
+    struct is_standard_card<StandardCardEs> {
+        static inline constexpr bool value{ true };
+    };
+
+    template<>
+    struct is_standard_card<StandardCardFr> {
+        static inline constexpr bool value{ true };
+    };
+
+    template<>
+    struct is_standard_card<StandardCardIt> {
+        static inline constexpr bool value{ true };
+    };
+
+    template<>
+    struct is_standard_card<StandardWindowsConsoleCard> {
+        static inline constexpr bool value{ true };
+    };
+
+    template<>
+    struct is_standard_card<StandardWindowsConsoleCardDe> {
+        static inline constexpr bool value{ true };
+    };
+
+    template<>
+    struct is_standard_card<StandardWindowsConsoleCardEs> {
+        static inline constexpr bool value{ true };
+    };
+
+    template<>
+    struct is_standard_card<StandardWindowsConsoleCardFr> {
+        static inline constexpr bool value{ true };
+    };
+
+    template<>
+    struct is_standard_card<StandardWindowsConsoleCardIt> {
+        static inline constexpr bool value{ true };
+    };
+
 }

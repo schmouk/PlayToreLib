@@ -679,6 +679,7 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
         EXPECT_TRUE(deck4.contains(DefaultCardT(i)));
 
     // notice: next methods have been already tested via the former tests of their insert_card() related callers
+    // - clear()
     // - pop_indexed_card(const IndexType index);
     // - pop_rand_card()
     // - pop_up_card()

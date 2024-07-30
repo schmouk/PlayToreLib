@@ -27,8 +27,8 @@
 #include <cstdint>
 #include <type_traits>
 
-#include "playing_cards/cards_deck.h"
 #include "playing_cards/standard_cards.h"
+#include "playing_cards/cards_deck.h"
 
 
 //===========================================================================
@@ -38,7 +38,7 @@ namespace pltr::cards
     /* \brief The class of 54 standard cards decks.
     */
     template<typename CardT>
-        requires std::is_base_of_v<pltr::cards::StandardCard, CardT>
+        requires pltr::cards::is_standard_card_v<CardT>
     class CardsDeck54 : public CardsDeck<CardT>
     {
     public:
@@ -49,7 +49,9 @@ namespace pltr::cards
         //-----   Constructors / Desctructor   -----//
         inline CardsDeck54()                                //!< empty constructor
             : MyBaseClass(_CARDS_COUNT)
-        {}
+        {
+            refill_deck();
+        }
 
         CardsDeck54(const CardsDeck54&) noexcept = default; //!< default copy constructor.
         CardsDeck54(CardsDeck54&&) noexcept = default;      //!< default move constructor.
@@ -68,6 +70,7 @@ namespace pltr::cards
 
     private:
         static inline constexpr std::uint32_t _CARDS_COUNT{ 54 };
+
     };
 
 
@@ -76,7 +79,7 @@ namespace pltr::cards
     /* \brief The class of 52 standard cards decks.
     */
     template<typename CardT>
-        requires std::is_base_of_v<pltr::cards::StandardCard, CardT>
+        requires pltr::cards::is_standard_card_v<CardT>
     class CardsDeck52 : public CardsDeck<CardT>
     {
     public:
@@ -87,7 +90,9 @@ namespace pltr::cards
         //-----   Constructors / Desctructor   -----//
         inline CardsDeck52()                                //!< empty constructor
             : MyBaseClass(_CARDS_COUNT)
-        {}
+        {
+            refill_deck();
+        }
 
         CardsDeck52(const CardsDeck52&) noexcept = default; //!< default copy constructor.
         CardsDeck52(CardsDeck52&&) noexcept = default;      //!< default move constructor.
@@ -106,6 +111,7 @@ namespace pltr::cards
 
     private:
         static inline constexpr std::uint32_t _CARDS_COUNT{ 52 };
+
     };
 
 
@@ -114,7 +120,7 @@ namespace pltr::cards
     /* \brief The class of 32 standard cards decks.
     */
     template<typename CardT>
-        requires std::is_base_of_v<pltr::cards::StandardCard, CardT>
+        requires pltr::cards::is_standard_card_v<CardT>
     class CardsDeck32 : public CardsDeck<CardT>
     {
     public:
@@ -125,7 +131,9 @@ namespace pltr::cards
         //-----   Constructors / Desctructor   -----//
         inline CardsDeck32()                                //!< empty constructor
             : MyBaseClass(_CARDS_COUNT)
-        {}
+        {
+            refill_deck();
+        }
 
         CardsDeck32(const CardsDeck32&) noexcept = default; //!< default copy constructor.
         CardsDeck32(CardsDeck32&&) noexcept = default;      //!< default move constructor.
@@ -144,6 +152,7 @@ namespace pltr::cards
 
     private:
         static inline constexpr std::uint32_t _CARDS_COUNT{ 32 };
+
     };
 
 
@@ -153,38 +162,41 @@ namespace pltr::cards
 
     //-----------------------------------------------------------------------
     template<typename CardT>
-        requires std::is_base_of_v<pltr::cards::StandardCard, CardT>
+        requires pltr::cards::is_standard_card_v<CardT>
     void CardsDeck54<CardT>::refill_deck()
     {
-        for (typename CardT::index_type ident = 0; ident < _CARDS_COUNT; ++ident)
-            append_card(ident, CardT::value_type((ident / 4) + 1));
+        MyBaseClass::clear();
+        for (typename MyBaseClass::IndexType ident = 0; ident < _CARDS_COUNT; ++ident)
+            MyBaseClass::append_card(CardT(ident, CardT::value_type((ident / 4) + 1)));
     }
 
     //-----------------------------------------------------------------------
     template<typename CardT>
-        requires std::is_base_of_v<pltr::cards::StandardCard, CardT>
+        requires pltr::cards::is_standard_card_v<CardT>
     void CardsDeck52<CardT>::refill_deck()
     {
-        for (typename CardT::index_type ident = 0; ident < _CARDS_COUNT; ++ident)
-            append_card(ident, CardT::value_type((ident / 4) + 1));
+        MyBaseClass::clear();
+        for (typename MyBaseClass::IndexType ident = 0; ident < _CARDS_COUNT; ++ident)
+            MyBaseClass::append_card(CardT(ident, CardT::value_type((ident / 4) + 1)));
     }
 
     //-----------------------------------------------------------------------
     template<typename CardT>
-        requires std::is_base_of_v<pltr::cards::StandardCard, CardT>
+        requires pltr::cards::is_standard_card_v<CardT>
     void CardsDeck32<CardT>::refill_deck()
     {
+        MyBaseClass::clear();
+
         // aces first
-        for (typename CardT::index_type ident = 0; ident < 4; ++ident)
-            append_card(ident, CardT::value_type(1));
+        for (typename MyBaseClass::IndexType ident = 0; ident < 4; ++ident)
+            MyBaseClass::append_card(CardT(ident, CardT::value_type(1)));
 
         // then 7s to kings
-        constexpr CardT::index_type gap{ 5 * 4 };  // skips 2s to 6s (included)
-        for (typename CardT::index_type i = 4; i < _CARDS_COUNT; ++i) {
-            const CardT::index_type ident{ i + gap };
-            append_card(ident, CardT::value_type((ident / 4) + 1));
+        constexpr MyBaseClass::IndexType GAP{ 5 * 4 };  // skips 2s to 6s (included)
+        for (typename MyBaseClass::IndexType i = 4; i < _CARDS_COUNT; ++i) {
+            const MyBaseClass::IndexType ident{ i + GAP };
+            MyBaseClass::append_card(CardT(ident, CardT::value_type((ident / 4) + 1)));
         }
-
     }
 
 }

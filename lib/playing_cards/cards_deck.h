@@ -130,9 +130,9 @@ namespace pltr::cards
 
         const bool contains_all(const CardsList& cards) const;      //!< returns true if all of the passed cards are contained in this deck
 
-        inline const bool contains_any()  const                     //!< end of containment searching recursion of any cards in this deck. Should not be called by library user - always return true.
+        inline const bool contains_any()  const                     //!< end of containment searching recursion of any cards in this deck. Should not be called by library user - always return false.
         {
-            return true;
+            return false;
         }
 
         template<typename FirstT, typename... RestT>
@@ -204,10 +204,12 @@ namespace pltr::cards
         [[nodiscard]]
         inline const bool is_full() const noexcept                  //!< returns true when this deck is full.
         {
-            return get_current_cards_count() == get_max_cards_count();
+            return !is_empty() && get_current_cards_count() == get_max_cards_count();
         }
 
         const CardT pop_bottom_card();                              //!< removes and returns the card at the bottom of this deck. May be considered as an optimized wrapper to pop_card(_current_cards_count - 1).
+
+        const CardsList pop_bottom_n_cards(const IndexType n);      //!< removes and returns n cards from the bottom of this deck. May return less than n cards if n > current deck size.
 
         const CardT pop_indexed_card(const IndexType index);        //!< removes and returns the n-th card from top in this deck. calls pop_bottom_card() if n > current deck size.
 
@@ -224,6 +226,20 @@ namespace pltr::cards
         {}
 
         void refill_deck(const CardsList& filling_deck);            //!< fills this deck according to a filling vector. Empties the deck first.
+
+        template<typename FirstT, typename... RestT>
+        void refill_deck(const FirstT& first, const RestT&... rest)     //!< fills this deck according to a variable length list of cards. Empties the deck first.
+        {
+            if (sizeof...(rest) > 0) [[likely]] { // notice: necessary not to conflict with the virtual signature of refill() with no args
+                refill_deck(rest...);
+                insert_card(first);
+            }
+            else [[unlikely]] {
+                this->_deck.clear();
+                this->_deck.shrink_to_fit();
+                insert_card(first);
+            }
+        }
 
         void shuffle();                                             //!< shuffles this whole deck.
 
@@ -249,7 +265,19 @@ namespace pltr::cards
         }
 
         [[nodiscard]]
-        const IndexType _get_random_index();
+        inline const IndexType _get_random_index()
+        {
+            return _get_random_index(this->get_current_cards_count());
+        }
+
+        [[nodiscard]]
+        inline const IndexType _get_random_index(const IndexType n)
+        {
+            if (n > 0) [[likely]]
+                return IndexType(this->_udistribution(this->_urand_generator) * float(n));
+            else [[unlikely]]
+                return IndexType(0);
+        }
 
         inline void _set_deck()
         {
@@ -329,9 +357,9 @@ namespace pltr::cards
     const CardsDeck<CardT>::IndexType CardsDeck<CardT>::get_index(const CardT& card) const
     {
         // reminder: returns the index of this card in deck if found, or -1 if not found
-        auto start_it{ this->_deck.cbegin() };
-        auto end_it{ this->_deck.cend() };
-        auto found_it{ std::find(start_it, end_it, card) };
+        auto start_it{ this->_deck.crbegin() };
+        auto end_it{ this->_deck.crend() };
+        auto found_it{ std::find_if(start_it, end_it, [card](const CardT& c) {return c.ident == card.ident; }) };
         return IndexType(found_it == end_it ? -1 : found_it - start_it);
     }
 
@@ -399,6 +427,17 @@ namespace pltr::cards
 
     //-----------------------------------------------------------------------
     template<typename CardT>
+    const CardsDeck<CardT>::CardsList CardsDeck<CardT>::pop_bottom_n_cards(const IndexType n)
+    {
+        // reminder: removes and returns n cards from the bottom of this deck. May return less than n cards if n > current deck size.
+        CardsList returned_list;
+        for (IndexType i = 0; i < n && !is_empty(); ++i)
+            returned_list.insert(returned_list.begin(), pop_bottom_card());
+        return returned_list;
+    }
+
+    //-----------------------------------------------------------------------
+    template<typename CardT>
     const CardT CardsDeck<CardT>::pop_indexed_card(const IndexType index)
     {
         // reminder: removes and returns the n-th card from top in this deck. calls pop_bottom_card() if n > current deck size.
@@ -433,13 +472,17 @@ namespace pltr::cards
     template<typename CardT>
     void CardsDeck<CardT>::refill_deck(const CardsList& filling_deck)
     {
-        // reminder: fills this deck according to a filling vector
+        // reminder: fills this deck according to a filling vector. Empties the deck first.
         this->_deck.clear();
-        if (!filling_deck.empty()) {
+        this->_deck.shrink_to_fit();
+        if (!filling_deck.empty()) [[likely]] {
             this->_deck.reserve(filling_deck.size());
-            std::move(filling_deck.crbegin(), filling_deck.crend(), this->_deck.begin());
+            append_cards(filling_deck);
+            this->_max_cards_count = (decltype(this->_max_cards_count))filling_deck.size();
         }
-        this->_max_cards_count = this->_deck.size();
+        else [[unlikely]] {
+            this->_max_cards_count = 0;
+        }
     }
 
     //-----------------------------------------------------------------------
@@ -447,8 +490,8 @@ namespace pltr::cards
     void CardsDeck<CardT>::shuffle()
     {
         // reminder: shuffles this whole deck.
-        for (IndexType n = this->_deck.size() - 1; n > 0; --n) {
-            const IndexType i{ _get_random_index(n + 1) };
+        for (IndexType n = IndexType(this->_deck.size() - 1); n > 0; --n) {
+            const IndexType i{ _get_random_index(n) };
             if (i != n)
                 std::swap(this->_deck[n], this->_deck[i]);
         }
@@ -467,17 +510,6 @@ namespace pltr::cards
             if (i != n)
                 std::swap(this->_deck[low_ + n], this->_deck[low_ + i]);
         }
-    }
-
-    //-----------------------------------------------------------------------
-    template<typename CardT>
-    const CardsDeck<CardT>::IndexType CardsDeck<CardT>::_get_random_index()
-    {
-        const IndexType deck_size{ get_current_cards_count() };
-        if (deck_size > 0) [[likely]]
-            return IndexType(this->_udistribution(this->_urand_generator) * float(deck_size));
-        else [[unlikely]]
-            return IndexType(0);
     }
 
     //-----------------------------------------------------------------------

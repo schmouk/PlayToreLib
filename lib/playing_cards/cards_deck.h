@@ -48,7 +48,7 @@ namespace pltr::cards
 
 
         //-----   Constructors / Desctructor   -----//
-        CardsDeck() = delete;                                   //!< empty constructor is disabled.
+        CardsDeck() noexcept = default;                         //!< empty constructor is disabled.
 
         CardsDeck(const IndexType max_cards_count);             //!< constructor with size argument.
 
@@ -111,6 +111,12 @@ namespace pltr::cards
         void append_card(const CardT& card);                        //!< appends a card at bottom of this deck. Deck max capacity may grow up then. \see insert_card()
 
         void append_cards(const CardsList& cards);                  //!< appends n cards at bottom of this deck. Deck max capacity may grow up then.
+
+        inline void clear()                                         //!< empties the content of this deck
+        {
+            this->_deck.clear();
+            this->_deck.shrink_to_fit();
+        }
 
         inline const bool contains(const CardT& card) const         //!< returns true if the card ident is found in this deck.
         {
@@ -235,8 +241,7 @@ namespace pltr::cards
                 insert_card(first);
             }
             else [[unlikely]] {
-                this->_deck.clear();
-                this->_deck.shrink_to_fit();
+                clear();
                 insert_card(first);
             }
         }
@@ -473,8 +478,7 @@ namespace pltr::cards
     void CardsDeck<CardT>::refill_deck(const CardsList& filling_deck)
     {
         // reminder: fills this deck according to a filling vector. Empties the deck first.
-        this->_deck.clear();
-        this->_deck.shrink_to_fit();
+        clear();
         if (!filling_deck.empty()) [[likely]] {
             this->_deck.reserve(filling_deck.size());
             append_cards(filling_deck);

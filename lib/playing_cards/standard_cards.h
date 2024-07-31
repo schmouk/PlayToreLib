@@ -28,37 +28,19 @@
 #include <filesystem>
 
 #include "playing_cards/playing_cards.h"
+#include "core/template_utils.h"
 
 
 //===========================================================================
 namespace pltr::cards
-{
-    //=======================================================================
-    /* \brief The strings structure for template parameters
-    */
-    template<const int STR_LENGTH>
-    struct StringTemplateParameter
-    {
-        char text[STR_LENGTH] {};
-
-        consteval StringTemplateParameter(const char(&txt_)[STR_LENGTH]){
-            std::copy_n(txt_, STR_LENGTH, text);
-        }
-
-        const char operator[] (const int index) const {
-            return text[index];
-        }
-
-    };
-    
-    
+{    
     //=======================================================================
     /* \brief The base class for standard cards.
     */
     template<
-        const StringTemplateParameter _CARDS_LETTERS = "A23456789XJQKJ",
-        const StringTemplateParameter _COLORS_LETTERS = "CDHS",
-        const StringTemplateParameter _JOKERS_COLORS = "RB"
+        const pltr::core::StringTemplateParameter _CARDS_LETTERS = "A23456789XJQKJ",
+        const pltr::core::StringTemplateParameter _COLORS_LETTERS = "CDHS",
+        const pltr::core::StringTemplateParameter _JOKERS_COLORS = "RB"
     >
     class StandardCard : public pltr::cards::PlayingCardT<std::uint8_t, std::uint32_t>
     {

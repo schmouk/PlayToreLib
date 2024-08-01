@@ -27,6 +27,7 @@
 #include <cstdint>
 #include <type_traits>
 
+#include "playing_cards/standard_cards.h"
 #include "playing_cards/standard_cards_decks.h"
 
 
@@ -36,15 +37,16 @@ namespace pltr::cards
     //=======================================================================
     /* \brief The generic class of decks that contains unique standard cards.
     */
-    template<typename StandardCardsDeckT>
-    class UniqueStandardCardsDeck : public StandardCardsDeckT
+    template<typename StandardDeckT, typename StandardCardT>
+        requires pltr::cards::is_standard_card_v<StandardCardT>
+    class UniqueStandardCardsDeck : public StandardDeckT
     {
     public:
         //-----   Type wrappers   -----//
-        using MyBaseClass = StandardCardsDeckT;
-        using CardT = StandardCardsDeckT::CardT;
-        using CardsList = StandardCardsDeckT::CardsList;
-        using IndexType = StandardCardsDeckT::IndexType;
+        using MyBaseClass = StandardDeckT;
+        using CardT = StandardCardT;
+        using CardsList = MyBaseClass::CardsList;
+        using IndexType = MyBaseClass::IndexType;
 
 
         //-----   Constructors / Desctructor   -----//
@@ -68,9 +70,7 @@ namespace pltr::cards
 
         virtual void append_cards(const CardsList& cards) override;                             //!< appends n cards at bottom of this deck except for cards already present in deck.
 
-        virtual const bool contains(const CardT& card) const override;                          //!< returns true if the card ident is found in this deck.
-
-        virtual void insert_card(const CardT& card) override;                                   //!< inserts a card at top of this deck except for cards already present in deck.
+        virtual const bool insert_card(const CardT& card) override;                             //!< inserts a card at top of this deck except for cards already present in deck.
 
         virtual void insert_cards(const CardsList& cards) override;                             //!< inserts n cards at top of this deck except for cards already present in deck.
 
@@ -80,6 +80,13 @@ namespace pltr::cards
 
         virtual const bool insert_rand_card(const CardT& card) override;                        //!< inserts a card at a random position in this deck. Deck max capacity may grow up then.
 
+
+    private:
+        inline const bool _may_insert(const CardT& card) const
+        {
+            return !MyBaseClass::is_full() && !MyBaseClass::contains(card);
+        }
+
     };
 
 
@@ -87,41 +94,46 @@ namespace pltr::cards
     /* \brief The class of decks that contains 54 unique standard cards.
     */
     template<typename CardT>
-    using UniqueStandardCardsDeck54 = UniqueStandardCardsDeck<CardsDeck54<CardT>>;
+        requires pltr::cards::is_standard_card_v<CardT>
+    using UniqueStandardCardsDeck54 = UniqueStandardCardsDeck<CardsDeck54<CardT>, CardT>;
 
 
     //=======================================================================
     /* \brief The class of decks that contains 52 unique standard cards.
     */
     template<typename CardT>
-    using UniqueStandardCardsDeck52 = UniqueStandardCardsDeck<CardsDeck52<CardT>>;
+        requires pltr::cards::is_standard_card_v<CardT>
+    using UniqueStandardCardsDeck52 = UniqueStandardCardsDeck<CardsDeck52<CardT>, CardT>;
 
 
     //=======================================================================
     /* \brief The class of decks that contains 32 unique standard cards.
     */
     template<typename CardT>
-    using UniqueStandardCardsDeck32 = UniqueStandardCardsDeck<CardsDeck32<CardT>>;
+        requires pltr::cards::is_standard_card_v<CardT>
+    using UniqueStandardCardsDeck32 = UniqueStandardCardsDeck<CardsDeck32<CardT>, CardT>;
+
 
 
     //=======================================================================
-    /* Local implementations
-    */
+    // Local implementations
 
     //-----------------------------------------------------------------------
-    template<typename StandardCardsDeckT>
-    const bool UniqueStandardCardsDeck<StandardCardsDeckT>::append_card(const CardT& card)
+    template<typename StandardDeckT, typename StandardCardT>
+        requires pltr::cards::is_standard_card_v<StandardCardT>
+    const bool UniqueStandardCardsDeck<StandardDeckT, StandardCardT>::append_card(const CardT& card)
     {
         // reminder: appends a card at bottom of this deck if not already present in it.
-        if (!contains(card))
-            return MyBaseClass:append_card(card);
+        if (_may_insert(card))
+            return MyBaseClass::append_card(card);
         else
             return false;
     }
 
     //-----------------------------------------------------------------------
-    template<typename StandardCardsDeckT>
-    void UniqueStandardCardsDeck<StandardCardsDeckT>::append_cards(const CardsList& cards)
+    template<typename StandardDeckT, typename StandardCardT>
+        requires pltr::cards::is_standard_card_v<StandardCardT>
+    void UniqueStandardCardsDeck<StandardDeckT, StandardCardT>::append_cards(const CardsList& cards)
     {
         // reminder: appends n cards at bottom of this deck except for cards already present in deck.
         for (auto& card : cards)
@@ -129,27 +141,21 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename StandardCardsDeckT>
-    const bool UniqueStandardCardsDeck<StandardCardsDeckT>::contains(const CardT& card) const
-    {
-        // reminder: returns true if the card ident is found in this deck.
-        return !is_full() && !MyBaseClass::contains(card);
-    }
-
-    //-----------------------------------------------------------------------
-    template<typename StandardCardsDeckT>
-    void UniqueStandardCardsDeck<StandardCardsDeckT>::insert_card(const CardT& card) 
+    template<typename StandardDeckT, typename StandardCardT>
+        requires pltr::cards::is_standard_card_v<StandardCardT>
+    const bool UniqueStandardCardsDeck<StandardDeckT, StandardCardT>::insert_card(const CardT& card)
     {
         // reminder: inserts a card at top of this deck except for cards already present in deck.
-        if (!contains(card))
-            return MyBaseClass:insert_card(card);
+        if (_may_insert(card))
+            return MyBaseClass::insert_card(card);
         else
             return false;
     }
 
     //-----------------------------------------------------------------------
-    template<typename StandardCardsDeckT>
-    void UniqueStandardCardsDeck<StandardCardsDeckT>::insert_cards(const CardsList& cards)
+    template<typename StandardDeckT, typename StandardCardT>
+        requires pltr::cards::is_standard_card_v<StandardCardT>
+    void UniqueStandardCardsDeck<StandardDeckT, StandardCardT>::insert_cards(const CardsList& cards)
     {
         // reminder: inserts n cards at top of this deck except for cards already present in deck.
         for (auto& card : cards)
@@ -157,21 +163,23 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename StandardCardsDeckT>
-    const bool UniqueStandardCardsDeck<StandardCardsDeckT>::insert_nth_card(const IndexType index, const CardT& card)
+    template<typename StandardDeckT, typename StandardCardT>
+        requires pltr::cards::is_standard_card_v<StandardCardT>
+    const bool UniqueStandardCardsDeck<StandardDeckT, StandardCardT>::insert_nth_card(const IndexType index, const CardT& card)
     {
-        // reminder: inserts a card at n-th position in this deck if not already present in deck
-        if (!contains(card))
-            return MyBaseClass:insert_nth_card(index, card);
+        // reminder: inserts a card at n-th position in this deck if not already present in deck.
+        if (_may_insert(card))
+            return MyBaseClass::insert_nth_card(index, card);
         else
             return false;
     }
 
     //-----------------------------------------------------------------------
-    template<typename StandardCardsDeckT>
-    void UniqueStandardCardsDeck<StandardCardsDeckT>::insert_nth_cards(const IndexType index, const CardsList& cards)
+    template<typename StandardDeckT, typename StandardCardT>
+        requires pltr::cards::is_standard_card_v<StandardCardT>
+    void UniqueStandardCardsDeck<StandardDeckT, StandardCardT>::insert_nth_cards(const IndexType index, const CardsList& cards)
     {
-        // reminder: inserts n cards at n-th position in this deck. Deck max capacity may grow up then.
+        // reminder: inserts n cards at n-th position in this deck.
         CardsList unique_cards{};
 
         for (auto& card : cards) {
@@ -179,7 +187,7 @@ namespace pltr::cards
                 std::find_if(unique_cards.begin(), unique_cards.end(), [unique_cards, card](CardT& c) { return c.ident == card.ident; })
             };
 
-            if (doubloon_it == unique_cards.end() && !contains(card))
+            if (doubloon_it == unique_cards.end() && _may_insert(card))
                 unique_cards.push_back(card);
         }
 
@@ -187,11 +195,12 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename StandardCardsDeckT>
-    const bool UniqueStandardCardsDeck<StandardCardsDeckT>::insert_rand_card(const CardT& card)
+    template<typename StandardDeckT, typename StandardCardT>
+        requires pltr::cards::is_standard_card_v<StandardCardT>
+    const bool UniqueStandardCardsDeck<StandardDeckT, StandardCardT>::insert_rand_card(const CardT& card)
     {
-        // reminder: inserts a card at a random position in this deck. Deck max capacity may grow up then.
-        if (!contains(card))
+        // reminder: inserts a card at a random position in this deck.
+        if (_may_insert(card))
             return MyBaseClass::insert_rand_card(card);
         else
             return false;

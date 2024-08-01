@@ -323,8 +323,7 @@ namespace pltr::cards
     template<typename CardT>
     CardsDeck<CardT>::CardsDeck(const CardsDeck<CardT>::CardsList& cards)
     {
-        this->_deck = cards | std::views::reverse | std::ranges::to<decltype(this->_deck)>();
-        this->_max_cards_count = std::uint32_t(this->_deck.size());
+        append_cards(cards);
         _set_randomness();
     }
 

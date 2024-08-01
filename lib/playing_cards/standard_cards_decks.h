@@ -44,6 +44,7 @@ namespace pltr::cards
     public:
         //-----   Type wrappers   -----//
         using MyBaseClass = CardsDeck<CardT>;
+        using CardType = CardT;
 
 
         //-----   Constructors / Desctructor   -----//
@@ -168,6 +169,35 @@ namespace pltr::cards
     private:
         static inline constexpr std::uint32_t _CARDS_COUNT{ 32 };
 
+    };
+
+
+
+    //=======================================================================
+    // Type traits concepts
+    //
+    template<typename DeckT, typename CardT>
+    struct is_standard_cards_deck {
+        static inline constexpr bool value{ false };
+    };
+
+    template<typename DeckT, typename CardT>
+    inline constexpr bool is_standard_cards_deck_v = is_standard_cards_deck<CardT>::value;
+
+
+    template<typename CardT>
+    struct is_standard_cards_deck<CardsDeck54<CardT>, CardT> {
+        static inline constexpr bool value{ pltr::cards::is_standard_card_v<CardT> };
+    };
+
+    template<typename CardT>
+    struct is_standard_cards_deck<CardsDeck52<CardT>, CardT> {
+        static inline constexpr bool value{ pltr::cards::is_standard_card_v<CardT> };
+    };
+
+    template<typename CardT>
+    struct is_standard_cards_deck<CardsDeck32<CardT>, CardT> {
+        static inline constexpr bool value{ pltr::cards::is_standard_card_v<CardT> };
     };
 
 

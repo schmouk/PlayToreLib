@@ -49,8 +49,16 @@ TEST(TestSuitePlayingCards, TestStandardCardsDeck) {
     for (int i = 0; i < 100; ++i)
         deck54.shuffle();
 
-    for (int i = 0; i < 54; ++i)
-        EXPECT_TRUE(deck54.contains(CardFr(i)));
+    for (int i = 0; i < 54; ++i) {
+        const CardFr card(i);
+        EXPECT_TRUE(deck54.contains(card));
+        EXPECT_TRUE(deck54.append_card(card));
+    }
+    for (int i = 54; i < 100; ++i) {
+        const CardFr card(i);
+        EXPECT_FALSE(deck54.contains(card));
+        EXPECT_FALSE(deck54.append_card(card));
+    }
 
 
     // tests 52-cards decks
@@ -67,8 +75,16 @@ TEST(TestSuitePlayingCards, TestStandardCardsDeck) {
     for (int i = 0; i < 100; ++i)
         deck52.shuffle();
 
-    for (int i = 0; i < 52; ++i)
-        EXPECT_TRUE(deck52.contains(CardFr(i)));
+    for (int i = 0; i < 52; ++i) {
+        const CardFr card(i);
+        EXPECT_TRUE(deck52.contains(card));
+        EXPECT_TRUE(deck52.append_card(card));
+    }
+    for (int i = 52; i < 56; ++i) {
+        const CardFr card(i);
+        EXPECT_FALSE(deck52.contains(card));
+        EXPECT_FALSE(deck52.append_card(card));
+    }
 
 
     // tests 32-cards decks
@@ -88,9 +104,25 @@ TEST(TestSuitePlayingCards, TestStandardCardsDeck) {
     for (int i = 0; i < 100; ++i)
         deck32.shuffle();
 
-    for (int i = 0; i < 4; ++i)
-        EXPECT_TRUE(deck32.contains(CardFr(i)));
-    for (int i = 24; i < 52; ++i)
-        EXPECT_TRUE(deck32.contains(CardFr(i)));
+    for (int i = 0; i < 4; ++i) {
+        const CardFr card(i);
+        EXPECT_TRUE(deck32.contains(card));
+        EXPECT_TRUE(deck32.append_card(card));
+    }
+    for (int i=4; i < 24; ++i) {
+        const CardFr card(i);
+        EXPECT_FALSE(deck32.contains(card));
+        EXPECT_FALSE(deck32.append_card(card));
+    }
+    for (int i = 24; i < 52; ++i) {
+        const CardFr card(i);
+        EXPECT_TRUE(deck32.contains(card));
+        EXPECT_TRUE(deck32.append_card(card));
+    }
+    for (int i = 52; i < 56; ++i) {
+        const CardFr card(i);
+        EXPECT_FALSE(deck32.contains(card));
+        EXPECT_FALSE(deck32.append_card(card));
+    }
 
 }

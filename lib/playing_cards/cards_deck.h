@@ -108,9 +108,9 @@ namespace pltr::cards
 
 
         //-----   Operations   -----//
-        void append_card(const CardT& card);                        //!< appends a card at bottom of this deck. Deck max capacity may grow up then. \see insert_card()
+        virtual const bool append_card(const CardT& card);          //!< appends a card at bottom of this deck. Deck max capacity may grow up then. \see insert_card()
 
-        void append_cards(const CardsList& cards);                  //!< appends n cards at bottom of this deck. Deck max capacity may grow up then.
+        virtual void append_cards(const CardsList& cards);          //!< appends n cards at bottom of this deck. Deck max capacity may grow up then.
 
         inline void clear()                                         //!< empties the content of this deck
         {
@@ -118,7 +118,7 @@ namespace pltr::cards
             this->_deck.shrink_to_fit();
         }
 
-        inline const bool contains(const CardT& card) const         //!< returns true if the card ident is found in this deck.
+        inline virtual const bool contains(const CardT& card) const //!< returns true if the card ident is found in this deck.
         {
             return get_index(card) != IndexType(-1);
         }
@@ -134,7 +134,10 @@ namespace pltr::cards
             return contains(first) && contains_all(rest...);
         }
 
-        const bool contains_all(const CardsList& cards) const;      //!< returns true if all of the passed cards are contained in this deck
+        const inline bool contains_all(const CardsList& cards) const    //!< returns true if all of the passed cards are contained in this deck
+        {
+            return std::all_of(cards.cbegin(), cards.cend(), [this](const CardT& c) { return allowed_card(c) && contains(c); });
+        }
 
         inline const bool contains_any()  const                     //!< end of containment searching recursion of any cards in this deck. Should not be called by library user - always return false.
         {
@@ -147,7 +150,10 @@ namespace pltr::cards
             return contains(first) || contains_any(rest...);
         }
 
-        const bool contains_any(const CardsList& cards) const;      //!< returns true if any of the passed cards is contained in this deck
+        const bool contains_any(const CardsList& cards) const       //!< returns true if any of the passed cards is contained in this deck
+        {
+            return std::any_of(cards.cbegin(), cards.cend(), [this](const CardT& c) { return allowed_card(c) && contains(c); });
+        }
 
         inline const CardT draw_card()                              //!< wrapper to pop_up_card(): removes and returns the card at the top of this deck.
         {
@@ -171,24 +177,24 @@ namespace pltr::cards
 
         const IndexType get_index(const CardT& card) const;         //!< returns the index of this card in deck if found, or -1 if not found
 
-        void insert_card(const CardT& card);                        //!< inserts a card at top of this deck. Deck max capacity may grow up then. \see append_card().
+        virtual const bool insert_card(const CardT& card);          //!< inserts a card at top of this deck. Deck max capacity may grow up then. \see append_card().
 
         inline void insert_cards()                                  //!< end of inserts recursion of cards in this deck. Should not be called by library user - does nothing.
         {}
 
         template<typename FirstT, typename... RestT>
-        void insert_cards(const FirstT& first, const RestT&... rest)   //!< inserts a list of cards in this deck.
+        void insert_cards(const FirstT& first, const RestT&... rest)    //!< inserts a list of cards in this deck.
         {
             insert_cards(rest...);
             insert_card(first);
         }
 
-        void insert_cards(const CardsList& cards);                  //!< inserts n cards at top of this deck. Deck max capacity may grow up then.
+        virtual void insert_cards(const CardsList& cards);           //!< inserts n cards at top of this deck. Deck max capacity may grow up then.
+
+        virtual const bool insert_nth_card(const IndexType index, const CardT& card); //!< inserts a card at n-th position in this deck. Deck max capacity may grow up then.
 
         void insert_nth_cards(const IndexType index)                 //!< end of inserts recursion of cards at some position in this deck. Should not be called by library user - does nothing.
         {}
-
-        void insert_nth_card(const IndexType index, const CardT& card);         //!< inserts a card at n-th position in this deck. Deck max capacity may grow up then.
 
         template<typename FirstT, typename... RestT>
         void insert_nth_cards(const IndexType index, const FirstT& first, const RestT&... rest)   //!< inserts a list of cards in this deck.
@@ -197,9 +203,9 @@ namespace pltr::cards
             insert_nth_card(index, first);
         }
 
-        void insert_nth_cards(const IndexType index, const CardsList& cards);   //!< inserts n cards at n-th position in this deck. Deck max capacity may grow up then.
+        virtual void insert_nth_cards(const IndexType index, const CardsList& cards);   //!< inserts n cards at n-th position in this deck. Deck max capacity may grow up then.
 
-        void insert_rand_card(const CardT& card);                   //!< inserts a card at a random position in this deck. Deck max capacity may grow up then.
+        virtual const bool insert_rand_card(const CardT& card);           //!< inserts a card at a random position in this deck. Deck max capacity may grow up then.
 
         [[nodiscard]]
         inline const bool is_empty() const noexcept                 //!< returns true when this deck is empty.
@@ -236,7 +242,7 @@ namespace pltr::cards
         template<typename FirstT, typename... RestT>
         void refill_deck(const FirstT& first, const RestT&... rest)     //!< fills this deck according to a variable length list of cards. Empties the deck first.
         {
-            if (sizeof...(rest) > 0) [[likely]] { // notice: necessary not to conflict with the virtual signature of refill() with no args
+            if (sizeof...(rest) > 0) [[likely]] { // notice: necessary to not conflict with the virtual signature of refill() with no args
                 refill_deck(rest...);
                 insert_card(first);
             }
@@ -319,11 +325,15 @@ namespace pltr::cards
 
     //-----------------------------------------------------------------------
     template<typename CardT>
-    void CardsDeck<CardT>::append_card(const CardT& card)
+    const bool CardsDeck<CardT>::append_card(const CardT& card)
     {
         // reminder: appends a card at bottom of this deck. Deck max capacity may grow up then.
-        this->_deck.insert(this->_deck.begin(), card);
-        this->_max_cards_count = std::max(this->_max_cards_count, std::uint32_t(this->_deck.size()));
+        const bool allowed{ allowed_card(card) };
+        if (allowed) {
+            this->_deck.insert(this->_deck.begin(), card);
+            this->_max_cards_count = std::max(this->_max_cards_count, std::uint32_t(this->_deck.size()));
+        }
+        return allowed;
     }
 
     //-----------------------------------------------------------------------
@@ -331,30 +341,12 @@ namespace pltr::cards
     void CardsDeck<CardT>::append_cards(const CardsList& cards)
     {
         // reminder: appends n cards at bottom of this deck. Deck max capacity may grow up then.
-        this->_deck.insert_range(this->_deck.begin(), cards | std::views::reverse);
+        this->_deck.insert_range(
+            this->_deck.begin(),
+            cards | std::views::filter([this](const CardT& c) { return this->allowed_card(c); }) | std::views::reverse
+        );
+
         this->_max_cards_count = std::max(this->_max_cards_count, std::uint32_t(this->_deck.size()));
-    }
-
-    //-----------------------------------------------------------------------
-    template<typename CardT>
-    const bool CardsDeck<CardT>::contains_all(const CardsList& cards) const
-    {
-        // reminder: returns true if all of the passed cards are contained in this deck
-        for (auto& card : cards)
-            if (!contains(card))
-                return false;
-        return true;
-    }
-
-    //-----------------------------------------------------------------------
-    template<typename CardT>
-    const bool CardsDeck<CardT>::contains_any(const CardsList& cards) const
-    {
-        // reminder: returns true if any of the passed cards is contained in this deck
-        for (auto& card : cards)
-            if (contains(card))
-                return true;
-        return false;
     }
 
     //-----------------------------------------------------------------------
@@ -370,11 +362,15 @@ namespace pltr::cards
 
     //-----------------------------------------------------------------------
     template<typename CardT>
-    void CardsDeck<CardT>::insert_card(const CardT& card)
+    const bool CardsDeck<CardT>::insert_card(const CardT& card)
     {
         // reminder: inserts a card at top of this deck. Deck max capacity may grow up then.
-        this->_deck.push_back(card);
-        this->_max_cards_count = std::max(this->_max_cards_count, std::uint32_t(this->_deck.size()));
+        const bool allowed{ allowed_card(card) };
+        if (allowed) {
+            this->_deck.push_back(card);
+            this->_max_cards_count = std::max(this->_max_cards_count, std::uint32_t(this->_deck.size()));
+        }
+        return allowed;
     }
 
     //-----------------------------------------------------------------------
@@ -389,14 +385,18 @@ namespace pltr::cards
 
     //-----------------------------------------------------------------------
     template<typename CardT>
-    void CardsDeck<CardT>::insert_nth_card(const IndexType index, const CardT& card)
+    const bool CardsDeck<CardT>::insert_nth_card(const IndexType index, const CardT& card)
     {
         // reminder! inserts a card at n-th position in this deck. Deck max capacity may grow up then.
-        auto indexed_it{ _get_indexed_iterator(index) };
-        if (index < get_max_cards_count())
-            ++indexed_it;
-        this->_deck.insert(indexed_it, card);
-        this->_max_cards_count = std::max(this->_max_cards_count, std::uint32_t(this->_deck.size()));
+        const bool allowed{ allowed_card(card) };
+        if (allowed) {
+            auto indexed_it{ _get_indexed_iterator(index) };
+            if (index < get_max_cards_count())
+                ++indexed_it;
+            this->_deck.insert(indexed_it, card);
+            this->_max_cards_count = std::max(this->_max_cards_count, std::uint32_t(this->_deck.size()));
+        }
+        return allowed;
     }
 
     //-----------------------------------------------------------------------
@@ -407,17 +407,27 @@ namespace pltr::cards
         auto indexed_it{ _get_indexed_iterator(index) };
         if (index < get_max_cards_count())
             ++indexed_it;
-        this->_deck.insert_range(indexed_it, cards | std::views::reverse);
+        
+        this->_deck.insert_range(
+            indexed_it,
+            cards | std::views::filter([this](const CardT& c) { return this->allowed_card(c); })
+                  | std::views::reverse
+        );
+
         this->_max_cards_count = std::max(this->_max_cards_count, std::uint32_t(this->_deck.size()));
     }
 
     //-----------------------------------------------------------------------
     template<typename CardT>
-    void CardsDeck<CardT>::insert_rand_card(const CardT& card)
+    const bool CardsDeck<CardT>::insert_rand_card(const CardT& card)
     {
         // reminder: inserts a card at a random position in this deck. Deck max capacity may grow up then.
-        insert_nth_card(_get_random_index(), card);
-        this->_max_cards_count = std::max(this->_max_cards_count, std::uint32_t(this->_deck.size()));
+        const bool allowed{ allowed_card(card) };
+        if (allowed) {
+            insert_nth_card(_get_random_index(), card);
+            this->_max_cards_count = std::max(this->_max_cards_count, std::uint32_t(this->_deck.size()));
+        }
+        return allowed;
     }
 
     //-----------------------------------------------------------------------

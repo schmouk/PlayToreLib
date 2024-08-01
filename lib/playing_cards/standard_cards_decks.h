@@ -65,7 +65,12 @@ namespace pltr::cards
 
 
         //-----   Operations   -----//
-        inline virtual void refill_deck();  //!< fills this deck with all related playing cards. Does nothing in this base class, must be overridden in inheriting classes.
+        virtual inline const bool allowed_card(const CardT& card) const noexcept override  //!< returns true if this card is allowed to be contained in this deck.
+        {
+            return card.ident < _CARDS_COUNT;
+        }
+
+        inline virtual void refill_deck() override;  //!< fills this deck with all related playing cards. Does nothing in this base class, must be overridden in inheriting classes.
 
 
     private:
@@ -106,7 +111,12 @@ namespace pltr::cards
 
 
         //-----   Operations   -----//
-        inline virtual void refill_deck();  //!< fills this deck with all related playing cards. Does nothing in this base class, must be overridden in inheriting classes.
+        virtual inline const bool allowed_card(const CardT& card) const noexcept override  //!< returns true if this card is allowed to be contained in this deck.
+        {
+            return card.ident < _CARDS_COUNT;
+        }
+
+        inline virtual void refill_deck() override;  //!< fills this deck with all related playing cards. Does nothing in this base class, must be overridden in inheriting classes.
 
 
     private:
@@ -147,7 +157,12 @@ namespace pltr::cards
 
 
         //-----   Operations   -----//
-        inline virtual void refill_deck();  //!< fills this deck with all related playing cards. Does nothing in this base class, must be overridden in inheriting classes.
+        virtual inline const bool allowed_card(const CardT& card) const noexcept override  //!< returns true if this card is allowed to be contained in this deck.
+        {
+            return card.ident < 4 || (24 <= card.ident && card.ident < 52);
+        }
+
+        inline virtual void refill_deck() override;  //!< fills this deck with all related playing cards. Does nothing in this base class, must be overridden in inheriting classes.
 
 
     private:

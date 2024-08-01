@@ -263,7 +263,7 @@ namespace pltr::cards
 
 
     private:
-        std::uniform_real_distribution<float> _udistribution{ 1.0f };
+        std::uniform_real_distribution<float> _udistribution{ 0.0f, 1.0f };
         std::mt19937 _urand_generator{};
         CardsList _deck{};
         IndexType _max_cards_count{ 0 };

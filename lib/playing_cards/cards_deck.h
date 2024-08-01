@@ -108,6 +108,11 @@ namespace pltr::cards
 
 
         //-----   Operations   -----//
+        virtual inline const bool allowed_card(const CardT& card) const noexcept  //!< returns true if this card is allowed to be contained in this deck.
+        {
+            return true;
+        }
+
         virtual const bool append_card(const CardT& card);          //!< appends a card at bottom of this deck. Deck max capacity may grow up then. \see insert_card()
 
         virtual void append_cards(const CardsList& cards);          //!< appends n cards at bottom of this deck. Deck max capacity may grow up then.

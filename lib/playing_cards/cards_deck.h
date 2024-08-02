@@ -35,6 +35,13 @@
 namespace pltr::cards
 {
     //=======================================================================
+    /* \brief The class of list of cards.
+    */
+    template<typename CardT>
+    using CardsList = std::vector<CardT>;
+
+
+    //=======================================================================
     /* \brief The base class for decks of cards.
     */
     template<typename CardT>
@@ -42,33 +49,33 @@ namespace pltr::cards
     {
     public:
         //-----   Types wrappers and declarations   -----//
-        using MyCardType = CardT;
+        using CardType = CardT;
         using IndexType = std::uint32_t;
-        using CardsList = std::vector<CardT>;
+        using Cardslist = pltr::cards::CardsList<CardT>;
 
 
         //-----   Constructors / Desctructor   -----//
-        CardsDeck() noexcept = default;                         //!< empty constructor is disabled.
+        CardsDeck() noexcept = default;                                 //!< empty constructor.
 
-        CardsDeck(const IndexType max_cards_count);             //!< constructor with size argument.
+        CardsDeck(const IndexType max_cards_count);                     //!< constructor with size argument.
 
-        CardsDeck(const CardsList& cards);                      //!< constructor with initialization vector.
+        CardsDeck(const CardsList<CardT>& cards);                       //!< constructor with initialization vector.
 
         template<typename FirstCardT, typename... NextCardsT>
         CardsDeck(
             const IndexType max_cards_count,
             const FirstCardT& first_card,
-            const NextCardsT&... next_cards)                    //!< constructor with initialization list
+            const NextCardsT&... next_cards)                            //!< constructor with initialization list
         {
             _set_deck(max_cards_count);
             _set_randomness();
             insert_cards(first_card, next_cards...);
         }
 
-        CardsDeck(const CardsDeck&) noexcept = default;         //!< default copy constructor.
-        CardsDeck(CardsDeck&&) noexcept = default;              //!< default move constructor.
+        CardsDeck(const CardsDeck&) noexcept = default;                 //!< default copy constructor.
+        CardsDeck(CardsDeck&&) noexcept = default;                      //!< default move constructor.
 
-        virtual ~CardsDeck() noexcept = default;                //!< default destructor.
+        virtual ~CardsDeck() noexcept = default;                        //!< default destructor.
 
 
         //-----   Operators   -----//
@@ -101,7 +108,13 @@ namespace pltr::cards
         }
 
 
-        inline const CardsList& deck() const noexcept                   //!< accessor to private deck content, no modifications allowed.
+        inline CardsList<CardT>& deck() noexcept                        //!< accessor to private deck content, mutable.
+        {
+            return this->_deck;
+        }
+
+
+        inline const CardsList<CardT>& deck() const noexcept            //!< accessor to private deck content, no modifications allowed.
         {
             return this->_deck;
         }
@@ -113,22 +126,22 @@ namespace pltr::cards
             return true;
         }
 
-        virtual const bool append_card(const CardT& card);          //!< appends a card at bottom of this deck. Deck max capacity may grow up then. \see insert_card()
+        virtual const bool append_card(const CardT& card);              //!< appends a card at bottom of this deck. Deck max capacity may grow up then. \see insert_card()
 
-        virtual void append_cards(const CardsList& cards);          //!< appends n cards at bottom of this deck. Deck max capacity may grow up then.
+        virtual void append_cards(const CardsList<CardT>& cards);       //!< appends n cards at bottom of this deck. Deck max capacity may grow up then.
 
-        inline void clear()                                         //!< empties the content of this deck
+        inline void clear()                                             //!< empties the content of this deck
         {
             this->_deck.clear();
             this->_deck.shrink_to_fit();
         }
 
-        inline virtual const bool contains(const CardT& card) const //!< returns true if the card ident is found in this deck.
+        inline virtual const bool contains(const CardT& card) const     //!< returns true if the card ident is found in this deck.
         {
             return get_index(card) != IndexType(-1);
         }
 
-        inline const bool contains_all()  const                     //!< end of containment searching recursion of all cards in this deck. Should not be called by library user - always return true.
+        inline const bool contains_all()  const                         //!< end of containment searching recursion of all cards in this deck. Should not be called by library user - always return true.
         {
             return true;
         }
@@ -139,12 +152,12 @@ namespace pltr::cards
             return contains(first) && contains_all(rest...);
         }
 
-        const inline bool contains_all(const CardsList& cards) const    //!< returns true if all of the passed cards are contained in this deck
+        const inline bool contains_all(const CardsList<CardT>& cards) const    //!< returns true if all of the passed cards are contained in this deck
         {
             return std::all_of(cards.cbegin(), cards.cend(), [this](const CardT& c) { return allowed_card(c) && contains(c); });
         }
 
-        inline const bool contains_any()  const                     //!< end of containment searching recursion of any cards in this deck. Should not be called by library user - always return false.
+        inline const bool contains_any()  const                         //!< end of containment searching recursion of any cards in this deck. Should not be called by library user - always return false.
         {
             return false;
         }
@@ -155,36 +168,36 @@ namespace pltr::cards
             return contains(first) || contains_any(rest...);
         }
 
-        const bool contains_any(const CardsList& cards) const       //!< returns true if any of the passed cards is contained in this deck
+        const bool contains_any(const CardsList<CardT>& cards) const    //!< returns true if any of the passed cards is contained in this deck
         {
             return std::any_of(cards.cbegin(), cards.cend(), [this](const CardT& c) { return allowed_card(c) && contains(c); });
         }
 
-        inline const CardT draw_card()                              //!< wrapper to pop_up_card(): removes and returns the card at the top of this deck.
+        inline const CardT draw_card()                                  //!< wrapper to pop_up_card(): removes and returns the card at the top of this deck.
         {
             return pop_up_card();
         }
 
-        inline const CardsList draw_n_cards(const IndexType n)      //!< wrapper to pop_up_n_cards(): removes and returns the card at the top of this deck. May return less than n cards if n > current deck size.
+        inline const CardsList<CardT> draw_n_cards(const IndexType n)   //!< wrapper to pop_up_n_cards(): removes and returns the card at the top of this deck. May return less than n cards if n > current deck size.
         {
             return pop_up_n_cards(n);
         }
 
-        inline const CardT draw_nth_card(const IndexType index)     //!< wrapper to pop_indexed_card(): removes and returns the card at n-th position in this deck.
+        inline const CardT draw_nth_card(const IndexType index)         //!< wrapper to pop_indexed_card(): removes and returns the card at n-th position in this deck.
         {
             return pop_indexed_card(index);
         }
 
-        inline const CardT draw_rand_card()                         //!< wrapper to pop_rand_card(): removes and returns a card at random position in this deck.
+        inline const CardT draw_rand_card()                             //!< wrapper to pop_rand_card(): removes and returns a card at random position in this deck.
         {
             return pop_rand_card();
         }
 
-        const IndexType get_index(const CardT& card) const;         //!< returns the index of this card in deck if found, or -1 if not found
+        const IndexType get_index(const CardT& card) const;             //!< returns the index of this card in deck if found, or -1 if not found
 
-        virtual const bool insert_card(const CardT& card);          //!< inserts a card at top of this deck. Deck max capacity may grow up then. \see append_card().
+        virtual const bool insert_card(const CardT& card);              //!< inserts a card at top of this deck. Deck max capacity may grow up then. \see append_card().
 
-        inline void insert_cards()                                  //!< end of inserts recursion of cards in this deck. Should not be called by library user - does nothing.
+        inline void insert_cards()                                      //!< end of inserts recursion of cards in this deck. Should not be called by library user - does nothing.
         {}
 
         template<typename FirstT, typename... RestT>
@@ -194,11 +207,11 @@ namespace pltr::cards
             insert_card(first);
         }
 
-        virtual void insert_cards(const CardsList& cards);           //!< inserts n cards at top of this deck. Deck max capacity may grow up then.
+        virtual void insert_cards(const CardsList<CardT>& cards);       //!< inserts n cards at top of this deck. Deck max capacity may grow up then.
 
         virtual const bool insert_nth_card(const IndexType index, const CardT& card); //!< inserts a card at n-th position in this deck. Deck max capacity may grow up then.
 
-        void insert_nth_cards(const IndexType index)                 //!< end of inserts recursion of cards at some position in this deck. Should not be called by library user - does nothing.
+        void insert_nth_cards(const IndexType index)                    //!< end of inserts recursion of cards at some position in this deck. Should not be called by library user - does nothing.
         {}
 
         template<typename FirstT, typename... RestT>
@@ -208,41 +221,41 @@ namespace pltr::cards
             insert_nth_card(index, first);
         }
 
-        virtual void insert_nth_cards(const IndexType index, const CardsList& cards);   //!< inserts n cards at n-th position in this deck. Deck max capacity may grow up then.
+        virtual void insert_nth_cards(const IndexType index, const CardsList<CardT>& cards);   //!< inserts n cards at n-th position in this deck. Deck max capacity may grow up then.
 
-        virtual const bool insert_rand_card(const CardT& card);           //!< inserts a card at a random position in this deck. Deck max capacity may grow up then.
+        virtual const bool insert_rand_card(const CardT& card);         //!< inserts a card at a random position in this deck. Deck max capacity may grow up then.
 
         [[nodiscard]]
-        inline const bool is_empty() const noexcept                 //!< returns true when this deck is empty.
+        inline const bool is_empty() const noexcept                     //!< returns true when this deck is empty.
         {
             return this->_deck.empty();
         }
 
         [[nodiscard]]
-        inline const bool is_full() const noexcept                  //!< returns true when this deck is full.
+        inline const bool is_full() const noexcept                      //!< returns true when this deck is full.
         {
             return !is_empty() && get_current_cards_count() == get_max_cards_count();
         }
 
-        const CardT pop_bottom_card();                              //!< removes and returns the card at the bottom of this deck. May be considered as an optimized wrapper to pop_card(_current_cards_count - 1).
+        const CardT pop_bottom_card();                                  //!< removes and returns the card at the bottom of this deck. May be considered as an optimized wrapper to pop_card(_current_cards_count - 1).
 
-        const CardsList pop_bottom_n_cards(const IndexType n);      //!< removes and returns n cards from the bottom of this deck. May return less than n cards if n > current deck size.
+        const CardsList<CardT> pop_bottom_n_cards(const IndexType n);   //!< removes and returns n cards from the bottom of this deck. May return less than n cards if n > current deck size.
 
-        const CardT pop_indexed_card(const IndexType index);        //!< removes and returns the n-th card from top in this deck. calls pop_bottom_card() if n > current deck size.
+        const CardT pop_indexed_card(const IndexType index);            //!< removes and returns the n-th card from top in this deck. calls pop_bottom_card() if n > current deck size.
 
-        const CardT pop_rand_card()                                 //!< removes and returns a card at random position from this deck.
+        const CardT pop_rand_card()                                     //!< removes and returns a card at random position from this deck.
         {
             return pop_indexed_card(_get_random_index());
         }
 
-        const CardT pop_up_card();                                  //!< removes and returns the card at the top of this deck. May be considered as an optimized wrapper to pop_indexed_card(0).
+        const CardT pop_up_card();                                      //!< removes and returns the card at the top of this deck. May be considered as an optimized wrapper to pop_indexed_card(0).
 
-        const CardsList pop_up_n_cards(const IndexType index);      //!< removes and returns n cards from top of this deck. May return less than n cards if n > current deck size.
+        const CardsList<CardT> pop_up_n_cards(const IndexType index);   //!< removes and returns n cards from top of this deck. May return less than n cards if n > current deck size.
 
-        inline virtual void refill_deck()                           //!< fills this deck with all related playing cards. Does nothing in this base class, must be overridden in inheriting classes.
+        inline virtual void refill_deck()                               //!< fills this deck with all related playing cards. Does nothing in this base class, must be overridden in inheriting classes.
         {}
 
-        void refill_deck(const CardsList& filling_deck);            //!< fills this deck according to a filling vector. Empties the deck first.
+        void refill_deck(const CardsList<CardT>& filling_deck);         //!< fills this deck according to a filling vector. Empties the deck first.
 
         template<typename FirstT, typename... RestT>
         void refill_deck(const FirstT& first, const RestT&... rest)     //!< fills this deck according to a variable length list of cards. Empties the deck first.
@@ -257,25 +270,25 @@ namespace pltr::cards
             }
         }
 
-        void shuffle();                                             //!< shuffles this whole deck.
+        void shuffle();                                                 //!< shuffles this whole deck.
 
-        void shuffle(const IndexType low, const IndexType high);    //!< shuffles some part of this deck. Automaticcaly clips indexes to the min and max values for this deck.
+        void shuffle(const IndexType low, const IndexType high);        //!< shuffles some part of this deck. Automaticcaly clips indexes to the min and max values for this deck.
 
 
     private:
         std::uniform_real_distribution<float> _udistribution{ 0.0f, 1.0f };
         std::mt19937 _urand_generator{};
-        CardsList _deck{};
+        CardsList<CardT> _deck{};
         IndexType _max_cards_count{ 0 };
 
         [[nodiscard]]
-        inline CardsList::iterator _get_indexed_iterator(const IndexType index)
+        inline CardsList<CardT>::iterator _get_indexed_iterator(const IndexType index)
         {
             return (index >= get_current_cards_count()) ? this->_deck.begin() : this->_deck.end() - index - 1;
         }
 
         [[nodiscard]]
-        inline const CardsList::iterator _get_indexed_iterator(const IndexType index) const
+        inline const CardsList<CardT>::iterator _get_indexed_iterator(const IndexType index) const
         {
             return (index >= get_current_cards_count()) ? this->_deck.begin() : this->_deck.end() - index - 1;
         }
@@ -321,7 +334,7 @@ namespace pltr::cards
 
     //-----------------------------------------------------------------------
     template<typename CardT>
-    CardsDeck<CardT>::CardsDeck(const CardsDeck<CardT>::CardsList& cards)
+    CardsDeck<CardT>::CardsDeck(const pltr::cards::CardsList<CardT>& cards)
     {
         append_cards(cards);
         _set_randomness();
@@ -342,7 +355,7 @@ namespace pltr::cards
 
     //-----------------------------------------------------------------------
     template<typename CardT>
-    void CardsDeck<CardT>::append_cards(const CardsList& cards)
+    void CardsDeck<CardT>::append_cards(const CardsList<CardT>& cards)
     {
         // reminder: appends n cards at bottom of this deck. Deck max capacity may grow up then.
         this->_deck.insert_range(
@@ -379,7 +392,7 @@ namespace pltr::cards
 
     //-----------------------------------------------------------------------
     template<typename CardT>
-    void CardsDeck<CardT>::insert_cards(const CardsList& cards)
+    void CardsDeck<CardT>::insert_cards(const CardsList<CardT>& cards)
     {
         // reminder: inserts n cards at top of this deck. Deck max capacity may grow up then.
         // notice: very simple but not optimized implementation
@@ -405,7 +418,7 @@ namespace pltr::cards
 
     //-----------------------------------------------------------------------
     template<typename CardT>
-    void CardsDeck<CardT>::insert_nth_cards(const IndexType index, const CardsList& cards)
+    void CardsDeck<CardT>::insert_nth_cards(const IndexType index, const CardsList<CardT>& cards)
     {
         // reminder: inserts n cards at n-th position in this deck. Deck max capacity may grow up then.
         auto indexed_it{ _get_indexed_iterator(index) };
@@ -446,10 +459,10 @@ namespace pltr::cards
 
     //-----------------------------------------------------------------------
     template<typename CardT>
-    const CardsDeck<CardT>::CardsList CardsDeck<CardT>::pop_bottom_n_cards(const IndexType n)
+    const pltr::cards::CardsList<CardT> CardsDeck<CardT>::pop_bottom_n_cards(const IndexType n)
     {
         // reminder: removes and returns n cards from the bottom of this deck. May return less than n cards if n > current deck size.
-        CardsList returned_list;
+        CardsList<CardT> returned_list;
         for (IndexType i = 0; i < n && !is_empty(); ++i)
             returned_list.insert(returned_list.begin(), pop_bottom_card());
         return returned_list;
@@ -478,10 +491,10 @@ namespace pltr::cards
 
     //-----------------------------------------------------------------------
     template<typename CardT>
-    const CardsDeck<CardT>::CardsList CardsDeck<CardT>::pop_up_n_cards(const IndexType n)
+    const CardsList<CardT> CardsDeck<CardT>::pop_up_n_cards(const IndexType n)
     {
         // reminder: removes and returns n cards from top of this deck. May return less than n cards if n > current deck size.
-        CardsList returned_list;
+        CardsList<CardT> returned_list;
         for (IndexType i = 0; i < n && !is_empty(); ++i)
             returned_list.push_back(pop_up_card());
         return returned_list;
@@ -489,7 +502,7 @@ namespace pltr::cards
 
     //-----------------------------------------------------------------------
     template<typename CardT>
-    void CardsDeck<CardT>::refill_deck(const CardsList& filling_deck)
+    void CardsDeck<CardT>::refill_deck(const CardsList<CardT>& filling_deck)
     {
         // reminder: fills this deck according to a filling vector. Empties the deck first.
         clear();

@@ -45,7 +45,7 @@ namespace pltr::cards
         //-----   Type wrappers   -----//
         using MyBaseClass = StandardDeckT;
         using CardT = StandardCardT;
-        using CardsList = MyBaseClass::CardsList;
+        using CardsList = pltr::cards::CardsList<StandardCardT>;
         using IndexType = MyBaseClass::IndexType;
 
 

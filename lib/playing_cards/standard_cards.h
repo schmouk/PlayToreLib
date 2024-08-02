@@ -33,7 +33,16 @@
 
 //===========================================================================
 namespace pltr::cards
-{    
+{
+    //=======================================================================
+    /* Cards colors enumeration.
+    */
+    enum class EColor : std::uint8_t //!< the standard colors for standard playing cards
+    {
+        E_CLUB, E_DIAMOND, E_HEART, E_SPADE, E_RED, E_BLACK
+    };
+
+
     //=======================================================================
     /* \brief The base class for standard cards.
     */
@@ -51,12 +60,7 @@ namespace pltr::cards
         using IdentT = MyBaseClass::ident_type;
         using ValueT = MyBaseClass::value_type;
 
-
-        //-----   Types declarations   -----//
-        enum class EColor : IdentT //!< the standard colors for standard playing cards
-        {
-            E_CLUB, E_DIAMOND, E_HEART, E_SPADE,
-        };
+        using MyClassType = StandardCard<_CARDS_LETTERS, _COLORS_LETTERS, _JOKERS_COLORS>;
 
 
         //-----   constants   -----//
@@ -130,7 +134,7 @@ namespace pltr::cards
         inline const EColor get_color() const noexcept                      //!< returns the enum color of this card
         {
             //return EColor(this->ident % IdentT(EColor::COLORS_COUNT));
-            return EColor(this->ident % COLORS_COUNT);
+            return is_joker() ? EColor(this->ident - JOKERS_FIRST_IDENT + 4) : EColor(this->ident % COLORS_COUNT);
         }
 
 
@@ -164,6 +168,37 @@ namespace pltr::cards
         }
 
 
+        //-----   Comparison Operations   -----//
+        static struct CmpColors {
+            bool operator() (const MyClassType& left, const MyClassType& right) {
+                return left.get_color() < right.get_color();
+            }
+        } cmp_colors;                                                       //!< comparison on sole colors of cards
+
+
+        static struct {
+            bool operator() (const MyClassType& left, const MyClassType& right) {
+                return left.get_color() < right.get_color() ||
+                    (left.get_color() == right.get_color() && left.value < right.value);
+            }
+        } CmpColorsValues;                                                  //!< comparison on colors of cards first then on cards value in same color
+
+
+        static struct {
+            bool operator() (const MyClassType& left, const MyClassType& right) {
+                return left.ident < right.ident;
+            }
+        } CmpIdents;                                                        //!< comparison on sole ident of cards 
+
+
+        static struct {
+            bool operator() (const MyClassType& left, const MyClassType& right) {
+                return left < right;
+            }
+        } CmpValue;                                                         //!< comparison on sole value of cards 
+
+
+
     protected:
         void _set_text() noexcept  //!< internally sets the text of this card
         {
@@ -182,6 +217,13 @@ namespace pltr::cards
         }
 
     };
+
+    template<
+        const pltr::core::StringTemplateParameter _CARDS_LETTERS,
+        const pltr::core::StringTemplateParameter _COLORS_LETTERS,
+        const pltr::core::StringTemplateParameter _JOKERS_COLORS
+    >
+    static StandardCard<_CARDS_LETTERS, _COLORS_LETTERS, _JOKERS_COLORS>::CmpColors  cmp_colors;  //!< comparison on sole colors of cards
 
 
     //=======================================================================

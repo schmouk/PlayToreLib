@@ -36,6 +36,7 @@ TEST(TestSuitePlayingCards, TestPlayingCard) {
     pltr::cards::PlayingCardT<> card0;
     EXPECT_EQ(0, card0.ident);
     EXPECT_EQ(0, card0.value);
+    EXPECT_EQ(0, card0.ordering_value);
     EXPECT_STREQ(EMPTY_WSTRING.c_str(), card0.image_path.c_str());
     EXPECT_STREQ(EMPTY_STRING.c_str(), card0.text.c_str());
 
@@ -43,14 +44,24 @@ TEST(TestSuitePlayingCards, TestPlayingCard) {
     pltr::cards::PlayingCardT<> card1(1, 11, "path-1", "txt-1");
     EXPECT_EQ(1, card1.ident);
     EXPECT_EQ(11, card1.value);
+    EXPECT_EQ(11, card1.ordering_value);
     EXPECT_STREQ(L"path-1", card1.image_path.c_str());
     EXPECT_STREQ("txt-1", card1.text.c_str());
+
+    // tests 5-args constructor
+    pltr::cards::PlayingCardT<> card5(5, 15, 25, "path-5", "txt-5");
+    EXPECT_EQ(5, card5.ident);
+    EXPECT_EQ(15, card5.value);
+    EXPECT_EQ(25, card5.ordering_value);
+    EXPECT_STREQ(L"path-5", card5.image_path.c_str());
+    EXPECT_STREQ("txt-5", card5.text.c_str());
 
     // tests operator=
     pltr::cards::PlayingCardT<> card11;
     card11 = card1;
     EXPECT_EQ(1, card11.ident);
     EXPECT_EQ(11, card11.value);
+    EXPECT_EQ(11, card11.ordering_value);
     EXPECT_STREQ(L"path-1", card11.image_path.c_str());
     EXPECT_STREQ("txt-1", card11.text.c_str());
 
@@ -101,6 +112,7 @@ TEST(TestSuitePlayingCards, TestPlayingCard) {
     card11.set(11, 21, "path-11", "text-11");
     EXPECT_EQ(11, card11.ident);
     EXPECT_EQ(21, card11.value);
+    EXPECT_EQ(21, card11.ordering_value);
     EXPECT_STREQ(L"path-11", card11.image_path.c_str());
     EXPECT_STREQ("text-11", card11.text.c_str());
 }

@@ -257,6 +257,13 @@ namespace pltr::cards
         {
             ident = ident_;
             value = value_;
+            ordering_value = value_;
+        }
+
+        inline void set(const IdentT ident_, const ValueT value_, const ValueT ordering_value_) noexcept      //!< sets data.
+        {
+            set(ident_, value_);
+            ordering_value = ordering_value_;
         }
 
         inline void set(
@@ -264,8 +271,17 @@ namespace pltr::cards
             const ValueT value_,
             const std::filesystem::path& image_path_) noexcept                  //!< sets data.
         {
-            ident = ident_;
-            value = value_;
+            set(ident_, value_);
+            image_path = image_path_;
+        }
+
+        inline void set(
+            const IdentT ident_,
+            const ValueT value_,
+            const ValueT ordering_value_,
+            const std::filesystem::path& image_path_) noexcept                  //!< sets data.
+        {
+            set(ident_, value_, ordering_value_);
             image_path = image_path_;
         }
 
@@ -273,10 +289,21 @@ namespace pltr::cards
             const IdentT ident_,
             const ValueT value_,
             const std::filesystem::path& image_path_,
-            const std::string& text_) noexcept                  //!< sets data.
+            const std::string& text_) noexcept                                  //!< sets data.
         {
-            ident = ident_;
-            value = value_;
+            set(ident_, value_);
+            image_path = image_path_;
+            text = text_;
+        }
+
+        inline void set(
+            const IdentT ident_,
+            const ValueT value_,
+            const ValueT ordering_value_,
+            const std::filesystem::path& image_path_,
+            const std::string& text_) noexcept                                  //!< sets data.
+        {
+            set(ident_, value_, ordering_value_);
             image_path = image_path_;
             text = text_;
         }

@@ -47,7 +47,7 @@ namespace pltr::cards
     /* \brief The base class for standard cards.
     */
     template<
-        const pltr::core::StringTemplateParameter _CARDS_LETTERS = "A23456789XJQKJ",
+        const pltr::core::StringTemplateParameter _CARDS_LETTERS = "23456789XJQKAJ",
         const pltr::core::StringTemplateParameter _COLORS_LETTERS = "CDHS",
         const pltr::core::StringTemplateParameter _JOKERS_COLORS = "RB"
     >
@@ -73,7 +73,7 @@ namespace pltr::cards
 
         //-----   Constructors / Desctructor   -----//
         inline StandardCard()                                           //!< default empty constructor.
-            : MyBaseClass(0, 1)
+            : MyBaseClass(0, 2)
         {
             _set_text();
         }
@@ -82,7 +82,7 @@ namespace pltr::cards
         inline StandardCard(
             const IdentT ident_
         ) noexcept                                                      //!< 1-valued constructor.
-            : MyBaseClass(ident_, ValueT(ident_ / 4 + 1))
+            : MyBaseClass(ident_, ValueT(ident_ / 4 + 2))
         {
             _set_text();
         }
@@ -102,7 +102,18 @@ namespace pltr::cards
             const IdentT ident_,
             const std::filesystem::path& image_path_
         ) noexcept                                                      //!< 2-valued constructor (2/2).
-            : MyBaseClass(ident_, ValueT(ident_ / 4 + 1), image_path_)
+            : MyBaseClass(ident_, ValueT(ident_ / 4 + 2), image_path_)
+        {
+            _set_text();
+        }
+
+
+        inline StandardCard(
+            const IdentT ident_,
+            const ValueT value_,
+            const ValueT ordering_value_
+        ) noexcept                                                      //!< 3-valued constructor (1/2).
+            : MyBaseClass(ident_, value_, ordering_value_)
         {
             _set_text();
         }
@@ -112,8 +123,20 @@ namespace pltr::cards
             const IdentT ident_,
             const ValueT value_,
             const std::filesystem::path& image_path_
-        ) noexcept                                                      //!< 3-valued constructor.
+        ) noexcept                                                      //!< 3-valued constructor (2/2).
             : MyBaseClass(ident_, value_, image_path_)
+        {
+            _set_text();
+        }
+
+
+        inline StandardCard(
+            const IdentT ident_,
+            const ValueT value_,
+            const ValueT ordering_value_,
+            const std::filesystem::path& image_path_
+        ) noexcept                                                      //!< 4-valued constructor.
+            : MyBaseClass(ident_, value_, ordering_value_, image_path_)
         {
             _set_text();
         }
@@ -147,7 +170,7 @@ namespace pltr::cards
 
         inline void set(const IdentT ident_) noexcept                       //!< sets data (1 arg).
         {
-            set(ident_, ident_ / 4 + 1);
+            set(ident_, ident_ / 4 + 2);
         }
 
 
@@ -161,9 +184,31 @@ namespace pltr::cards
         inline void set(
             const IdentT ident_,
             const ValueT value_,
-            const std::filesystem::path& image_path_) noexcept              //!< sets data (3 args).
+            const ValueT ordering_value_
+        ) noexcept                                                          //!< sets data (3 args, 1/2).
+        {
+            MyBaseClass::set(ident_, value_, ordering_value_);
+            _set_text();
+        }
+
+
+        inline void set(
+            const IdentT ident_,
+            const ValueT value_,
+            const std::filesystem::path& image_path_) noexcept              //!< sets data (3 args, 2/2).
         {
             MyBaseClass::set(ident_, value_, image_path_);
+            _set_text();
+        }
+
+
+        inline void set(
+            const IdentT ident_,
+            const ValueT value_,
+            const ValueT ordering_value_,
+            const std::filesystem::path& image_path_) noexcept              //!< sets data (4 args).
+        {
+            MyBaseClass::set(ident_, value_, ordering_value_, image_path_);
             _set_text();
         }
 
@@ -218,18 +263,11 @@ namespace pltr::cards
 
     };
 
-    template<
-        const pltr::core::StringTemplateParameter _CARDS_LETTERS,
-        const pltr::core::StringTemplateParameter _COLORS_LETTERS,
-        const pltr::core::StringTemplateParameter _JOKERS_COLORS
-    >
-    static StandardCard<_CARDS_LETTERS, _COLORS_LETTERS, _JOKERS_COLORS>::CmpColors  cmp_colors;  //!< comparison on sole colors of cards
-
 
     //=======================================================================
     /* \brief The class for standard cards - German localization.
     */
-    using StandardCardDe = StandardCard<"123456789XBDKJ", "RAHP", "RS">;  // notice: RAHP für kReuz, kAro, Herz, Pik
+    using StandardCardDe = StandardCard<"23456789XBDK1J", "RAHP", "RS">;  // notice: RAHP für kReuz, kAro, Herz, Pik
 
 
     //=======================================================================
@@ -241,31 +279,31 @@ namespace pltr::cards
     //=======================================================================
     /* \brief The class for standard cards - Spanish localization.
     */
-    using StandardCardEs = StandardCard<"123456789XJAYJ", "ECDT", "RN">;  // notice: ECDT para Jota, reinA, reY, Joker
+    using StandardCardEs = StandardCard<"23456789XJAR1J", "TDCE", "RN">;  // notice: JARJ para Jota, reinA, Rey, Joker ; TDCE para Tréboles, Diamantes; Corazón, Espadas
 
 
     //=======================================================================
     /* \brief The class for standard cards - French localization.
     */
-    using StandardCardFr = StandardCard<"123456789XVDRJ", "TKCP", "RN">;  // notice: TKCP pour Trèfle, (K)arreau, Coeur, Pique
+    using StandardCardFr = StandardCard<"23456789XVDR1J", "TKCP", "RN">;  // notice: TKCP pour Trèfle, (K)arreau, Coeur, Pique
 
 
     //=======================================================================
     /* \brief The class for standard cards - Italian localization.
     */
-    using StandardCardIt = StandardCard<"123456789XJARJ", "PCQF", "RN">;  // notice: "PCQF"per Jack, reginA, Re, Joker
+    using StandardCardIt = StandardCard<"23456789XJAR1J", "MQCP", "RN">;  // notice: JARJ per Jack, reginA, Re, Joker ; MQCP per Mazze, Quadri; Cuore, Picche
 
 
     //=======================================================================
     /* \brief The class for Windows console standard cards.
     */
-    using StandardWindowsConsoleCard = StandardCard<"A23456789XJQKJ", "\005\004\003\006", "RB">;
+    using StandardWindowsConsoleCard = StandardCard<"23456789XJQKAJ", "\005\004\003\006", "RB">;
 
 
     //=======================================================================
     /* \brief The class for Windows console standard cards - German localization.
     */
-    using StandardWindowsConsoleCardDe = StandardCard<"123456789XBDKJ", "\005\004\003\006", "RS">;
+    using StandardWindowsConsoleCardDe = StandardCard<"23456789XBDK1J", "\005\004\003\006", "RS">;
 
 
     //=======================================================================
@@ -277,19 +315,19 @@ namespace pltr::cards
     //=======================================================================
     /* \brief The class for Windows console standard cards - Spanish localization.
     */
-    using StandardWindowsConsoleCardEs = StandardCard<"123456789XJAYJ", "\005\004\003\006", "RN">;
+    using StandardWindowsConsoleCardEs = StandardCard<"23456789XJAR1J", "\005\004\003\006", "RN">;
 
 
     //=======================================================================
     /* \brief The class for Windows console standard cards - French localization.
     */
-    using StandardWindowsConsoleCardFr = StandardCard<"123456789XVDRJ", "\005\004\003\006", "RN">;
+    using StandardWindowsConsoleCardFr = StandardCard<"23456789XVDR1J", "\005\004\003\006", "RN">;
 
 
     //=======================================================================
     /* \brief The class for Windows console standard cards - Italian localization.
     */
-    using StandardWindowsConsoleCardIt = StandardCard<"123456789XJARJ", "\005\004\003\006", "RN">;
+    using StandardWindowsConsoleCardIt = StandardCard<"23456789XJAR1J", "\005\004\003\006", "RN">;
 
 
     //=======================================================================
@@ -349,9 +387,11 @@ namespace pltr::cards
         static inline constexpr bool value{ true };
     };
 
+    /* Notice: 'It' template version is exactly the same as 'Es' one. No need to set this specialization twice!
     template<>
     struct is_standard_card<StandardWindowsConsoleCardIt> {
         static inline constexpr bool value{ true };
     };
+    */
 
 }

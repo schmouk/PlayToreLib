@@ -93,25 +93,25 @@ namespace pltr::cards
     //=======================================================================
     /* \brief The class of decks that contains 54 unique standard cards.
     */
-    template<typename CardT>
+    template<typename CardT, const std::uint32_t START_VALUE = 0>
         requires pltr::cards::is_standard_card_v<CardT>
-    using UniqueStandardCardsDeck54 = UniqueStandardCardsDeck<CardsDeck54<CardT>, CardT>;
+    using UniqueStandardCardsDeck54 = UniqueStandardCardsDeck<CardsDeck54<CardT, START_VALUE>, CardT>;
 
 
     //=======================================================================
     /* \brief The class of decks that contains 52 unique standard cards.
     */
-    template<typename CardT>
+    template<typename CardT, const std::uint32_t START_VALUE = 0>
         requires pltr::cards::is_standard_card_v<CardT>
-    using UniqueStandardCardsDeck52 = UniqueStandardCardsDeck<CardsDeck52<CardT>, CardT>;
+    using UniqueStandardCardsDeck52 = UniqueStandardCardsDeck<CardsDeck52<CardT, START_VALUE>, CardT>;
 
 
     //=======================================================================
     /* \brief The class of decks that contains 32 unique standard cards.
     */
-    template<typename CardT>
+    template<typename CardT, const std::uint32_t START_VALUE = 0>
         requires pltr::cards::is_standard_card_v<CardT>
-    using UniqueStandardCardsDeck32 = UniqueStandardCardsDeck<CardsDeck32<CardT>, CardT>;
+    using UniqueStandardCardsDeck32 = UniqueStandardCardsDeck<CardsDeck32<CardT, START_VALUE>, CardT>;
 
 
 

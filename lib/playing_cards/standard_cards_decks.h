@@ -153,18 +153,18 @@ namespace pltr::cards
 
     //-----------------------------------------------------------------------
     /* \brief 54 standard cards decks. */
-    template<typename CardT>
-    using CardsDeck54 = StandardCardsDeck<CardT, 54>;
+    template<typename CardT, const std::uint32_t START_VALUE = 0>
+    using CardsDeck54 = StandardCardsDeck<CardT, 54, START_VALUE>;
 
     //-----------------------------------------------------------------------
     /* \brief 52 standard cards decks. */
-    template<typename CardT>
-    using CardsDeck52 = StandardCardsDeck<CardT, 52>;
+    template<typename CardT, const std::uint32_t START_VALUE = 0>
+    using CardsDeck52 = StandardCardsDeck<CardT, 52, START_VALUE>;
 
     //-----------------------------------------------------------------------
     /* \brief 32 standard cards decks. */
-    template<typename CardT>
-    using CardsDeck32 = StandardCardsDeck<CardT, 32>;
+    template<typename CardT, const std::uint32_t START_VALUE = 0>
+    using CardsDeck32 = StandardCardsDeck<CardT, 32, START_VALUE>;
 
 
 

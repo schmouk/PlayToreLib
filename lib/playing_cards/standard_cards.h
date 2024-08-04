@@ -49,18 +49,22 @@ namespace pltr::cards
     template<
         const pltr::core::StringTemplateParameter _CARDS_LETTERS = "23456789XJQKAJ",
         const pltr::core::StringTemplateParameter _COLORS_LETTERS = "CDHS",
-        const pltr::core::StringTemplateParameter _JOKERS_COLORS = "RB"
+        const pltr::core::StringTemplateParameter _JOKERS_COLORS = "RB",
+        const std::uint32_t _START_VALUE = 2
     >
     class StandardCard : public pltr::cards::PlayingCardT<std::uint8_t, std::uint32_t>
     {
     public:
-
         //-----   Types wrappers   -----//
         using MyBaseClass = pltr::cards::PlayingCardT<std::uint8_t, std::uint32_t>;
         using IdentT = MyBaseClass::ident_type;
         using ValueT = MyBaseClass::value_type;
 
         using MyClassType = StandardCard<_CARDS_LETTERS, _COLORS_LETTERS, _JOKERS_COLORS>;
+
+
+        //-----   constants   -----//
+        static inline constexpr ValueT _START_VALUE{ _START_VALUE };
 
 
         //-----   constants   -----//
@@ -73,7 +77,7 @@ namespace pltr::cards
 
         //-----   Constructors / Desctructor   -----//
         inline StandardCard()                                           //!< default empty constructor.
-            : MyBaseClass(0, 2)
+            : MyBaseClass(0, _START_VALUE)
         {
             _set_text();
         }
@@ -82,7 +86,7 @@ namespace pltr::cards
         inline StandardCard(
             const IdentT ident_
         ) noexcept                                                      //!< 1-valued constructor.
-            : MyBaseClass(ident_, ValueT(ident_ / 4 + 2))
+            : MyBaseClass(ident_, ValueT(ident_ / 4 + _START_VALUE))
         {
             _set_text();
         }
@@ -102,7 +106,7 @@ namespace pltr::cards
             const IdentT ident_,
             const std::filesystem::path& image_path_
         ) noexcept                                                      //!< 2-valued constructor (2/2).
-            : MyBaseClass(ident_, ValueT(ident_ / 4 + 2), image_path_)
+            : MyBaseClass(ident_, ValueT(ident_ / 4 + _START_VALUE), image_path_)
         {
             _set_text();
         }
@@ -170,7 +174,7 @@ namespace pltr::cards
 
         inline void set(const IdentT ident_) noexcept                       //!< sets data (1 arg).
         {
-            set(ident_, ident_ / 4 + 2);
+            set(ident_, ident_ / 4 + _START_VALUE);
         }
 
 

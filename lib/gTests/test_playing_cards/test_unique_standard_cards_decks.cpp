@@ -30,12 +30,14 @@
 //===========================================================================
 TEST(TestSuitePlayingCards, TestUniqueStandardCardsDeck) {
 
+    constexpr std::uint32_t START_VALUE_54{ 2 };
+    constexpr std::uint32_t START_VALUE_52{ 0 };
+    constexpr std::uint32_t START_VALUE_32{ 7 };
 
-    /**** /
     using CardFr = pltr::cards::StandardCardFr;
     using Deck54 = pltr::cards::UniqueStandardCardsDeck54<CardFr>;
-    using Deck52 = pltr::cards::UniqueStandardCardsDeck52<CardFr>;
-    using Deck32 = pltr::cards::UniqueStandardCardsDeck32<CardFr>;
+    using Deck52 = pltr::cards::UniqueStandardCardsDeck52<CardFr, START_VALUE_52>;
+    using Deck32 = pltr::cards::UniqueStandardCardsDeck32<CardFr, START_VALUE_32>;
 
     // tests 54-cards decks
     Deck54 deck54;
@@ -97,35 +99,67 @@ TEST(TestSuitePlayingCards, TestUniqueStandardCardsDeck) {
     EXPECT_EQ(32, deck32.deck().size());
     EXPECT_LE(32, deck32.deck().capacity());
 
-    int n{ 0 };
-    for (int i = 0; i < 4; ++n, ++i)
-        EXPECT_EQ(i, deck32[n].ident);
-    for (int i = 24; i < 52; ++n, ++i)
-        EXPECT_EQ(i, deck32[n].ident);
+    for (int i = 0; i < 32; ++i)
+        EXPECT_EQ(i, deck32[i].ident);
 
     for (int i = 0; i < 100; ++i)
         deck32.shuffle();
 
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 32; ++i) {
         const CardFr card(i);
         EXPECT_TRUE(deck32.contains(card));
         EXPECT_FALSE(deck32.append_card(card));
     }
-    for (int i = 4; i < 24; ++i) {
+    for (int i = 32; i < 56; ++i) {
         const CardFr card(i);
         EXPECT_FALSE(deck32.contains(card));
         EXPECT_FALSE(deck32.append_card(card));
     }
-    for (int i = 24; i < 52; ++i) {
-        const CardFr card(i);
-        EXPECT_TRUE(deck32.contains(card));
-        EXPECT_FALSE(deck32.append_card(card));
+
+    deck32.refill_deck();
+    deck32.sort();
+    int v{ 14 };
+    for (int i = 0; i < 32; i += 4, v--) {
+        for (int j = 0; j < 4; ++j) {
+            EXPECT_EQ(31 - i - j, int(deck32[i + j].ident));
+            EXPECT_EQ(v, deck32[i + j].value);
+            EXPECT_EQ(v, deck32[i + j].ordering_value);
+        }
     }
-    for (int i = 52; i < 56; ++i) {
-        const CardFr card(i);
-        EXPECT_FALSE(deck32.contains(card));
-        EXPECT_FALSE(deck32.append_card(card));
+
+    deck32.refill_deck();
+    deck32.sort_colors();
+    pltr::cards::EColor color{ pltr::cards::EColor::E_SPADE };
+    for (int i = 0; i < 32; i += 8) {
+        for (int j = 7; j >= 0; --j) {
+            EXPECT_EQ(j + START_VALUE_32, deck32[i + 7 - j].value);
+            EXPECT_EQ(4 * j + int(color), int(deck32[i + 7 - j].ident));
+            EXPECT_EQ(int(color), int(deck32[i + 7 - j].get_color()));
+        }
+        color = pltr::cards::EColor(int(color) - 1);
     }
+
+    deck32.refill_deck();
+    deck32.sort_colors_values();
+    color = pltr::cards::EColor::E_SPADE;
+    for (int i = 0; i < 32; i += 8) {
+        for (int j = 7; j > 0; --j) {
+            EXPECT_EQ(j + START_VALUE_32, deck32[i + 7 - j].value);
+            EXPECT_EQ(4 * j + int(color), int(deck32[i + 7 - j].ident));
+            EXPECT_EQ(int(color), int(deck32[i + 7 - j].get_color()));
+        }
+        color = pltr::cards::EColor(int(color) - 1);
+    }
+
+    deck32.refill_deck();
+    deck32.sort_idents();
+    color = pltr::cards::EColor::E_SPADE;
+    for (int i = 0; i < 32; ++i) {
+        EXPECT_EQ((31 - i) / 4 + START_VALUE_32, deck32[i].value);
+        EXPECT_EQ(31 - i, int(deck32[i].ident));
+        EXPECT_EQ((31 - i) % 4, int(deck32[i].get_color()));
+    }
+
 
     using CardsList = Deck52::CardsList;
     deck52.refill_deck();
@@ -242,5 +276,4 @@ TEST(TestSuitePlayingCards, TestUniqueStandardCardsDeck) {
     for (int i = 0; i < 52; ++i)
         EXPECT_TRUE(deck52.contains(CardFr(i)));
 
-    /*****/
 }

@@ -27,6 +27,7 @@
 #include <cstdint>
 #include <filesystem>
 
+#include "core/object.h"
 #include "playing_cards/playing_cards.h"
 #include "core/template_utils.h"
 
@@ -76,7 +77,7 @@ namespace pltr::cards
 
 
         //-----   Constructors / Desctructor   -----//
-        inline StandardCard()                                           //!< default empty constructor.
+        inline StandardCard()                                           //!< empty constructor.
             : MyBaseClass(0, _START_VALUE)
         {
             _set_text();
@@ -263,6 +264,9 @@ namespace pltr::cards
                     _CARDS_LETTERS[JOKERS_INDEX],
                     (this->ident == JOKERS_FIRST_IDENT) ? _JOKERS_COLORS[0] : _JOKERS_COLORS[1]
                 );
+
+            MyBaseClass::Object::inheriting_class_name = "StandardCard<>";
+            MyBaseClass::Object::object_name = this->text;
         }
 
     };

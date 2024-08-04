@@ -34,15 +34,18 @@ namespace pltr::core
     /* \brief The base class for every object in PlayTore library. */
     struct Object
     {
-        Object() = default;
-        Object(const Object&) = default;
-        Object(Object&&) = default;
-        virtual ~Object() = default;
+        Object() noexcept = default;
+        Object(const Object&) noexcept = default;
+        Object(Object&&) noexcept = default;
+        virtual ~Object() noexcept = default;
 
-        Object(const std::string& inheriting_class_name_);
-        Object(const std::string& inheriting_class_name_, std::string& object_name_);
+        Object& operator= (const Object&) noexcept = default;
+        Object& operator= (Object&&) noexcept = default;
 
-        virtual std::string repr();  //!< helps logging information related to the inheriting object when debugging via logs.
+        Object(const std::string& inheriting_class_name_) noexcept;
+        Object(const std::string& inheriting_class_name_, std::string& object_name_) noexcept;
+
+        virtual std::string repr() noexcept;  //!< helps logging information related to the inheriting object when debugging via logs.
 
         std::string inheriting_class_name{};
         std::string object_name{};

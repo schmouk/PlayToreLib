@@ -30,6 +30,8 @@
 #include <ranges>
 #include <vector>
 
+#include "core/object.h"
+
 
 //===========================================================================
 namespace pltr::cards
@@ -45,7 +47,7 @@ namespace pltr::cards
     /* \brief The base class for decks of cards.
     */
     template<typename CardT>
-    class CardsDeck
+    class CardsDeck : pltr::core::Object
     {
     public:
         //-----   Types wrappers and declarations   -----//
@@ -329,6 +331,7 @@ namespace pltr::cards
     //-----------------------------------------------------------------------
     template<typename CardT>
     CardsDeck<CardT>::CardsDeck(const IndexType max_cards_count)
+        : pltr::core::Object()
     {
         _set_deck(max_cards_count);
         _set_randomness();
@@ -337,6 +340,7 @@ namespace pltr::cards
     //-----------------------------------------------------------------------
     template<typename CardT>
     CardsDeck<CardT>::CardsDeck(const pltr::cards::CardsList<CardT>& cards)
+        : pltr::core::Object()
     {
         append_cards(cards);
         _set_randomness();

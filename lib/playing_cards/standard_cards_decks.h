@@ -49,7 +49,7 @@ namespace pltr::cards
         using CardType = CardT;
 
 
-        //-----   Constructors / Desctructor   -----//
+        //-----   Constructors / Destructor   -----//
         inline StandardCardsDeck()                                                  //!< empty constructor
             : MyBaseClass(_CARDS_COUNT)
         {

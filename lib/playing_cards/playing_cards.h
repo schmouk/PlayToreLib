@@ -28,6 +28,8 @@
 #include <filesystem>
 #include <string>
 
+#include "core/object.h"
+
 
 //===========================================================================
 namespace pltr::cards
@@ -38,7 +40,7 @@ namespace pltr::cards
     template<
         typename IdentT = char,
         typename ValueT = std::int32_t
-    > struct PlayingCardT
+    > struct PlayingCardT : public pltr::core::Object
     {
         //-----   Types wrappers   -----//
         using ident_type = IdentT;
@@ -58,7 +60,8 @@ namespace pltr::cards
 
 
         inline PlayingCardT(const IdentT ident_) noexcept                       //!< 1-arg constructor.
-            : ident(ident_)
+            : pltr::core::Object()
+            , ident(ident_)
             , value(ValueT(ident_))
             , ordering_value(ValueT(ident_))
         {}
@@ -68,7 +71,8 @@ namespace pltr::cards
             const IdentT ident_,
             const ValueT value_
         ) noexcept                                                              //!< 2-args constructor with value.
-            : ident(ident_)
+            : pltr::core::Object()
+            , ident(ident_)
             , value(value_)
             , ordering_value(value_)
         {}
@@ -78,7 +82,8 @@ namespace pltr::cards
             const IdentT ident_,
             const std::filesystem::path& image_path_
         ) noexcept                                                              //!< 2-args constructor with image path.
-            : ident(ident_)
+            : pltr::core::Object()
+            , ident(ident_)
             , value(ValueT(ident_))
             , ordering_value(ValueT(ident_))
             , image_path(image_path_)
@@ -89,7 +94,8 @@ namespace pltr::cards
             const IdentT ident_,
             const std::string& text_
         ) noexcept                                                              //!< 2-args constructor with text.
-            : ident(ident_)
+            : pltr::core::Object()
+            , ident(ident_)
             , value(ValueT(ident_))
             , ordering_value(ValueT(ident_))
             , text(text_)
@@ -101,7 +107,8 @@ namespace pltr::cards
             const ValueT value_,
             const ValueT ordering_
         ) noexcept                                                              //!< 3-args constructor with value and ordering value.
-            : ident(ident_)
+            : pltr::core::Object()
+            , ident(ident_)
             , value(value_)
             , ordering_value(ordering_)
         {}
@@ -112,7 +119,8 @@ namespace pltr::cards
             const ValueT value_,
             const std::filesystem::path& image_path_
         ) noexcept                                                              //!< 3-args constructor with value and image path.
-            : ident(ident_)
+            : pltr::core::Object()
+            , ident(ident_)
             , value(value_)
             , ordering_value(value_)
             , image_path(image_path_)
@@ -124,7 +132,8 @@ namespace pltr::cards
             const ValueT value_,
             const std::string& text_
         ) noexcept                                                              //!< 3-args constructor with value and text.
-            : ident(ident_)
+            : pltr::core::Object()
+            , ident(ident_)
             , value(value_)
             , ordering_value(value_)
             , text(text_)
@@ -136,7 +145,8 @@ namespace pltr::cards
             const std::filesystem::path& image_path_,
             const std::string& text_
         ) noexcept                                                              //!< 3-args constructor with image path and text.
-            : ident(ident_)
+            : pltr::core::Object()
+            , ident(ident_)
             , value(ValueT(ident_))
             , ordering_value(ValueT(ident_))
             , image_path(image_path_)
@@ -150,7 +160,8 @@ namespace pltr::cards
             const ValueT ordering_,
             const std::filesystem::path& image_path_
         ) noexcept                                                              //!< 4-args constructor with value, ordering value and image path.
-            : ident(ident_)
+            : pltr::core::Object()
+            , ident(ident_)
             , value(value_)
             , ordering_value(ordering_)
             , image_path(image_path_)
@@ -163,7 +174,8 @@ namespace pltr::cards
             const ValueT ordering_,
             const std::string& text_
         ) noexcept                                                              //!< 4-args constructor with value, ordering value and text.
-            : ident(ident_)
+            : pltr::core::Object()
+            , ident(ident_)
             , value(value_)
             , ordering_value(ordering_)
             , text(text_)
@@ -176,7 +188,8 @@ namespace pltr::cards
             const std::filesystem::path& image_path_,
             const std::string& text_
         ) noexcept                                                              //!< 4-args constructor with value, image path and text.
-            : ident(ident_)
+            : pltr::core::Object()
+            , ident(ident_)
             , value(value_)
             , ordering_value(value_)
             , image_path(image_path_)
@@ -191,7 +204,8 @@ namespace pltr::cards
             const std::filesystem::path& image_path_,
             const std::string& text_
         ) noexcept                                                              //!< 5-args constructor.
-            : ident(ident_)
+            : pltr::core::Object()
+            , ident(ident_)
             , value(value_)
             , ordering_value(ordering_)
             , image_path(image_path_)

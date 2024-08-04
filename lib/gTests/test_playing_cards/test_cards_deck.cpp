@@ -252,6 +252,23 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
     EXPECT_EQ(0, deck3bis.deck().size());
     EXPECT_LE(deck3bis.get_max_cards_count(), deck3bis.deck().capacity());
 
+    // tests drawing a specific card
+    // reminder: deck4 contains 6 cards with 1 <= ident <= 6
+    for (int i = 1; i <= 6; ++i) {
+        DefaultCardT card(i);
+        EXPECT_TRUE(deck4.draw_card(card));
+        EXPECT_EQ(5, deck4.get_current_cards_count());
+        EXPECT_FALSE(deck4.contains(card));
+        deck4.append_card(card);
+    }
+    for (int i = 7; i < 10; ++i) {
+        DefaultCardT card(i);
+        EXPECT_FALSE(deck4.draw_card(card));
+        EXPECT_EQ(6, deck4.get_current_cards_count());
+        EXPECT_FALSE(deck4.contains(card));
+    }
+
+
     // tests inserting no card
     deck3bis.insert_cards();
 

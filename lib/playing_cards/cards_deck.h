@@ -178,6 +178,8 @@ namespace pltr::cards
             return pop_up_card();
         }
 
+        inline const bool draw_card(const CardT& card);                 //!< if present in deck, removes the card and returns true; returns false else.
+
         inline const CardsList<CardT> draw_n_cards(const IndexType n)   //!< wrapper to pop_up_n_cards(): removes and returns the card at the top of this deck. May return less than n cards if n > current deck size.
         {
             return pop_up_n_cards(n);
@@ -364,6 +366,21 @@ namespace pltr::cards
         );
 
         this->_max_cards_count = std::max(this->_max_cards_count, std::uint32_t(this->_deck.size()));
+    }
+
+    //-----------------------------------------------------------------------
+    template<typename CardT>
+    const bool CardsDeck<CardT>::draw_card(const CardT& card)
+    {
+        // reminder: if present in deck, removes the card and returns true; returns false else.
+        auto found_it = std::find(_deck.begin(), _deck.end(), card);
+        if (found_it != _deck.end()) [[likely]] {
+            _deck.erase(found_it);
+            return true;
+        }
+        else [[unlikely]] {
+            return false;
+        }
     }
 
     //-----------------------------------------------------------------------

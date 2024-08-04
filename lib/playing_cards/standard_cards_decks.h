@@ -138,16 +138,9 @@ namespace pltr::cards
         if (!_reference_already_set) {
             _reference_deck.clear();
 
-            /*
-            for (typename MyBaseClass::IndexType ident = 0; ident < _CARDS_COUNT; ++ident) {
-                CardT card(ident);
-                card.value += _START_VALUE;
-                _reference_deck.append_card(card);
-            }
-            */
             for (std::uint32_t i : std::views::iota(std::uint32_t(0), _CARDS_COUNT))
                 _reference_deck.append_card(CardT(i, (i / 4) + _START_VALUE));
-
+               
             _reference_already_set = true;
         }
     }

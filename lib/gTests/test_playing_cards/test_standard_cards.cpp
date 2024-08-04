@@ -39,14 +39,14 @@ TEST(TestSuitePlayingCards, TestStandardCard) {
     // tests empty default constructor
     StandardCard card0;
     EXPECT_EQ(0, card0.ident);
-    EXPECT_EQ(1, card0.value);
+    EXPECT_EQ(StandardCard::_START_VALUE, card0.value);
     EXPECT_STREQ(EMPTY_WSTRING.c_str(), card0.image_path.c_str());
-    EXPECT_STREQ("AC", card0.text.c_str());
+    EXPECT_STREQ("2C", card0.text.c_str());
 
     // tests all stuff for every card
     StandardCard card;
     int i = 0;
-    for (char id : {'A', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K'}) {
+    for (char id : {'2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K', 'A'}) {
         for (char color : {'C', 'D', 'H', 'S'}) {
             card.set(i);
 
@@ -68,23 +68,23 @@ TEST(TestSuitePlayingCards, TestStandardCard) {
             }
 
             EXPECT_EQ(i, card.ident);
-            EXPECT_EQ(i / 4 + 1, card.value);
+            EXPECT_EQ(i / 4 + StandardCard::_START_VALUE, card.value);
             EXPECT_STREQ(EMPTY_WSTRING.c_str(), card.image_path.c_str());
             EXPECT_STREQ(std::format("{:c}{:c}", id, color).c_str(), card.text.c_str());
 
             switch (color)
             {
             case 'C':
-                EXPECT_EQ(StandardCard::EColor::E_CLUB, card.get_color());
+                EXPECT_EQ(pltr::cards::EColor::E_CLUB, card.get_color());
                 break;
             case 'D':
-                EXPECT_EQ(StandardCard::EColor::E_DIAMOND, card.get_color());
+                EXPECT_EQ(pltr::cards::EColor::E_DIAMOND, card.get_color());
                 break;
             case 'H':
-                EXPECT_EQ(StandardCard::EColor::E_HEART, card.get_color());
+                EXPECT_EQ(pltr::cards::EColor::E_HEART, card.get_color());
                 break;
             case 'S':
-                EXPECT_EQ(StandardCard::EColor::E_SPADE, card.get_color());
+                EXPECT_EQ(pltr::cards::EColor::E_SPADE, card.get_color());
                 break;
             default:
                 ADD_FAILURE();
@@ -99,7 +99,7 @@ TEST(TestSuitePlayingCards, TestStandardCard) {
 
     card.set(i);
     EXPECT_EQ(i, card.ident);
-    EXPECT_EQ(i / 4 + 1, card.value);
+    EXPECT_EQ(i / 4 + StandardCard::_START_VALUE, card.value);
     EXPECT_STREQ(EMPTY_WSTRING.c_str(), card.image_path.c_str());
     EXPECT_STREQ("JR", card.text.c_str());
     EXPECT_TRUE(card.is_joker());
@@ -114,7 +114,7 @@ TEST(TestSuitePlayingCards, TestStandardCard) {
 
     card.set(i);
     EXPECT_EQ(i, card.ident);
-    EXPECT_EQ(i / 4 + 1, card.value);
+    EXPECT_EQ(i / 4 + StandardCard::_START_VALUE, card.value);
     EXPECT_STREQ(EMPTY_WSTRING.c_str(), card.image_path.c_str());
     EXPECT_STREQ("JB", card.text.c_str());
     EXPECT_TRUE(card.is_joker());

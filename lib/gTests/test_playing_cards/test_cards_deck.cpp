@@ -32,6 +32,7 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
 
     using DefaultCardT = pltr::cards::PlayingCardT<>;
     using DefaultDeckT = pltr::cards::CardsDeck<DefaultCardT>;
+    using CardsList = pltr::cards::CardsList<DefaultCardT>;
 
     // creates a empty test deck of cards and accessors
     DefaultDeckT empty_deck(15);
@@ -42,7 +43,7 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
     EXPECT_EQ(15, empty_deck.deck().capacity());
 
     // tests constructor with vector initialization and accessors
-    DefaultDeckT::CardsList init_vect{
+    CardsList init_vect{
         DefaultCardT(1),
         DefaultCardT(2),
         DefaultCardT(3)
@@ -165,7 +166,7 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
     EXPECT_EQ(16, deck3bis[4].ident);
 
     // tests drawing n top cards
-    DefaultDeckT::CardsList drawn_cards{ deck3bis.draw_n_cards(2) };
+    CardsList drawn_cards{ deck3bis.draw_n_cards(2) };
 
     EXPECT_EQ(2, drawn_cards[0].ident);
     EXPECT_EQ(3, drawn_cards[1].ident);
@@ -592,7 +593,7 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
     EXPECT_FALSE(deck4.is_empty());
     EXPECT_FALSE(deck4.is_full());
 
-    DefaultDeckT::CardsList hand{ deck4.draw_n_cards(25) };
+    CardsList hand{ deck4.draw_n_cards(25) };
     EXPECT_EQ(6, hand.size());
     EXPECT_EQ(0, deck4.get_current_cards_count());
     EXPECT_EQ(7, deck4.get_max_cards_count());

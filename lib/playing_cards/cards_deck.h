@@ -136,7 +136,7 @@ namespace pltr::cards
             this->_deck.shrink_to_fit();
         }
 
-        inline virtual const bool contains(const CardT& card) const     //!< returns true if the card ident is found in this deck.
+        inline virtual const bool contains(const CardT& card)  const    //!< returns true if the card ident is found in this deck.
         {
             return get_index(card) != IndexType(-1);
         }

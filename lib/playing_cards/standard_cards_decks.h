@@ -24,7 +24,9 @@
 
 
 //===========================================================================
+#include <algorithm>
 #include <cstdint>
+#include <ranges>
 #include <type_traits>
 
 #include "playing_cards/standard_cards.h"
@@ -37,9 +39,9 @@ namespace pltr::cards
     //=======================================================================
     /* \brief The class of 54 standard cards decks.
     */
-    template<typename CardT>
+    template<typename CardT, const std::uint32_t _CARDS_COUNT, const std::uint32_t _START_VALUE = 0>
         requires pltr::cards::is_standard_card_v<CardT>
-    class CardsDeck54 : public CardsDeck<CardT>
+    class StandardCardsDeck : public CardsDeck<CardT>
     {
     public:
         //-----   Type wrappers   -----//
@@ -48,21 +50,22 @@ namespace pltr::cards
 
 
         //-----   Constructors / Desctructor   -----//
-        inline CardsDeck54()                                //!< empty constructor
+        inline StandardCardsDeck()                                                  //!< empty constructor
             : MyBaseClass(_CARDS_COUNT)
         {
+            _set_reference_deck();
             refill_deck();
         }
 
-        CardsDeck54(const CardsDeck54&) noexcept = default; //!< default copy constructor.
-        CardsDeck54(CardsDeck54&&) noexcept = default;      //!< default move constructor.
+        StandardCardsDeck(const StandardCardsDeck&) noexcept = default;             //!< default copy constructor.
+        StandardCardsDeck(StandardCardsDeck&&) noexcept = default;                  //!< default move constructor.
 
-        virtual ~CardsDeck54() noexcept = default;          //!< default destructor.
+        virtual ~StandardCardsDeck() noexcept = default;                            //!< default destructor.
 
 
         //-----   Operators   -----//
-        CardsDeck54& operator=(const CardsDeck54&) noexcept = default;  //!< default copy operator.
-        CardsDeck54& operator=(CardsDeck54&&) noexcept = default;       //!< default move operator.
+        StandardCardsDeck& operator=(const StandardCardsDeck&) noexcept = default;  //!< default copy operator.
+        StandardCardsDeck& operator=(StandardCardsDeck&&) noexcept = default;       //!< default move operator.
 
 
         //-----   Operations   -----//
@@ -71,105 +74,105 @@ namespace pltr::cards
             return card.ident < _CARDS_COUNT;
         }
 
-        inline virtual void refill_deck() override;  //!< fills this deck with all related playing cards. Does nothing in this base class, must be overridden in inheriting classes.
+        inline virtual void refill_deck() override      //!< fills this deck with all related playing cards. Does nothing in this base class, must be overridden in inheriting classes.
+        {
+            //MyBaseClass::clear();
+            //std::ranges::copy(_reference_deck.deck(), MyBaseClass::deck());
+            MyBaseClass::deck() = _reference_deck.deck();
+        }
+
+        inline void sort()                              //!< sorts this deck according to descending order of values then in the descending order of colors
+        {
+            auto cmp = [](const CardT& left, const CardT& right) {
+                return left.value < right.value ||
+                    (left.value == right.value && left.get_color() < right.get_color());
+            };
+            std::ranges::stable_sort(MyBaseClass::deck(), cmp);
+        }
+
+        inline void sort_colors()                       //!< sorts this deck according to the descending order of colors then in the descending order of ordering values
+        {
+            auto cmp_colors = [](const CardT& left, const CardT& right) {
+                return left.get_color() < right.get_color() ||
+                    (left.get_color() == right.get_color() && left.ordering_value < right.ordering_value);
+            };
+            std::ranges::stable_sort(MyBaseClass::deck(), cmp_colors);
+        }
+
+        inline void sort_colors_values()                //!< sorts this deck according to the descending order of colors first then on cards descending values in same color
+        {
+            auto cmp_colors_values = [](const CardT& left, const CardT& right) {
+                return left.get_color() < right.get_color() ||
+                    (left.get_color() == right.get_color() && left.value < right.value);
+            };
+            std::ranges::stable_sort(MyBaseClass::deck(), cmp_colors_values);
+        }
+
+        inline void sort_idents()                       //!< sorts this deck according to the descending order of colors first then on cards descending idents in same color
+        {
+            auto cmp_idents = [](const CardT& left, const CardT& right) {
+                return left.ident < right.ident;
+            };
+            std::ranges::stable_sort(MyBaseClass::deck(), cmp_idents);
+        }
 
 
     private:
-        static inline constexpr std::uint32_t _CARDS_COUNT{ 54 };
+        static inline MyBaseClass _reference_deck{ MyBaseClass(_CARDS_COUNT) };
+        static inline bool _reference_already_set{ false };
+        
+        static void _set_reference_deck();
 
     };
 
 
 
     //=======================================================================
-    /* \brief The class of 52 standard cards decks.
-    */
-    template<typename CardT>
+    // local implementations
+
+    //-----------------------------------------------------------------------
+    template<typename CardT, const std::uint32_t _CARDS_COUNT, const std::uint32_t _START_VALUE>
         requires pltr::cards::is_standard_card_v<CardT>
-    class CardsDeck52 : public CardsDeck<CardT>
+    void StandardCardsDeck<CardT, _CARDS_COUNT, _START_VALUE>::_set_reference_deck()
     {
-    public:
-        //-----   Type wrappers   -----//
-        using MyBaseClass = CardsDeck<CardT>;
+        if (!_reference_already_set) {
+            _reference_deck.clear();
 
+            /*
+            for (typename MyBaseClass::IndexType ident = 0; ident < _CARDS_COUNT; ++ident) {
+                CardT card(ident);
+                card.value += _START_VALUE;
+                _reference_deck.append_card(card);
+            }
+            */
+            for (std::uint32_t i : std::views::iota(std::uint32_t(0), _CARDS_COUNT))
+                _reference_deck.append_card(CardT(i, (i / 4) + _START_VALUE));
 
-        //-----   Constructors / Desctructor   -----//
-        inline CardsDeck52()                                //!< empty constructor
-            : MyBaseClass(_CARDS_COUNT)
-        {
-            refill_deck();
+            _reference_already_set = true;
         }
-
-        CardsDeck52(const CardsDeck52&) noexcept = default; //!< default copy constructor.
-        CardsDeck52(CardsDeck52&&) noexcept = default;      //!< default move constructor.
-
-        virtual ~CardsDeck52() noexcept = default;          //!< default destructor.
-
-
-        //-----   Operators   -----//
-        CardsDeck52& operator=(const CardsDeck52&) noexcept = default;  //!< default copy operator.
-        CardsDeck52& operator=(CardsDeck52&&) noexcept = default;       //!< default move operator.
-
-
-        //-----   Operations   -----//
-        virtual inline const bool allowed_card(const CardT& card) const noexcept override  //!< returns true if this card is allowed to be contained in this deck.
-        {
-            return card.ident < _CARDS_COUNT;
-        }
-
-        inline virtual void refill_deck() override;  //!< fills this deck with all related playing cards. Does nothing in this base class, must be overridden in inheriting classes.
-
-
-    private:
-        static inline constexpr std::uint32_t _CARDS_COUNT{ 52 };
-
-    };
+    }
 
 
 
     //=======================================================================
-    /* \brief The class of 32 standard cards decks.
-    */
+    // Specializations
+    //
+
+    //-----------------------------------------------------------------------
+    /* \brief 54 standard cards decks. */
     template<typename CardT>
-        requires pltr::cards::is_standard_card_v<CardT>
-    class CardsDeck32 : public CardsDeck<CardT>
-    {
-    public:
-        //-----   Type wrappers   -----//
-        using MyBaseClass = CardsDeck<CardT>;
+    using CardsDeck54 = StandardCardsDeck<CardT, 54>;
 
+    //-----------------------------------------------------------------------
+    /* \brief 52 standard cards decks. */
+    template<typename CardT>
+    using CardsDeck52 = StandardCardsDeck<CardT, 52>;
 
-        //-----   Constructors / Desctructor   -----//
-        inline CardsDeck32()                                //!< empty constructor
-            : MyBaseClass(_CARDS_COUNT)
-        {
-            refill_deck();
-        }
+    //-----------------------------------------------------------------------
+    /* \brief 32 standard cards decks. */
+    template<typename CardT>
+    using CardsDeck32 = StandardCardsDeck<CardT, 32>;
 
-        CardsDeck32(const CardsDeck32&) noexcept = default; //!< default copy constructor.
-        CardsDeck32(CardsDeck32&&) noexcept = default;      //!< default move constructor.
-
-        virtual ~CardsDeck32() noexcept = default;          //!< default destructor.
-
-
-        //-----   Operators   -----//
-        CardsDeck32& operator=(const CardsDeck32&) noexcept = default;  //!< default copy operator.
-        CardsDeck32& operator=(CardsDeck32&&) noexcept = default;       //!< default move operator.
-
-
-        //-----   Operations   -----//
-        virtual inline const bool allowed_card(const CardT& card) const noexcept override  //!< returns true if this card is allowed to be contained in this deck.
-        {
-            return card.ident < 4 || (24 <= card.ident && card.ident < 52);
-        }
-
-        inline virtual void refill_deck() override;  //!< fills this deck with all related playing cards. Does nothing in this base class, must be overridden in inheriting classes.
-
-
-    private:
-        static inline constexpr std::uint32_t _CARDS_COUNT{ 32 };
-
-    };
 
 
 
@@ -199,49 +202,5 @@ namespace pltr::cards
     struct is_standard_cards_deck<CardsDeck32<CardT>, CardT> {
         static inline constexpr bool value{ pltr::cards::is_standard_card_v<CardT> };
     };
-
-
-
-    //=======================================================================
-    // local implementations
-
-    //-----------------------------------------------------------------------
-    template<typename CardT>
-        requires pltr::cards::is_standard_card_v<CardT>
-    void CardsDeck54<CardT>::refill_deck()
-    {
-        MyBaseClass::clear();
-        for (typename MyBaseClass::IndexType ident = 0; ident < _CARDS_COUNT; ++ident)
-            MyBaseClass::append_card(CardT(ident, CardT::value_type((ident / 4) + 1)));
-    }
-
-    //-----------------------------------------------------------------------
-    template<typename CardT>
-        requires pltr::cards::is_standard_card_v<CardT>
-    void CardsDeck52<CardT>::refill_deck()
-    {
-        MyBaseClass::clear();
-        for (typename MyBaseClass::IndexType ident = 0; ident < _CARDS_COUNT; ++ident)
-            MyBaseClass::append_card(CardT(ident, CardT::value_type((ident / 4) + 1)));
-    }
-
-    //-----------------------------------------------------------------------
-    template<typename CardT>
-        requires pltr::cards::is_standard_card_v<CardT>
-    void CardsDeck32<CardT>::refill_deck()
-    {
-        MyBaseClass::clear();
-
-        // aces first
-        for (typename MyBaseClass::IndexType ident = 0; ident < 4; ++ident)
-            MyBaseClass::append_card(CardT(ident, CardT::value_type(1)));
-
-        // then 7s to kings
-        constexpr MyBaseClass::IndexType GAP{ 5 * 4 };  // skips 2s to 6s (included)
-        for (typename MyBaseClass::IndexType i = 4; i < _CARDS_COUNT; ++i) {
-            const MyBaseClass::IndexType ident{ i + GAP };
-            MyBaseClass::append_card(CardT(ident, CardT::value_type((ident / 4) + 1)));
-        }
-    }
 
 }

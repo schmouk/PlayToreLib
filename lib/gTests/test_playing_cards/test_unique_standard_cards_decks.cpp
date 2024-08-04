@@ -30,6 +30,8 @@
 //===========================================================================
 TEST(TestSuitePlayingCards, TestUniqueStandardCardsDeck) {
 
+
+    /**** /
     using CardFr = pltr::cards::StandardCardFr;
     using Deck54 = pltr::cards::UniqueStandardCardsDeck54<CardFr>;
     using Deck52 = pltr::cards::UniqueStandardCardsDeck52<CardFr>;
@@ -240,4 +242,5 @@ TEST(TestSuitePlayingCards, TestUniqueStandardCardsDeck) {
     for (int i = 0; i < 52; ++i)
         EXPECT_TRUE(deck52.contains(CardFr(i)));
 
+    /*****/
 }

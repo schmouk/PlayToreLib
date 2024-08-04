@@ -209,7 +209,6 @@ namespace pltr::cards
         inline PlayingCardT& operator=(const PlayingCardT&) noexcept = default; //!< default copy assignment.
         inline PlayingCardT& operator=(PlayingCardT&&) noexcept = default;      //!< default move assignment.
 
-
         [[nodiscard]]
         inline const bool operator< (const PlayingCardT& other) const noexcept  //!< less-than operator.
         {
@@ -227,14 +226,14 @@ namespace pltr::cards
         [[nodiscard]]
         inline const bool operator<= (const PlayingCardT& other) const noexcept  //!< less-than-or-equal operator.
         {
-            return this->value <= other.value;
+            return !(*this > other);
         }
 
 
         [[nodiscard]]
         inline const bool operator>= (const PlayingCardT& other) const noexcept  //!< greater-than-or-equal operator.
         {
-            return this->value >= other.value;
+            return !(*this < other);
         }
 
 

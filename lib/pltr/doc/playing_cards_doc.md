@@ -4,7 +4,7 @@ This file documents the implementation of the base class for all types of playin
 
 The related header file is `include/pltr/playing_cards/playing_cards.h`.
 
-It defines what are playing cards and the actions that can be applied to them.
+It defines what are playing cards and what are the actions that can be applied to them.
 
 
 ## `playing_cards` package - table of content <!-- omit in toc -->
@@ -156,22 +156,22 @@ Default move operator.
 ## Comparison operators
 
 ### `const bool operator< (const PlayingCardT& other) const`
-less-than operator. Operates on values.
+less-than operator. Operates on attributes `value`.
 
 ### `const bool operator> (const PlayingCardT& other) const`
-greater-than operator. Operates on values.
+greater-than operator. Operates on attributes `value`.
 
 ### `const bool operator<= (const PlayingCardT& other) const`
-less-than-or-equal operator. Operates on values.
+less-than-or-equal operator. Operates on attributes `value`.
 
 ### `const bool operator>= (const PlayingCardT& other) const`
-greater-than-or-equal operator. Operates on values.
+greater-than-or-equal operator. Operates on attributes `value`.
 
 ### `const bool operator== (const PlayingCardT& other) const`
-equality operator. Operates on values.
+equality operator. Operates on attributes `value`.
 
 ### `const bool operator!= (const PlayingCardT& other) const`
-non-equality operator. Operates on values.
+non-equality operator. Operates on attributes `value`.
 
 
 ## Operations

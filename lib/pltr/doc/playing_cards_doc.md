@@ -45,6 +45,7 @@ It defines what are playing cards and what are the actions that can be applied t
     - [`void set (const IdentT ident_, const ValueT value_, const ValueT ordering_value_, const std::filesystem::path& image_path_)`](#void-set-const-identt-ident_-const-valuet-value_-const-valuet-ordering_value_-const-stdfilesystempath-image_path_)
     - [`void set (const IdentT ident_, const ValueT value_, const std::filesystem::path& image_path_, const std::string& text_)`](#void-set-const-identt-ident_-const-valuet-value_-const-stdfilesystempath-image_path_-const-stdstring-text_)
     - [`void set (const IdentT ident_, const ValueT value_, const ValueT ordering_value_, const std::filesystem::path& image_path_, const std::string& text_)`](#void-set-const-identt-ident_-const-valuet-value_-const-valuet-ordering_value_-const-stdfilesystempath-image_path_-const-stdstring-text_)
+    - [`virtual void action ()`](#virtual-void-action-)
     - [`virtual void draw ()`](#virtual-void-draw-)
 
 
@@ -193,6 +194,10 @@ Sets Sets attributes  `ident`, `value`, `image_path` and `text`. Attribute `orde
 
 ### `void set (const IdentT ident_, const ValueT value_, const ValueT ordering_value_, const std::filesystem::path& image_path_, const std::string& text_)`
 Sets all attributes.
+
+### `virtual void action ()` 
+Actions to be processed when this card is played.  
+Does nothing in this base class. To be overridden in inheriting classes if this gets meaning.
 
 ### `virtual void draw ()`
 Draws this card (CAUTION: this is a drawing action on screen, not a draw from a deck!).  

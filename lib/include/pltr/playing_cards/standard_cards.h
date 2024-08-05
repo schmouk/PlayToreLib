@@ -27,9 +27,9 @@
 #include <cstdint>
 #include <filesystem>
 
-#include "core/object.h"
-#include "playing_cards/playing_cards.h"
-#include "core/template_utils.h"
+#include "pltr/core/object.h"
+#include "pltr/playing_cards/playing_cards.h"
+#include "pltr/core/template_utils.h"
 
 
 //===========================================================================

@@ -29,8 +29,8 @@
 #include <ranges>
 #include <type_traits>
 
-#include "playing_cards/standard_cards.h"
-#include "playing_cards/cards_deck.h"
+#include "pltr/playing_cards/standard_cards.h"
+#include "pltr/playing_cards/cards_deck.h"
 
 
 //===========================================================================

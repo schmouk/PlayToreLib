@@ -27,8 +27,8 @@
 #include <cstdint>
 #include <type_traits>
 
-#include "playing_cards/standard_cards.h"
-#include "playing_cards/standard_cards_decks.h"
+#include "pltr/playing_cards/standard_cards.h"
+#include "pltr/playing_cards/standard_cards_decks.h"
 
 
 //===========================================================================

@@ -23,8 +23,8 @@
 //===========================================================================
 #include "gtest/gtest.h"
 
-#include "playing_cards/cards_deck.h"
-#include "playing_cards/playing_cards.h"
+#include "pltr/playing_cards/cards_deck.h"
+#include "pltr/playing_cards/playing_cards.h"
 
 
 //===========================================================================

@@ -7,7 +7,7 @@ The related header file is `include/pltr/playing_cards/playing_cards.h`.
 It defines what are playing cards and what are the actions that can be applied to them.
 
 
-## `playing_cards` package - table of content <!-- omit in toc -->
+## `playing_cards.h` header file - table of content <!-- omit in toc -->
 - [`playing_cards_doc.md` - intro](#playing_cards_docmd---intro)
 - [struct `PlayingCardT<>`](#struct-playingcardt)
   - [Types Wrappers](#types-wrappers)

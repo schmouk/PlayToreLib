@@ -75,7 +75,7 @@ The standard colors for standard playing cards. These are named (in their ordere
 # Exception(s)
 
 ## `struct StandardInvalidIdent : public std::exception`
-The StandardInvalidIdent exception for standard cards. Raised when an ident value is out of bounds [0, 53]. Method `what()` returns an `std::string` which contains a message error with the invalid indentifier.
+The StandardInvalidIdent exception for standard cards. Raised every time an ident value (used for the setting of standard cards identifiers) is out of bounds [0, 53]. Method `what()` returns an `std::string` which contains a message error that shows the invalid indentifier.
 
 
 # class `StandardCard<>`

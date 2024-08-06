@@ -39,7 +39,7 @@ TEST(TestSuitePlayingCards, TestStandardCard) {
     // tests empty default constructor
     StandardCard card0;
     EXPECT_EQ(0, card0.ident);
-    EXPECT_EQ(StandardCard::_START_VALUE, card0.value);
+    EXPECT_EQ(StandardCard::START_VALUE, card0.value);
     EXPECT_STREQ(EMPTY_WSTRING.c_str(), card0.image_path.c_str());
     EXPECT_STREQ("2C", card0.text.c_str());
 
@@ -68,7 +68,7 @@ TEST(TestSuitePlayingCards, TestStandardCard) {
             }
 
             EXPECT_EQ(i, card.ident);
-            EXPECT_EQ(i / 4 + StandardCard::_START_VALUE, card.value);
+            EXPECT_EQ(i / 4 + StandardCard::START_VALUE, card.value);
             EXPECT_STREQ(EMPTY_WSTRING.c_str(), card.image_path.c_str());
             EXPECT_STREQ(std::format("{:c}{:c}", id, color).c_str(), card.text.c_str());
 
@@ -99,7 +99,7 @@ TEST(TestSuitePlayingCards, TestStandardCard) {
 
     card.set(i);
     EXPECT_EQ(i, card.ident);
-    EXPECT_EQ(i / 4 + StandardCard::_START_VALUE, card.value);
+    EXPECT_EQ(i / 4 + StandardCard::START_VALUE, card.value);
     EXPECT_STREQ(EMPTY_WSTRING.c_str(), card.image_path.c_str());
     EXPECT_STREQ("JR", card.text.c_str());
     EXPECT_TRUE(card.is_joker());
@@ -114,7 +114,7 @@ TEST(TestSuitePlayingCards, TestStandardCard) {
 
     card.set(i);
     EXPECT_EQ(i, card.ident);
-    EXPECT_EQ(i / 4 + StandardCard::_START_VALUE, card.value);
+    EXPECT_EQ(i / 4 + StandardCard::START_VALUE, card.value);
     EXPECT_STREQ(EMPTY_WSTRING.c_str(), card.image_path.c_str());
     EXPECT_STREQ("JB", card.text.c_str());
     EXPECT_TRUE(card.is_joker());
@@ -125,5 +125,25 @@ TEST(TestSuitePlayingCards, TestStandardCard) {
     EXPECT_FALSE(card0 > card);
     EXPECT_FALSE(card0 >= card);
 
+
+    EXPECT_THROW({
+        try{
+            StandardCard invalid_card(54);
+        }
+        catch (pltr::cards::StandardInvalidIdent& s) {
+            EXPECT_STREQ("'54' is an invalid identifier for standard cards (0 <= ident <= 53)", s.what().c_str());
+            throw s;
+        }
+    }, pltr::cards::StandardInvalidIdent);
+
+    EXPECT_THROW({
+        try {
+            StandardCard invalid_card(255);
+        }
+        catch (pltr::cards::StandardInvalidIdent& s) {
+            EXPECT_STREQ("'255' is an invalid identifier for standard cards (0 <= ident <= 53)", s.what().c_str());
+            throw s;
+        }
+        }, pltr::cards::StandardInvalidIdent);
 
 }

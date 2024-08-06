@@ -25,6 +25,8 @@
 //===========================================================================
 #include <algorithm>
 #include <cstdint>
+#include <exception>
+#include <format>
 #include <filesystem>
 
 #include "pltr/core/object.h"
@@ -41,6 +43,25 @@ namespace pltr::cards
     enum class EColor : std::uint8_t //!< the standard colors for standard playing cards
     {
         E_CLUB, E_DIAMOND, E_HEART, E_SPADE, E_RED, E_BLACK
+    };
+
+
+    //=======================================================================
+    /* \brief The InvalidIdent exception for standard cards. Raised when an ident value is out of bounds [0, 53].
+    */
+    struct StandardInvalidIdent : public std::exception
+    {
+        std::string _msg;
+
+        inline StandardInvalidIdent(const int ident)
+            : _msg{ std::format("'{}' is an invalid identifier for standard cards (0 <= ident <= 53)", ident) }
+        {}
+
+        std::string& what()
+        {
+            return this->_msg;
+        }
+
     };
 
 
@@ -65,10 +86,8 @@ namespace pltr::cards
 
 
         //-----   constants   -----//
-        static inline constexpr ValueT _START_VALUE{ _START_VALUE };
+        static inline constexpr ValueT START_VALUE{ _START_VALUE };
 
-
-        //-----   constants   -----//
         static inline constexpr IdentT CARDS_PER_COLOR{ 13 };
         static inline constexpr IdentT COLORS_COUNT{ 4 };
 
@@ -80,15 +99,17 @@ namespace pltr::cards
         inline StandardCard()                                           //!< empty constructor.
             : MyBaseClass(0, _START_VALUE)
         {
+            _check_ident();
             _set_text();
         }
 
 
         inline StandardCard(
             const IdentT ident_
-        ) noexcept                                                      //!< 1-valued constructor.
+        )                                                               //!< 1-valued constructor.
             : MyBaseClass(ident_, ValueT(ident_ / 4 + _START_VALUE))
         {
+            _check_ident();
             _set_text();
         }
 
@@ -96,9 +117,10 @@ namespace pltr::cards
         inline StandardCard(
             const IdentT ident_,
             const ValueT value_
-        ) noexcept                                                      //!< 2-valued constructor (1/2).
+        )                                                               //!< 2-valued constructor (1/2).
             : MyBaseClass(ident_, value_)
         {
+            _check_ident();
             _set_text();
         }
 
@@ -106,9 +128,10 @@ namespace pltr::cards
         inline StandardCard(
             const IdentT ident_,
             const std::filesystem::path& image_path_
-        ) noexcept                                                      //!< 2-valued constructor (2/2).
+        )                                                               //!< 2-valued constructor (2/2).
             : MyBaseClass(ident_, ValueT(ident_ / 4 + _START_VALUE), image_path_)
         {
+            _check_ident();
             _set_text();
         }
 
@@ -117,9 +140,10 @@ namespace pltr::cards
             const IdentT ident_,
             const ValueT value_,
             const ValueT ordering_value_
-        ) noexcept                                                      //!< 3-valued constructor (1/2).
+        )                                                               //!< 3-valued constructor (1/2).
             : MyBaseClass(ident_, value_, ordering_value_)
         {
+            _check_ident();
             _set_text();
         }
 
@@ -128,9 +152,10 @@ namespace pltr::cards
             const IdentT ident_,
             const ValueT value_,
             const std::filesystem::path& image_path_
-        ) noexcept                                                      //!< 3-valued constructor (2/2).
+        )                                                               //!< 3-valued constructor (2/2).
             : MyBaseClass(ident_, value_, image_path_)
         {
+            _check_ident();
             _set_text();
         }
 
@@ -140,9 +165,10 @@ namespace pltr::cards
             const ValueT value_,
             const ValueT ordering_value_,
             const std::filesystem::path& image_path_
-        ) noexcept                                                      //!< 4-valued constructor.
+        )                                                               //!< 4-valued constructor.
             : MyBaseClass(ident_, value_, ordering_value_, image_path_)
         {
+            _check_ident();
             _set_text();
         }
 
@@ -161,7 +187,6 @@ namespace pltr::cards
         [[nodiscard]]
         inline const EColor get_color() const noexcept                      //!< returns the enum color of this card
         {
-            //return EColor(this->ident % IdentT(EColor::COLORS_COUNT));
             return is_joker() ? EColor(this->ident - JOKERS_FIRST_IDENT + 4) : EColor(this->ident % COLORS_COUNT);
         }
 
@@ -173,14 +198,16 @@ namespace pltr::cards
         }
 
 
-        inline void set(const IdentT ident_) noexcept                       //!< sets data (1 arg).
+        inline void set(const IdentT ident_)                                //!< sets data (1 arg).
         {
+            _check_ident();
             set(ident_, ident_ / 4 + _START_VALUE);
         }
 
 
-        inline void set(const IdentT ident_, const ValueT value_) noexcept  //!< sets data (2 args).
+        inline void set(const IdentT ident_, const ValueT value_)           //!< sets data (2 args).
         {
+            _check_ident();
             MyBaseClass::set(ident_, value_);
             _set_text();
         }
@@ -190,7 +217,7 @@ namespace pltr::cards
             const IdentT ident_,
             const ValueT value_,
             const ValueT ordering_value_
-        ) noexcept                                                          //!< sets data (3 args, 1/2).
+        )                                                                   //!< sets data (3 args, 1/2).
         {
             MyBaseClass::set(ident_, value_, ordering_value_);
             _set_text();
@@ -200,7 +227,7 @@ namespace pltr::cards
         inline void set(
             const IdentT ident_,
             const ValueT value_,
-            const std::filesystem::path& image_path_) noexcept              //!< sets data (3 args, 2/2).
+            const std::filesystem::path& image_path_)                       //!< sets data (3 args, 2/2).
         {
             MyBaseClass::set(ident_, value_, image_path_);
             _set_text();
@@ -211,64 +238,33 @@ namespace pltr::cards
             const IdentT ident_,
             const ValueT value_,
             const ValueT ordering_value_,
-            const std::filesystem::path& image_path_) noexcept              //!< sets data (4 args).
+            const std::filesystem::path& image_path_)                       //!< sets data (4 args).
         {
             MyBaseClass::set(ident_, value_, ordering_value_, image_path_);
             _set_text();
         }
 
 
-        //-----   Comparison Operations   -----//
-        static struct CmpColors {
-            bool operator() (const MyClassType& left, const MyClassType& right) {
-                return left.get_color() < right.get_color();
-            }
-        } cmp_colors;                                                       //!< comparison on sole colors of cards
-
-
-        static struct {
-            bool operator() (const MyClassType& left, const MyClassType& right) {
-                return left.get_color() < right.get_color() ||
-                    (left.get_color() == right.get_color() && left.value < right.value);
-            }
-        } CmpColorsValues;                                                  //!< comparison on colors of cards first then on cards value in same color
-
-
-        static struct {
-            bool operator() (const MyClassType& left, const MyClassType& right) {
-                return left.ident < right.ident;
-            }
-        } CmpIdents;                                                        //!< comparison on sole ident of cards 
-
-
-        static struct {
-            bool operator() (const MyClassType& left, const MyClassType& right) {
-                return left < right;
-            }
-        } CmpValue;                                                         //!< comparison on sole value of cards 
-
-
-
     protected:
         void _set_text() noexcept  //!< internally sets the text of this card
         {
-            if (!is_joker())
-                this->text = std::format(
-                    "{:c}{:c}",
-                    _CARDS_LETTERS[this->ident / COLORS_COUNT],
-                    _COLORS_LETTERS[this->ident % COLORS_COUNT]
-                );
-            else
-                this->text = std::format(
-                    "{:c}{:c}",
-                    _CARDS_LETTERS[JOKERS_INDEX],
-                    (this->ident == JOKERS_FIRST_IDENT) ? _JOKERS_COLORS[0] : _JOKERS_COLORS[1]
-                );
+            const char face_letter{ _CARDS_LETTERS[this->ident / COLORS_COUNT] };
+            const int color_index{ int(get_color()) };
+            const char color_letter{ color_index < COLORS_COUNT ? _COLORS_LETTERS[color_index] : _JOKERS_COLORS[color_index - COLORS_COUNT] };
+
+            this->text = std::format("{:c}{:c}", face_letter, color_letter);
 
             MyBaseClass::Object::inheriting_class_name = "StandardCard<>";
             MyBaseClass::Object::object_name = this->text;
         }
 
+
+    private:
+        inline void _check_ident()  //!< throws exception if internal value of ident is out of bounds
+        {
+            if (this->ident < 0 || this->ident >= CARDS_PER_COLOR * COLORS_COUNT + 2)
+                throw pltr::cards::StandardInvalidIdent(this->ident);
+        }
     };
 
 
@@ -299,7 +295,7 @@ namespace pltr::cards
     //=======================================================================
     /* \brief The class for standard cards - Italian localization.
     */
-    using StandardCardIt = StandardCard<"23456789XJAR1J", "MQCP", "RN">;  // notice: JARJ per Jack, reginA, Re, Joker ; MQCP per Mazze, Quadri; Cuore, Picche
+    using StandardCardIt = StandardCard<"23456789XJAR1J", "MQCP", "RN">;  // notice: JARJ per Jack, reginA, Re, Joker ; MQCP per Mazze, Quadri, Cuore, Picche
 
 
     //=======================================================================

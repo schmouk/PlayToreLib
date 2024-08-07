@@ -42,13 +42,12 @@ namespace pltr::core
         Object& operator= (const Object&) noexcept = default;
         Object& operator= (Object&&) noexcept = default;
 
-        Object(const std::string& inheriting_class_name_) noexcept;
-        Object(const std::string& inheriting_class_name_, std::string& object_name_) noexcept;
-
         virtual std::string repr() noexcept;  //!< helps logging information related to the inheriting object when debugging via logs.
 
-        std::string inheriting_class_name{};
-        std::string object_name{};
+        inline virtual const std::string get_object_name() const noexcept  //!< returns the name of the object. To be overridden in inheriting classes if this makes sense.
+        {
+            return "";
+        }
 
     };
 

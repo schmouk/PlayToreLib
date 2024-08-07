@@ -253,9 +253,6 @@ namespace pltr::cards
             const char color_letter{ color_index < COLORS_COUNT ? _COLORS_LETTERS[color_index] : _JOKERS_COLORS[color_index - COLORS_COUNT] };
 
             this->text = std::format("{:c}{:c}", face_letter, color_letter);
-
-            MyBaseClass::Object::inheriting_class_name = "StandardCard<>";
-            MyBaseClass::Object::object_name = this->text;
         }
 
 

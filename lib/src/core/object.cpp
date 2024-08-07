@@ -34,28 +34,14 @@
 namespace pltr::core
 {
     //-----------------------------------------------------------------------
-    Object::Object(const std::string& inheriting_class_name_) noexcept
-        : inheriting_class_name(inheriting_class_name_)
-        , object_name()
-    {}
-
-
-    //-----------------------------------------------------------------------
-    Object::Object(const std::string& inheriting_class_name_, std::string& object_name_) noexcept
-        : inheriting_class_name(inheriting_class_name_)
-        , object_name(object_name_)
-    {}
-
-
-    //-----------------------------------------------------------------------
     std::string Object::repr() noexcept
     {
         // reminder: helps logging information related to the inheriting object when debugging via logs.
         // Use it and add your own logs text when debugging the code of your inheriting objects.
-        return std::format("{:08x} (class '{:s}' - instance name '{:s}')",
+        return std::format("0x{:08x} ({:s} - instance name: '{:s}')",
             std::size_t(this),
-            this->inheriting_class_name,
-            this->object_name
+            typeid(*this).name(),
+            this->get_object_name()
         );
     }
 

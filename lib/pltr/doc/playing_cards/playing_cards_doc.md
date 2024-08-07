@@ -206,4 +206,4 @@ Does nothing in this base class. To be overridden in inheriting classes if this 
 
 ### `protected: virtual const std::string _get_object_name() const noexcept override`
 Returns the name of the object.  
-In this class, just retruns the value of attribute `text`. This protected method is overridden from the inherited class `pltr::core::Object` and is internally called by method `pltr::core::Object::repr()` to provide a log string related to this playing card instance.
+In this class, just returns the value of attribute `text`. This protected method is overridden from the inherited class `pltr::core::Object` and is internally called by method `pltr::core::Object::repr()` to provide a log string related to this playing card instance.

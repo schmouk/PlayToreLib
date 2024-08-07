@@ -266,11 +266,7 @@ namespace pltr::cards
         }
 
 
-        //-----   Accessors / Mutators   -----//
-        inline virtual const std::string get_object_name() const noexcept       //!< returns the name of the object. To be overridden in inheriting classes if this makes sense.
-        {
-            return this->text;
-        }
+        //-----   Mutators   -----//
         inline void set(const IdentT ident_, const ValueT value_) noexcept      //!< sets data.
         {
             ident = ident_;
@@ -342,11 +338,11 @@ namespace pltr::cards
         }
 
 
-        protected:
-            inline virtual const std::string _get_object_name() const noexcept override  //!< returns the name of the object. To be overridden in inheriting classes if this makes sense.
-            {
-                return this->text;
-            }
+    protected:
+        inline virtual const std::string _get_object_name() const noexcept override  //!< returns the name of the object. To be overridden in inheriting classes if this makes sense.
+        {
+            return this->text;
+        }
 
     };
 

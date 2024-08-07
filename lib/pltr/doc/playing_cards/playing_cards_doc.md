@@ -9,7 +9,7 @@ It defines what are playing cards and what are the actions that can be applied t
 
 ## `playing_cards.h` header file - table of content <!-- omit in toc -->
 - [`playing_cards_doc.md` - intro](#playing_cards_docmd---intro)
-- [struct `PlayingCardT<>`](#struct-playingcardt)
+- [class `PlayingCardT<>`](#class-playingcardt)
   - [Types Wrappers](#types-wrappers)
   - [Attributes](#attributes)
   - [Constructors / Destructor](#constructors--destructor)
@@ -47,12 +47,13 @@ It defines what are playing cards and what are the actions that can be applied t
     - [`void set (const IdentT ident_, const ValueT value_, const ValueT ordering_value_, const std::filesystem::path& image_path_, const std::string& text_)`](#void-set-const-identt-ident_-const-valuet-value_-const-valuet-ordering_value_-const-stdfilesystempath-image_path_-const-stdstring-text_)
     - [`virtual void action ()`](#virtual-void-action-)
     - [`virtual void draw ()`](#virtual-void-draw-)
+    - [`protected: virtual const std::string _get_object_name() const noexcept override`](#protected-virtual-const-stdstring-_get_object_name-const-noexcept-override)
 
 
 # Code documentation <!-- omit in toc -->
 Next subsections document the public and protected APIs of class `pltr::cards::PlayingCardT<>`.
 
-# struct `PlayingCardT<>`
+# class `PlayingCardT<>`
 Defined in file `include/pltr/playing_cards/playing_cards.h`.
 
 `PlayingCardsT<>` is the base class for all playing cards and is defined as a template:
@@ -202,3 +203,7 @@ Does nothing in this base class. To be overridden in inheriting classes if this 
 ### `virtual void draw ()`
 Draws this card (CAUTION: this is a drawing action on screen, not a draw from a deck!).  
 Does nothing in this base class. To be overridden in inheriting classes if this gets meaning.
+
+### `protected: virtual const std::string _get_object_name() const noexcept override`
+Returns the name of the object.  
+In this class, just retruns the value of attribute `text`. This protected method is overridden from the inherited class `pltr::core::Object` and is internally called by method `pltr::core::Object::repr()` to provide a log string related to this playing card instance.

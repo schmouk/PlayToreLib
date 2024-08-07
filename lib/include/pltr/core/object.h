@@ -32,8 +32,10 @@ namespace pltr::core
 {
     //=======================================================================
     /* \brief The base class for every object in PlayTore library. */
-    struct Object
+    class Object
     {
+    public:
+
         Object() noexcept = default;
         Object(const Object&) noexcept = default;
         Object(Object&&) noexcept = default;
@@ -44,7 +46,8 @@ namespace pltr::core
 
         virtual std::string repr() noexcept;  //!< helps logging information related to the inheriting object when debugging via logs.
 
-        inline virtual const std::string get_object_name() const noexcept  //!< returns the name of the object. To be overridden in inheriting classes if this makes sense.
+    protected:
+        inline virtual const std::string _get_object_name() const noexcept  //!< returns the name of the object. To be overridden in inheriting classes if this makes sense.
         {
             return "";
         }

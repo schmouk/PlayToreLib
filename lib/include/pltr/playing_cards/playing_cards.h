@@ -40,8 +40,9 @@ namespace pltr::cards
     template<
         typename IdentT = char,
         typename ValueT = std::int32_t
-    > struct PlayingCardT : public pltr::core::Object
+    > class PlayingCardT : public pltr::core::Object
     {
+    public:
         //-----   Types wrappers   -----//
         using ident_type = IdentT;
         using value_type = ValueT;
@@ -339,6 +340,13 @@ namespace pltr::cards
             // does nothing in this base class
             // to be overridden in inheriting classes if this gets meaning.
         }
+
+
+        protected:
+            inline virtual const std::string _get_object_name() const noexcept override  //!< returns the name of the object. To be overridden in inheriting classes if this makes sense.
+            {
+                return this->text;
+            }
 
     };
 

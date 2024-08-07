@@ -46,6 +46,7 @@ Standard cards are the one that are used for playing Poker, for instance, plus b
     - [`void set(const IdentT ident_, const ValueT value_, const std::filesystem::path& image_path_)`](#void-setconst-identt-ident_-const-valuet-value_-const-stdfilesystempath-image_path_)
     - [`void set(const IdentT ident_, const ValueT value_, const ValueT ordering_value_, const std::filesystem::path& image_path_)`](#void-setconst-identt-ident_-const-valuet-value_-const-valuet-ordering_value_-const-stdfilesystempath-image_path_)
     - [`void _set_text()`](#void-_set_text)
+    - [`virtual const std::string _get_object_name() const noexcept override`](#virtual-const-stdstring-_get_object_name-const-noexcept-override)
 - [Template Specialization](#template-specialization)
   - [`using StandardCardDe = StandardCard<"23456789XBDK1J", "RAHP", "RS">`](#using-standardcardde--standardcard23456789xbdk1j-rahp-rs)
   - [`using StandardClassEn = StandardCard<>`](#using-standardclassen--standardcard)
@@ -249,6 +250,10 @@ Attribute `ident` is set to `ident_`, Attribute `value` is set to `value_`. Attr
 ### `void _set_text()`
 Protected method. Internally sets the text of this card according to its known `ident`: the letter associated with this card face is set to `_CARDS_LETTERS[this->ident / COLORS_COUNT]`; the letter associated to its color relates to the returned value of method `get_color()`.  
 Notice: the attributes of base class `pltr::core::Object` are set also with class name `StandardCard<>` and with attribute `text` content as the instance name.
+
+### `virtual const std::string _get_object_name() const noexcept override`
+Protected method. Returns the name of the object.  
+As inherited from base class `PlayingCardT<>`, just returns the value of attribute `text`. This protected method is overridden from the inherited class `pltr::core::Object` and is internally called by method `pltr::core::Object::repr()` to provide a log string related to this playing card instance.
 
 
 # Template Specialization

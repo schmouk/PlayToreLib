@@ -41,7 +41,7 @@ namespace pltr::core
         return std::format("0x{:08x} ({:s} - instance name: '{:s}')",
             std::size_t(this),
             typeid(*this).name(),
-            this->get_object_name()
+            this->_get_object_name()
         );
     }
 

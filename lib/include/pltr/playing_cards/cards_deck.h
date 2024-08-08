@@ -53,11 +53,10 @@ namespace pltr::cards
         //-----   Types wrappers and declarations   -----//
         using CardType = CardT;
         using IndexType = std::uint32_t;
-        using Cardslist = pltr::cards::CardsList<CardT>;
 
 
         //-----   Constructors / Desctructor   -----//
-        CardsDeck() noexcept = default;                                 //!< empty constructor.
+        CardsDeck();                                                    //!< empty constructor.
 
         CardsDeck(const IndexType max_cards_count);                     //!< constructor with size argument.
 
@@ -280,10 +279,13 @@ namespace pltr::cards
 
 
     private:
+        using _PrngType = std::mt19937;
+
         std::uniform_real_distribution<float> _udistribution{ 0.0f, 1.0f };
-        std::mt19937 _urand_generator{};
+        static inline _PrngType _urand_generator{};
         CardsList<CardT> _deck{};
         IndexType _max_cards_count{ 0 };
+        bool _urand_generator_inited{ false };
 
         [[nodiscard]]
         inline CardsList<CardT>::iterator _get_indexed_iterator(const IndexType index)
@@ -327,6 +329,15 @@ namespace pltr::cards
 
     //=======================================================================
     // local implementations
+
+    //-----------------------------------------------------------------------
+    template<typename CardT>
+    CardsDeck<CardT>::CardsDeck()
+        : pltr::core::Object()
+    {
+        _set_deck(0);
+        _set_randomness();
+    }
 
     //-----------------------------------------------------------------------
     template<typename CardT>
@@ -577,8 +588,11 @@ namespace pltr::cards
     template<typename CardT>
     void CardsDeck<CardT>::_set_randomness()
     {
-        std::random_device rd_seed;
-        this->_urand_generator.seed(rd_seed());
+        if (!this->_urand_generator_inited) {
+            std::random_device rd_seed;
+            this->_urand_generator.seed(rd_seed());
+            this->_urand_generator_inited = true;
+        }
     }
 
 }

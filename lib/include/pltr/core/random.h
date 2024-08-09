@@ -49,11 +49,11 @@ namespace pltr::core
         static inline std::mt19937_64 _rand_generator{};
         static inline bool _already_inited{ false };
 
-        inline void _check_init()
+        inline static void _check_init()
         {
             if (!_already_inited) {
-                this->_rand_generator.seed(std::random_device()());
-                this->_already_inited = true;
+                BaseRandom::_rand_generator.seed(std::random_device()());
+                BaseRandom::_already_inited = true;
             }
         }
 
@@ -77,29 +77,29 @@ namespace pltr::core
 
         template<typename IntType>
             requires std::is_integral_v<IntType>
-        inline const IntType urand(const IntType min, const IntType max)        //!< returns an random integer in range [min, max] with uniform distribution
+        inline static const IntType urand(const IntType min, const IntType max)        //!< returns an random integer in range [min, max] with uniform distribution
         {
             _check_init();
-            return std::uniform_int_distribution<IntType>(min, max)(this->_rand_generator);
+            return std::uniform_int_distribution<IntType>(min, max)(_rand_generator);
         }
 
         template<typename FloatType>
             requires std::is_floating_point_v<FloatType>
-        inline const FloatType urand(const FloatType min, const FloatType max)  //!< returns a random float value in range [min, max] with uniform distribution
+        inline static const FloatType urand(const FloatType min, const FloatType max)  //!< returns a random float value in range [min, max] with uniform distribution
         {
             _check_init();
-            return std::uniform_real_distribution<FloatType>(min, max)(this->_rand_generator);
+            return std::uniform_real_distribution<FloatType>(min, max)(_rand_generator);
         }
 
         template<typename FloatType>
             requires std::is_floating_point_v<FloatType>
-        inline const FloatType urand()                                          //!< returns a random float value in range [0.0, 1.0] with uniform distribution
+        inline static const FloatType urand()                                          //!< returns a random float value in range [0.0, 1.0] with uniform distribution
         {
             _check_init();
-            return std::uniform_real_distribution<FloatType>(FloatType(0), FloatType(1))(this->_rand_generator);
+            return std::uniform_real_distribution<FloatType>(FloatType(0), FloatType(1))(_rand_generator);
         }
 
-        inline const double urand()                                             //!< shortcut to return a double value in range [0.0, 1.0] with uniform distribution
+        inline static const double urand()                                             //!< shortcut to return a double value in range [0.0, 1.0] with uniform distribution
         {
             return urand<double>();
         }
@@ -130,7 +130,7 @@ namespace pltr::core
         {
             std::lock_guard<std::mutex> guard(this->_mutex);
             _check_init();
-            return std::uniform_int_distribution<IntType>(min, max)(this->_rand_generator);
+            return std::uniform_int_distribution<IntType>(min, max)(_rand_generator);
         }
 
         template<typename FloatType>
@@ -139,7 +139,7 @@ namespace pltr::core
         {
             std::lock_guard<std::mutex> guard(this->_mutex);
             _check_init();
-            return std::uniform_real_distribution<FloatType>(min, max)(this->_rand_generator);
+            return std::uniform_real_distribution<FloatType>(min, max)(_rand_generator);
         }
 
         template<typename FloatType>
@@ -148,7 +148,7 @@ namespace pltr::core
         {
             _check_init();
             std::lock_guard<std::mutex> guard(this->_mutex);
-            return std::uniform_real_distribution<FloatType>(FloatType(0), FloatType(1))(this->_rand_generator);
+            return std::uniform_real_distribution<FloatType>(FloatType(0), FloatType(1))(_rand_generator);
         }
 
         inline const double urand()                                             //!< shortcut to return a double value in range [0.0, 1.0] with uniform distribution

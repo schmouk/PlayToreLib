@@ -31,6 +31,7 @@
 #include <vector>
 
 #include "pltr/core/object.h"
+#include "pltr/core/random.h"
 
 
 //===========================================================================
@@ -69,7 +70,6 @@ namespace pltr::cards
             const NextCardsT&... next_cards)                            //!< constructor with initialization list
         {
             _set_deck(max_cards_count);
-            _set_randomness();
             insert_cards(first_card, next_cards...);
         }
 
@@ -94,7 +94,7 @@ namespace pltr::cards
         }
 
 
-        //-----   Accessors   -----//
+        //-----   Accessors / Mutators   -----//
         [[nodiscard]]
         inline const IndexType get_current_cards_count() const noexcept //!< returns the count of cards currently contained in this deck.
         {
@@ -279,13 +279,9 @@ namespace pltr::cards
 
 
     private:
-        using _PrngType = std::mt19937;
-
-        std::uniform_real_distribution<float> _udistribution{ 0.0f, 1.0f };
-        static inline _PrngType _urand_generator{};
         CardsList<CardT> _deck{};
         IndexType _max_cards_count{ 0 };
-        bool _urand_generator_inited{ false };
+        
 
         [[nodiscard]]
         inline CardsList<CardT>::iterator _get_indexed_iterator(const IndexType index)
@@ -306,10 +302,10 @@ namespace pltr::cards
         }
 
         [[nodiscard]]
-        inline const IndexType _get_random_index(const IndexType n)
+        inline const IndexType _get_random_index(const IndexType max_index)
         {
-            if (n > 0) [[likely]]
-                return IndexType(this->_udistribution(this->_urand_generator) * float(n));
+            if (max_index > 1) [[likely]]
+                return IndexType(pltr::core::Random::urand(IndexType(0), max_index-1));
             else [[unlikely]]
                 return IndexType(0);
         }
@@ -320,8 +316,6 @@ namespace pltr::cards
         }
 
         void _set_deck(const IndexType max_cards_count);
-
-        void _set_randomness();
 
     };
 
@@ -336,7 +330,6 @@ namespace pltr::cards
         : pltr::core::Object()
     {
         _set_deck(0);
-        _set_randomness();
     }
 
     //-----------------------------------------------------------------------
@@ -345,7 +338,6 @@ namespace pltr::cards
         : pltr::core::Object()
     {
         _set_deck(max_cards_count);
-        _set_randomness();
     }
 
     //-----------------------------------------------------------------------
@@ -354,7 +346,6 @@ namespace pltr::cards
         : pltr::core::Object()
     {
         append_cards(cards);
-        _set_randomness();
     }
 
     //-----------------------------------------------------------------------
@@ -582,17 +573,6 @@ namespace pltr::cards
         this->_max_cards_count = max_cards_count;
         this->_deck.reserve(max_cards_count);
         this->refill_deck();
-    }
-
-    //-----------------------------------------------------------------------
-    template<typename CardT>
-    void CardsDeck<CardT>::_set_randomness()
-    {
-        if (!this->_urand_generator_inited) {
-            std::random_device rd_seed;
-            this->_urand_generator.seed(rd_seed());
-            this->_urand_generator_inited = true;
-        }
     }
 
 }

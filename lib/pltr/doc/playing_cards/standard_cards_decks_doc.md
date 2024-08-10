@@ -76,9 +76,9 @@ For decks that contain at most one same standard card and not more at a time, se
     - [`void sort()`](#void-sort)
     - [`void sort_colors_values()`](#void-sort_colors_values)
     - [`void sort_idents()`](#void-sort_idents)
+  - [Internal implementation topics](#internal-implementation-topics)
   - [Notes](#notes)
     - [note 1](#note-1)
-  - [Internal implementation topics](#internal-implementation-topics)
 
 
 # Code documentation <!-- omit in toc -->
@@ -367,11 +367,11 @@ Sorts this deck according to the descending order of colors first then on cards 
 Ssorts this deck according to the descending order of colors first then on cards descending idents in same color.
 
 
+## Internal implementation topics
+A static reference deck is initialized once for every specialization of template `cards::StandardCardsDeck<>`. The initialization takes place at the very first instantiation of the specialized class. This reference deck is used back every time a call to `refill_deck()` is done. It is a way to speed up refills.
+
+
 ## Notes
 
 ### note 1
 Base class `pltr::cards::CardsDeck<>` uses internally and per default the (not-thread safe) **PlayTore** core class `pltr::core::Random`, defined in header file `pltr/core/random.h`. The curious reader will take benefit from looking at the implemented code of private method `CardsDeck<>::_get_random_index(const IndexType max_index)`.
-
-
-## Internal implementation topics
-A static reference deck is initialized once for every specialization of template `cards::StandardCardsDeck<>`. The initialization takes place at the very first instantiation of the specialized class. This reference deck is used back every time a call to `refill_deck()` is done. It is a way to spped up refills.

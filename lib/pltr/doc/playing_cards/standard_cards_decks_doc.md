@@ -78,6 +78,7 @@ For decks that contain at most one same standard card and not more at a time, se
     - [`void sort_idents()`](#void-sort_idents)
   - [Notes](#notes)
     - [note 1](#note-1)
+  - [Internal implementation topics](#internal-implementation-topics)
 
 
 # Code documentation <!-- omit in toc -->
@@ -96,7 +97,8 @@ template<
     typename CardT,
     const std::uint32_t _CARDS_COUNT,
     const std::uint32_t _START_VALUE = 0,
-    const std::uint32_t _START_ORDERING_VALUE = 0
+    const std::uint32_t _START_ORDERING_VALUE = 0,
+    const std::uint32_t _DECKS_COUNT = 1
 >
     requires pltr::cards::is_standard_card_v<CardT>
 class StandardCardsDeck : public CardsDeck<CardT>
@@ -109,11 +111,14 @@ the type of playing cards that are contained in this type of deck. It gets no de
 the count of cards that are contained in this type of deck. Mostly, this should be 32, 52 or 54. See specializations of the template at end of this documentation.
 - `_START_VALUE`:  
 the lowest value to be set for cards in deck. This is used when filling the deck with cards at construction time. It is associated with the card with the lowest face value and is incremented by one for each next face value. Defaults to 0 in this base class.  
-Notice: defaults to 2 for 54- and 52- cards decks specializations; defaults to 7 for 32 cards decks specialization.
+Notice: defaults to 2 for 54- and 52- cards decks specializations; defaults to 7 for 32 cards decks specialization;
 - `_START_ORDERING_VALUE`:  
-the lowest ordering value to be set for cards in deck. This is used when filling the deck with cards at construction time. It is associated with the card with the lowest identifier in deck and is incremented by one for each next card. Defaults to 0 in this base class as well as in its  specializations.
+the lowest ordering value to be set for cards in deck. This is used when filling the deck with cards at construction time. It is associated with the card with the lowest identifier in deck and is incremented by one for each next card. Defaults to 0 in this base class as well as in its  specializations;
+- `_DECKS_COUNT`:  
+the number of same decks containing each `_CARDS_COUNT` cards that are to be mixed in this deck; defaults to 1. This way, it is possible to get a deck taht contains multiple times same cards.
 
 This class inherits from class `pltr::cards::CardsDeck<CardT>` and as such, from `pltr::core::Object` also.
+
 
 ## Types Wrappers
 ```
@@ -122,6 +127,7 @@ using CardsList = pltr::cards::CardsList<CardT>;
 using CardType = CardT;
 ```
 Notice: indexes are used to index cards in the deck.
+
 
 ## Attributes
 Cards deck have next attributes, all of them being **private** with accessors/mutators provided for some of them:
@@ -365,3 +371,7 @@ Ssorts this deck according to the descending order of colors first then on cards
 
 ### note 1
 Base class `pltr::cards::CardsDeck<>` uses internally and per default the (not-thread safe) **PlayTore** core class `pltr::core::Random`, defined in header file `pltr/core/random.h`. The curious reader will take benefit from looking at the implemented code of private method `CardsDeck<>::_get_random_index(const IndexType max_index)`.
+
+
+## Internal implementation topics
+A static reference deck is initialized once for every specialization of template `cards::StandardCardsDeck<>`. The initialization takes place at the very first instantiation of the specialized class. This reference deck is used back every time a call to `refill_deck()` is done. It is a way to spped up refills.

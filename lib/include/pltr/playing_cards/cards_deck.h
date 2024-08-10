@@ -129,7 +129,7 @@ namespace pltr::cards
 
         virtual const bool append_card(const CardT& card);              //!< appends a card at bottom of this deck. Deck max capacity may grow up then. \see insert_card()
 
-        virtual void append_cards(const CardsList<CardT>& cards);       //!< appends n cards at bottom of this deck. Deck max capacity may grow up then.
+        virtual void append_cards(const CardsList<CardT>& cards);       //!< appends cards in list at bottom of this deck. Deck max capacity may grow up then.
 
         inline void clear()                                             //!< empties the content of this deck
         {
@@ -379,7 +379,8 @@ namespace pltr::cards
     const bool CardsDeck<CardT>::draw_card(const CardT& card)
     {
         // reminder: if present in deck, removes the card and returns true; returns false else.
-        auto found_it = std::find(_deck.begin(), _deck.end(), card);
+        auto found_it = std::find_if(_deck.cbegin(), _deck.cend(), [&](const CardT& c) { return card.ident == c.ident; });
+
         if (found_it != _deck.end()) [[likely]] {
             _deck.erase(found_it);
             return true;

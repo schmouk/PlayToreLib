@@ -39,19 +39,27 @@ namespace pltr::cards
     //=======================================================================
     /* \brief The class of 54 standard cards decks.
     */
-    template<typename CardT, const std::uint32_t _CARDS_COUNT, const std::uint32_t _START_VALUE = 0>
+    template<
+        typename CardT,
+        const std::uint32_t _CARDS_COUNT,
+        const std::uint32_t _START_VALUE = 0,
+        const std::uint32_t _START_ORDERING_VALUE = 0,
+        const std::uint32_t _DECKS_COUNT = 1
+    >
         requires pltr::cards::is_standard_card_v<CardT>
     class StandardCardsDeck : public CardsDeck<CardT>
     {
     public:
         //-----   Type wrappers   -----//
-        using MyBaseClass = CardsDeck<CardT>;
+        using MyBaseClass = pltr::cards::CardsDeck<CardT>;
+        using CardsList = pltr::cards::CardsList<CardT>;
         using CardType = CardT;
 
 
         //-----   Constructors / Destructor   -----//
+
         inline StandardCardsDeck()                                                  //!< empty constructor
-            : MyBaseClass(_CARDS_COUNT)
+            : MyBaseClass(_DECKS_COUNT * _CARDS_COUNT)
         {
             _set_reference_deck();
             refill_deck();
@@ -76,8 +84,6 @@ namespace pltr::cards
 
         inline virtual void refill_deck() override      //!< fills this deck with all related playing cards. Does nothing in this base class, must be overridden in inheriting classes.
         {
-            //MyBaseClass::clear();
-            //std::ranges::copy(_reference_deck.deck(), MyBaseClass::deck());
             MyBaseClass::deck() = _reference_deck.deck();
         }
 
@@ -121,7 +127,7 @@ namespace pltr::cards
         static inline MyBaseClass _reference_deck{ MyBaseClass(_CARDS_COUNT) };
         static inline bool _reference_already_set{ false };
         
-        static void _set_reference_deck();
+        static inline void _set_reference_deck() noexcept;
 
     };
 
@@ -131,16 +137,31 @@ namespace pltr::cards
     // local implementations
 
     //-----------------------------------------------------------------------
-    template<typename CardT, const std::uint32_t _CARDS_COUNT, const std::uint32_t _START_VALUE>
+    template<
+        typename CardT,
+        const std::uint32_t _CARDS_COUNT,
+        const std::uint32_t _START_VALUE,
+        const std::uint32_t _START_ORDERING_VALUE,
+        const std::uint32_t _DECKS_COUNT
+    >
         requires pltr::cards::is_standard_card_v<CardT>
-    void StandardCardsDeck<CardT, _CARDS_COUNT, _START_VALUE>::_set_reference_deck()
+    void StandardCardsDeck<
+        CardT,
+        _CARDS_COUNT,
+        _START_VALUE, 
+        _START_ORDERING_VALUE,
+        _DECKS_COUNT
+    >::_set_reference_deck() noexcept
     {
         if (!_reference_already_set) {
             _reference_deck.clear();
 
-            for (std::uint32_t i : std::views::iota(std::uint32_t(0), _CARDS_COUNT))
-                _reference_deck.append_card(CardT(i, (i / 4) + _START_VALUE));
-               
+            for (std::uint32_t i = 0; i < _CARDS_COUNT; ++i) {
+                CardT card(i, (i / 4) + _START_VALUE, i + _START_ORDERING_VALUE);
+                for (unsigned int c = 0; c < _DECKS_COUNT; ++c)
+                    _reference_deck.append_card(card);
+            }
+
             _reference_already_set = true;
         }
     }
@@ -153,19 +174,30 @@ namespace pltr::cards
 
     //-----------------------------------------------------------------------
     /* \brief 54 standard cards decks. */
-    template<typename CardT, const std::uint32_t START_VALUE = 0>
-    using CardsDeck54 = StandardCardsDeck<CardT, 54, START_VALUE>;
+    template<
+        typename CardT,
+        const std::uint32_t START_VALUE = 2,
+        const std::uint32_t START_ORDERING_VALUE = 0
+    >
+    using CardsDeck54 = StandardCardsDeck<CardT, 54, START_VALUE, START_ORDERING_VALUE>;
 
     //-----------------------------------------------------------------------
     /* \brief 52 standard cards decks. */
-    template<typename CardT, const std::uint32_t START_VALUE = 0>
-    using CardsDeck52 = StandardCardsDeck<CardT, 52, START_VALUE>;
+    template<
+        typename CardT,
+        const std::uint32_t START_VALUE = 2,
+        const std::uint32_t START_ORDERING_VALUE = 0
+    >
+    using CardsDeck52 = StandardCardsDeck<CardT, 52, START_VALUE, START_ORDERING_VALUE>;
 
     //-----------------------------------------------------------------------
     /* \brief 32 standard cards decks. */
-    template<typename CardT, const std::uint32_t START_VALUE = 0>
-    using CardsDeck32 = StandardCardsDeck<CardT, 32, START_VALUE>;
-
+    template<
+        typename CardT,
+        const std::uint32_t START_VALUE = 7,
+        const std::uint32_t START_ORDERING_VALUE = 0
+    >
+    using CardsDeck32 = StandardCardsDeck<CardT, 32, START_VALUE, START_ORDERING_VALUE>;
 
 
 

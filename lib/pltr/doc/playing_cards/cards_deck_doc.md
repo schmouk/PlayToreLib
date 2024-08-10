@@ -176,7 +176,7 @@ Returns the count of cards currently contained in this deck. Not mutable.
 Returns the max count of cards that can be contained in this deck. Not mutable.
 
 ### `CardsList<CardT>& deck()`  
-Accessor to private deck content, mutable. To be used cautiously when modifying the content of the deck. Changing its content with a content with more cards than current `max_cards_count` value 
+Accessor to private deck content, mutable. To be used cautiously when modifying the content of the deck. Changing its content with a content with more cards than current `max_cards_count` value.
 
 ### `const CardsList<CardT>& deck() const`  
 Accessor to private deck content, not mutable: no modifications are allowed, so safe to be used for reading any data in it.
@@ -217,7 +217,7 @@ This is the end of the containment searching recursion in this deck of any liste
 Returns true if any card in list is contained in this deck.
 
 ### `const bool contains_any(const CardsList<CardT>& cards) const`  
-Returns true if any of the passed cards is contained in this deck
+Returns true if any of the passed cards is contained in this deck.
 
 ### `inline const CardT draw_card()`  
 Wrapper to `pop_up_card()`: removes and returns the card at the top of this deck.
@@ -229,13 +229,13 @@ If present in deck, removes the card and returns true; returns false else.
 Wrapper to `pop_up_n_cards()`: removes and returns `n` cards at the top of this deck. May return less than `n` cards if n > current deck size.
 
 ### `inline const CardT draw_nth_card(const IndexType index)`  
-Wrapper to `pop_indexed_card()`: removes and returns the card at `n`-th position in this deck.
+Wrapper to `pop_indexed_card()`: removes and returns the card at `index` position in this deck.  
 
 ### `inline const CardT draw_rand_card()`  
 Wrapper to `pop_rand_card()`: removes and returns a card at random position in this deck. (see note 1)
 
 ### `const IndexType get_index(const CardT& card) const`  
-Returns the index of this card in deck if found, or `-1` if not found
+Returns the index of this card in deck if found, or `-1` if not found.
 
 ### `virtual const bool insert_card(const CardT& card)`  
 Inserts a card at top of this deck. Deck max capacity may grow up then. \see append_card().
@@ -310,4 +310,4 @@ Shuffles some part of this deck. Automaticcaly clips indexes to the min and max 
 ## Notes
 
 ### note 1
-class `pltr::cards::CardsDeck<>` uses internally and per default the (not-thread safe) **PlayTore** core class `pltr::core::Random`, defined in header file `pltr/core/random.h`. The curious reader will take benefit from looking at the implemented code of `CardsDeck<>` private method `_get_random_index(const IndexType max_index)`.
+Class `pltr::cards::CardsDeck<>` uses internally and per default the (not-thread safe) **PlayTore** core class `pltr::core::Random`, defined in header file `pltr/core/random.h`. The curious reader will take benefit from looking at the implemented code of private method `CardsDeck<>::_get_random_index(const IndexType max_index)`.

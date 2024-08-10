@@ -72,7 +72,9 @@ namespace pltr::cards
         const pltr::core::StringTemplateParameter _CARDS_LETTERS = "23456789XJQKAJ",
         const pltr::core::StringTemplateParameter _COLORS_LETTERS = "CDHS",
         const pltr::core::StringTemplateParameter _JOKERS_COLORS = "RB",
-        const std::uint32_t _START_VALUE = 2
+        const std::uint32_t _START_VALUE = 2,
+        const std::uint32_t _START_INDEX = 0,
+        const std::uint32_t _END_INDEX = 54
     >
     class StandardCard : public pltr::cards::PlayingCardT<std::uint8_t, std::uint32_t>
     {
@@ -97,7 +99,7 @@ namespace pltr::cards
 
         //-----   Constructors / Desctructor   -----//
         inline StandardCard()                                           //!< empty constructor.
-            : MyBaseClass(0, _START_VALUE)
+            : MyBaseClass(_START_INDEX, _START_VALUE)
         {
             _check_ident();
             _set_text();
@@ -107,7 +109,7 @@ namespace pltr::cards
         inline StandardCard(
             const IdentT ident_
         )                                                               //!< 1-valued constructor.
-            : MyBaseClass(ident_, ValueT(ident_ / 4 + _START_VALUE))
+            : MyBaseClass(ident_, ValueT((ident_ - _START_INDEX) / 4 + _START_VALUE))
         {
             _check_ident();
             _set_text();
@@ -129,7 +131,7 @@ namespace pltr::cards
             const IdentT ident_,
             const std::filesystem::path& image_path_
         )                                                               //!< 2-valued constructor (2/2).
-            : MyBaseClass(ident_, ValueT(ident_ / 4 + _START_VALUE), image_path_)
+            : MyBaseClass(ident_, ValueT((ident_ - _START_INDEX) / 4 + _START_VALUE), image_path_)
         {
             _check_ident();
             _set_text();
@@ -179,8 +181,8 @@ namespace pltr::cards
 
 
         //-----   Operators   -----//
-        StandardCard& operator=(const StandardCard&) noexcept = default;      //!< default copy operator.
-        StandardCard& operator=(StandardCard&&) noexcept = default;           //!< default move operator.
+        StandardCard& operator=(const StandardCard&) noexcept = default;    //!< default copy operator.
+        StandardCard& operator=(StandardCard&&) noexcept = default;         //!< default move operator.
 
 
         //-----   Accessors / Mutators   -----//
@@ -201,7 +203,7 @@ namespace pltr::cards
         inline void set(const IdentT ident_)                                //!< sets data (1 arg).
         {
             _check_ident();
-            set(ident_, ident_ / 4 + _START_VALUE);
+            set(ident_, (ident_ - _START_INDEX) / 4 + _START_VALUE);
         }
 
 
@@ -259,7 +261,7 @@ namespace pltr::cards
     private:
         inline void _check_ident()  //!< throws exception if internal value of ident is out of bounds
         {
-            if (this->ident < 0 || this->ident >= CARDS_PER_COLOR * COLORS_COUNT + 2)
+            if (this->ident < _START_INDEX || this->ident >= _END_INDEX)
                 throw pltr::cards::StandardInvalidIdent(this->ident);
         }
     };
@@ -268,67 +270,78 @@ namespace pltr::cards
     //=======================================================================
     /* \brief The class for standard cards - German localization.
     */
-    using StandardCardDe = StandardCard<"23456789XBDK1J", "RAHP", "RS">;  // notice: RAHP für kReuz, kAro, Herz, Pik
+    template<const std::uint32_t START_INDEX = 0, const std::uint32_t LAST_INDEX = 54>
+    using StandardCardDe = StandardCard<"23456789XBDK1J", "RAHP", "RS", 2, START_INDEX, LAST_INDEX>;  // notice: RAHP für kReuz, kAro, Herz, Pik
 
 
     //=======================================================================
     /* \brief The class for standard cards - English localization.
     */
-    using StandardClassEn = StandardCard<>;  // that's all!
+    template<const std::uint32_t START_INDEX = 0, const std::uint32_t LAST_INDEX = 54>
+    using StandardClassEn = StandardCard<"23456789XJQKAJ", "CDHS", "RB", 2, START_INDEX, LAST_INDEX>;
 
 
     //=======================================================================
     /* \brief The class for standard cards - Spanish localization.
     */
-    using StandardCardEs = StandardCard<"23456789XJAR1J", "TDCE", "RN">;  // notice: JARJ para Jota, reinA, Rey, Joker ; TDCE para Tréboles, Diamantes; Corazón, Espadas
+    template<const std::uint32_t START_INDEX = 0, const std::uint32_t LAST_INDEX = 54>
+    using StandardCardEs = StandardCard<"23456789XJAR1J", "TDCE", "RN", 2, START_INDEX, LAST_INDEX>;  // notice: JARJ para Jota, reinA, Rey, Joker ; TDCE para Tréboles, Diamantes; Corazón, Espadas
 
 
     //=======================================================================
     /* \brief The class for standard cards - French localization.
     */
-    using StandardCardFr = StandardCard<"23456789XVDR1J", "TKCP", "RN">;  // notice: TKCP pour Trèfle, (K)arreau, Coeur, Pique
+    template<const std::uint32_t START_INDEX = 0, const std::uint32_t LAST_INDEX = 54>
+    using StandardCardFr = StandardCard<"23456789XVDR1J", "TKCP", "RN", 2, START_INDEX, LAST_INDEX>;  // notice: TKCP pour Trèfle, (K)arreau, Coeur, Pique
 
 
     //=======================================================================
     /* \brief The class for standard cards - Italian localization.
     */
-    using StandardCardIt = StandardCard<"23456789XJAR1J", "MQCP", "RN">;  // notice: JARJ per Jack, reginA, Re, Joker ; MQCP per Mazze, Quadri, Cuore, Picche
+    template<const std::uint32_t START_INDEX = 0, const std::uint32_t LAST_INDEX = 54>
+    using StandardCardIt = StandardCard<"23456789XJAR1J", "MQCP", "RN", 2, START_INDEX, LAST_INDEX>;  // notice: JARJ per Jack, reginA, Re, Joker ; MQCP per Mazze, Quadri, Cuore, Picche
 
 
     //=======================================================================
     /* \brief The class for Windows console standard cards.
     */
-    using StandardWindowsConsoleCard = StandardCard<"23456789XJQKAJ", "\005\004\003\006", "RB">;
+    template<const std::uint32_t START_INDEX = 0, const std::uint32_t LAST_INDEX = 54>
+    using StandardWindowsConsoleCard = StandardCard<"23456789XJQKAJ", "\005\004\003\006", "RB", 2, START_INDEX, LAST_INDEX>;
 
 
     //=======================================================================
     /* \brief The class for Windows console standard cards - German localization.
     */
-    using StandardWindowsConsoleCardDe = StandardCard<"23456789XBDK1J", "\005\004\003\006", "RS">;
+    template<const std::uint32_t START_INDEX = 0, const std::uint32_t LAST_INDEX = 54>
+    using StandardWindowsConsoleCardDe = StandardCard<"23456789XBDK1J", "\005\004\003\006", "RS", 2, START_INDEX, LAST_INDEX>;
 
 
     //=======================================================================
     /* \brief The class for Windows console standard cards - English localization.
     */
-    using StandardWindowsConsoleClassEn = StandardWindowsConsoleCard;  // that's all!
+    template<const std::uint32_t START_INDEX = 0, const std::uint32_t LAST_INDEX = 54>
+    using StandardWindowsConsoleClassEn = StandardWindowsConsoleCard<START_INDEX, LAST_INDEX>;  // that's all!
 
 
     //=======================================================================
     /* \brief The class for Windows console standard cards - Spanish localization.
     */
-    using StandardWindowsConsoleCardEs = StandardCard<"23456789XJAR1J", "\005\004\003\006", "RN">;
+    template<const std::uint32_t START_INDEX = 0, const std::uint32_t LAST_INDEX = 54>
+    using StandardWindowsConsoleCardEs = StandardCard<"23456789XJAR1J", "\005\004\003\006", "RN", 2, START_INDEX, LAST_INDEX>;
 
 
     //=======================================================================
     /* \brief The class for Windows console standard cards - French localization.
     */
-    using StandardWindowsConsoleCardFr = StandardCard<"23456789XVDR1J", "\005\004\003\006", "RN">;
+    template<const std::uint32_t START_INDEX = 0, const std::uint32_t LAST_INDEX = 54>
+    using StandardWindowsConsoleCardFr = StandardCard<"23456789XVDR1J", "\005\004\003\006", "RN", 2, START_INDEX, LAST_INDEX>;
 
 
     //=======================================================================
     /* \brief The class for Windows console standard cards - Italian localization.
     */
-    using StandardWindowsConsoleCardIt = StandardCard<"23456789XJAR1J", "\005\004\003\006", "RN">;
+    template<const std::uint32_t START_INDEX = 0, const std::uint32_t LAST_INDEX = 54>
+    using StandardWindowsConsoleCardIt = StandardCard<"23456789XJAR1J", "\005\004\003\006", "RN", 2, START_INDEX, LAST_INDEX>;
 
 
     //=======================================================================
@@ -348,49 +361,49 @@ namespace pltr::cards
         static inline constexpr bool value{ true };
     };
 
-    template<>
-    struct is_standard_card<StandardCardDe> {
+    template<const std::uint32_t START_INDEX, const std::uint32_t LAST_INDEX>
+    struct is_standard_card<StandardCardDe<START_INDEX, LAST_INDEX>> {
         static inline constexpr bool value{ true };
     };
 
-    template<>
-    struct is_standard_card<StandardCardEs> {
+    template<const std::uint32_t START_INDEX, const std::uint32_t LAST_INDEX>
+    struct is_standard_card<StandardCardEs<START_INDEX, LAST_INDEX>> {
         static inline constexpr bool value{ true };
     };
 
-    template<>
-    struct is_standard_card<StandardCardFr> {
+    template<const std::uint32_t START_INDEX, const std::uint32_t LAST_INDEX>
+    struct is_standard_card<StandardCardFr<START_INDEX, LAST_INDEX>> {
         static inline constexpr bool value{ true };
     };
 
-    template<>
-    struct is_standard_card<StandardCardIt> {
+    template<const std::uint32_t START_INDEX, const std::uint32_t LAST_INDEX>
+    struct is_standard_card<StandardCardIt<START_INDEX, LAST_INDEX>> {
         static inline constexpr bool value{ true };
     };
 
-    template<>
-    struct is_standard_card<StandardWindowsConsoleCard> {
+    template<const std::uint32_t START_INDEX, const std::uint32_t LAST_INDEX>
+    struct is_standard_card<StandardWindowsConsoleCard<START_INDEX, LAST_INDEX>> {
         static inline constexpr bool value{ true };
     };
 
-    template<>
-    struct is_standard_card<StandardWindowsConsoleCardDe> {
+    template<const std::uint32_t START_INDEX, const std::uint32_t LAST_INDEX>
+    struct is_standard_card<StandardWindowsConsoleCardDe<START_INDEX, LAST_INDEX>> {
         static inline constexpr bool value{ true };
     };
 
-    template<>
-    struct is_standard_card<StandardWindowsConsoleCardEs> {
+    template<const std::uint32_t START_INDEX, const std::uint32_t LAST_INDEX>
+    struct is_standard_card<StandardWindowsConsoleCardEs<START_INDEX, LAST_INDEX>> {
         static inline constexpr bool value{ true };
     };
 
-    template<>
-    struct is_standard_card<StandardWindowsConsoleCardFr> {
+    template<const std::uint32_t START_INDEX, const std::uint32_t LAST_INDEX>
+    struct is_standard_card<StandardWindowsConsoleCardFr<START_INDEX, LAST_INDEX>> {
         static inline constexpr bool value{ true };
     };
 
     /* Notice: 'It' template version is exactly the same as 'Es' one. No need to set this specialization twice!
-    template<>
-    struct is_standard_card<StandardWindowsConsoleCardIt> {
+    template<const std::uint32_t START_INDEX, const std::uint32_t LAST_INDEX>
+    struct is_standard_card<StandardWindowsConsoleCardIt<START_INDEX, LAST_INDEX>> {
         static inline constexpr bool value{ true };
     };
     */

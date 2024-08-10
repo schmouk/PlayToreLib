@@ -37,11 +37,12 @@
 namespace pltr::cards
 {
     //=======================================================================
-    /* \brief The class of 54 standard cards decks.
+    /* \brief The base class for decks that contain standard cards.
     */
     template<
         typename CardT,
         const std::uint32_t _CARDS_COUNT,
+        const std::uint32_t _START_INDEX = 0,
         const std::uint32_t _START_VALUE = 0,
         const std::uint32_t _START_ORDERING_VALUE = 0,
         const std::uint32_t _DECKS_COUNT = 1
@@ -79,7 +80,7 @@ namespace pltr::cards
         //-----   Operations   -----//
         virtual inline const bool allowed_card(const CardT& card) const noexcept override  //!< returns true if this card is allowed to be contained in this deck.
         {
-            return card.ident < _CARDS_COUNT;
+            return card.ident >= _START_INDEX && card.ident - _START_INDEX < _CARDS_COUNT;
         }
 
         inline virtual void refill_deck() override      //!< fills this deck with all related playing cards. Does nothing in this base class, must be overridden in inheriting classes.
@@ -140,6 +141,7 @@ namespace pltr::cards
     template<
         typename CardT,
         const std::uint32_t _CARDS_COUNT,
+        const std::uint32_t _START_INDEX,
         const std::uint32_t _START_VALUE,
         const std::uint32_t _START_ORDERING_VALUE,
         const std::uint32_t _DECKS_COUNT
@@ -148,6 +150,7 @@ namespace pltr::cards
     void StandardCardsDeck<
         CardT,
         _CARDS_COUNT,
+        _START_INDEX,
         _START_VALUE, 
         _START_ORDERING_VALUE,
         _DECKS_COUNT
@@ -157,7 +160,7 @@ namespace pltr::cards
             _reference_deck.clear();
 
             for (std::uint32_t i = 0; i < _CARDS_COUNT; ++i) {
-                CardT card(i, (i / 4) + _START_VALUE, i + _START_ORDERING_VALUE);
+                CardT card(i + _START_INDEX, (i / 4) + _START_VALUE, i + _START_ORDERING_VALUE);
                 for (unsigned int c = 0; c < _DECKS_COUNT; ++c)
                     _reference_deck.append_card(card);
             }
@@ -179,7 +182,7 @@ namespace pltr::cards
         const std::uint32_t START_VALUE = 2,
         const std::uint32_t START_ORDERING_VALUE = 0
     >
-    using CardsDeck54 = StandardCardsDeck<CardT, 54, START_VALUE, START_ORDERING_VALUE>;
+    using CardsDeck54 = StandardCardsDeck<CardT, 54, 0, START_VALUE, START_ORDERING_VALUE>;
 
     //-----------------------------------------------------------------------
     /* \brief 52 standard cards decks. */
@@ -188,7 +191,7 @@ namespace pltr::cards
         const std::uint32_t START_VALUE = 2,
         const std::uint32_t START_ORDERING_VALUE = 0
     >
-    using CardsDeck52 = StandardCardsDeck<CardT, 52, START_VALUE, START_ORDERING_VALUE>;
+    using CardsDeck52 = StandardCardsDeck<CardT, 52, 0, START_VALUE, START_ORDERING_VALUE>;
 
     //-----------------------------------------------------------------------
     /* \brief 32 standard cards decks. */
@@ -197,7 +200,7 @@ namespace pltr::cards
         const std::uint32_t START_VALUE = 7,
         const std::uint32_t START_ORDERING_VALUE = 0
     >
-    using CardsDeck32 = StandardCardsDeck<CardT, 32, START_VALUE, START_ORDERING_VALUE>;
+    using CardsDeck32 = StandardCardsDeck<CardT, 32, 20, START_VALUE, START_ORDERING_VALUE>;
 
 
 

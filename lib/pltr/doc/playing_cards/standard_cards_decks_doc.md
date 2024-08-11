@@ -5,7 +5,7 @@ This class is defined within namespace `pltr::cards`. It inherits from base clas
 
 The related header file is `include/pltr/playing_cards/standard_cards_deck.h`.
 
-It defines what are decks of standaard playing cards and what are the actions that can be applied to them.
+It defines what are decks of standard playing cards and what are the actions that can be applied to them.
 
 Notice: class `StandardCardsDeck<>` accepts the presence of multiple occurences of same card in deck. Some cards game rules state that multiple decks must be used altogether to play (e.g. the rules of Rami when more than 4 players are involved, or to simulate Blackjack sessions).  
 For decks that contain at most one same standard card and not more at a time, see class [`pltr::cards::UniqueStandardCardsDeck`](./unique_standard_cards_deck_doc.md).
@@ -81,7 +81,7 @@ For decks that contain at most one same standard card and not more at a time, se
 - [Specializations](#specializations)
   - [`CardsDeck54<>`](#cardsdeck54)
   - [`CardsDeck52<>`](#cardsdeck52)
-  - [`CardsDeck22<>`](#cardsdeck22)
+  - [`CardsDeck32<>`](#cardsdeck32)
 - [Type traits](#type-traits)
   - [`pltr::cards::is_standard_cards_deck<>`](#pltrcardsis_standard_cards_deck)
   - [`pltr::cards::is_standard_cards_deck_v<>`](#pltrcardsis_standard_cards_deck_v)
@@ -341,7 +341,8 @@ Removes and returns `n` cards from top of this deck. May return less than `n` ca
 *Inherited from base class*.
 
 ### `virtual void refill_deck() override`  
-Fills this deck with all related playing cards. Does nothing in this base class, must be overridden in inheriting classes.
+Fills this deck with all related playing cards.  
+*Overridden from base class*.
 
 ### `void refill_deck(const CardsList<CardT>& filling_deck)`  
 Fills this deck according to a filling vector. Empties the deck first.  
@@ -412,9 +413,9 @@ template<
 using CardsDeck52 = StandardCardsDeck<CardT, 52, 0, START_VALUE, START_ORDERING_VALUE, _DECKS_COUNT>;
 ```
 
-## `CardsDeck22<>`
+## `CardsDeck32<>`
 
-This is a template class that defines 22 standard cards deck (i.e. all standard cards without Jokers, 2's 3's 4's 5's and 6's).
+This is a template class that defines 32 standard cards deck (i.e. all standard cards without Jokers, 2's 3's 4's 5's and 6's).
 
 It is declared as
 ```

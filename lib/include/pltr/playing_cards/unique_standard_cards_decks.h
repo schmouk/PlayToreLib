@@ -66,19 +66,19 @@ namespace pltr::cards
 
 
         //-----   Operations   -----//
-        virtual const bool append_card(const CardType& card) override;                             //!< appends a card at bottom of this deck if not already present in it.
+        virtual const bool append_card(const CardType& card) override;                          //!< appends a card at bottom of this deck if not already present in it.
 
         virtual void append_cards(const CardsList& cards) override;                             //!< appends n cards at bottom of this deck except for cards already present in deck.
 
-        virtual const bool insert_card(const CardType& card) override;                             //!< inserts a card at top of this deck except for cards already present in deck.
+        virtual const bool insert_card(const CardType& card) override;                          //!< inserts a card at top of this deck except for cards already present in deck.
 
         virtual void insert_cards(const CardsList& cards) override;                             //!< inserts n cards at top of this deck except for cards already present in deck.
 
-        virtual const bool insert_nth_card(const IndexType index, const CardType& card) override;  //!< inserts a card at n-th position in this deck if not already present in deck
+        virtual const bool insert_nth_card(const IndexType index, const CardType& card) override;   //!< inserts a card at n-th position in this deck if not already present in deck
 
         virtual void insert_nth_cards(const IndexType index, const CardsList& cards) override;  //!< inserts n cards at n-th position in this deck. Deck max capacity may grow up then.
 
-        virtual const bool insert_rand_card(const CardType& card) override;                        //!< inserts a card at a random position in this deck. Deck max capacity may grow up then.
+        virtual const bool insert_rand_card(const CardType& card) override;                     //!< inserts a card at a random position in this deck. Deck max capacity may grow up then.
 
 
     private:
@@ -214,5 +214,17 @@ namespace pltr::cards
         else
             return false;
     }
+
+
+    //=======================================================================
+    // Type traits concepts
+    //
+    template<typename UniqueStandardDeckT>
+    struct is_unique_standard_cards_deck {
+        static inline const bool value{ pltr::cards::is_standard_cards_deck_v<typename UniqueStandardDeckT::MyBaseClass> };
+    };
+
+    template<typename UniqueStandardDeckT>
+    constexpr bool is_unique_standard_cards_deck_v = is_standard_cards_deck<UniqueStandardDeckT>::value;
 
 }

@@ -137,7 +137,7 @@ Attribute `deck` is set as a copy of the specified list of cards (first card at 
 
 ### `template<typename FirstCardT, typename... NextCardsT> CardsDeck( const IndexType max_cards_count, const FirstCardT& first_card, const NextCardsT&... next_cards)`  
 The constructor with an initialization list.  
-According to this signature of constructor, you can pass a list of cards as parameters. Attribute `deck` is set as containing the specified list of cards (first card at bottom of deck, last card at top of deck), attribute `max_cards_count` is set to the count of cards in parameters list, and the class random generation attributes are set if this is the very first instantiation of this class within your application.
+According to this signature of constructor, you can pass a list of cards as parameters. Attribute `deck` is set as containing the specified list of cards (first card at bottom of deck, last card at top of deck), attribute `max_cards_count` is set to the count of cards in parameters list, and the class random generation attributes are set if this is the very first instantiation of this class within your application. It can be accessed via the not mutable accessor method `get_max_cards_count()`.
 
 ### `CardsDeck(const CardsDeck&)`  
 The default copy constructor.

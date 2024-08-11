@@ -215,7 +215,7 @@ namespace pltr::cards
     };
 
     template<typename DeckT, typename CardT = typename DeckT::CardType>
-    inline constexpr bool is_standard_cards_deck_v = is_standard_cards_deck<DeckT>::value;
+    constexpr bool is_standard_cards_deck_v = is_standard_cards_deck<DeckT>::value;
 
 
     template<typename CardT>

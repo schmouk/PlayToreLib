@@ -18,7 +18,6 @@ For decks that contain at most one same standard card and not more at a time, se
   - [Attributes](#attributes)
   - [Constructors / Destructor](#constructors--destructor)
     - [`StandardCardsDeck()`](#standardcardsdeck)
-    - [`StandardCardsDeck(const unsigned int n)`](#standardcardsdeckconst-unsigned-int-n)
     - [`StandardCardsDeck(const StandardCardsDeck&) noexcept`](#standardcardsdeckconst-standardcardsdeck-noexcept)
     - [`StandardCardsDeck(StandardCardsDeck&&) noexcept`](#standardcardsdeckstandardcardsdeck-noexcept)
     - [`virtual ~StandardCardsDeck() noexcept`](#virtual-standardcardsdeck-noexcept)
@@ -79,6 +78,13 @@ For decks that contain at most one same standard card and not more at a time, se
   - [Internal implementation topics](#internal-implementation-topics)
   - [Notes](#notes)
     - [note 1](#note-1)
+- [Specializations](#specializations)
+  - [`CardsDeck54<>`](#cardsdeck54)
+  - [`CardsDeck52<>`](#cardsdeck52)
+  - [`CardsDeck22<>`](#cardsdeck22)
+- [Type traits](#type-traits)
+  - [`pltr::cards::is_standard_cards_deck<>`](#pltrcardsis_standard_cards_deck)
+  - [`pltr::cards::is_standard_cards_deck_v<>`](#pltrcardsis_standard_cards_deck_v)
 
 
 # Code documentation <!-- omit in toc -->
@@ -96,12 +102,14 @@ It is defined as a template:
 template<
     typename CardT,
     const std::uint32_t _CARDS_COUNT,
+    const std::uint32_t _START_INDEX = 0,
     const std::uint32_t _START_VALUE = 0,
     const std::uint32_t _START_ORDERING_VALUE = 0,
     const std::uint32_t _DECKS_COUNT = 1
 >
     requires pltr::cards::is_standard_card_v<CardT>
 class StandardCardsDeck : public CardsDeck<CardT>
+
  ```
 
 The template arguments are:
@@ -109,6 +117,8 @@ The template arguments are:
 the type of playing cards that are contained in this type of deck. It gets no default value. It MUST conform to the `is_standard_card` requirement: see [`StandardCard<>`](./standard_cards_doc.md) documentation to get an overview of what it is and for some localized specialization types that are provided with library **PlayTore**.
 - `_CARDS_COUNT`:  
 the count of cards that are contained in this type of deck. Mostly, this should be 32, 52 or 54. See specializations of the template at end of this documentation.
+- `_START_INDEX`:  
+the lowest index to be assigned to cards that are contained in this deck. This index should be unique for every different card, while in this base class a same card may be present many times in a deck;
 - `_START_VALUE`:  
 the lowest value to be set for cards in deck. This is used when filling the deck with cards at construction time. It is associated with the card with the lowest face value and is incremented by one for each next face value. Defaults to 0 in this base class.  
 Notice: defaults to 2 for 54- and 52- cards decks specializations; defaults to 7 for 32 cards decks specialization;
@@ -130,22 +140,19 @@ Notice: indexes are used to index cards in the deck.
 
 
 ## Attributes
-Cards deck have next attributes, all of them being **private** with accessors/mutators provided for some of them:
+Cards deck have next attributes, all of them being **private** with accessors/mutators provided for some of them, each of them being inherited from base class `cards::CardsDeck<>`:
 - `_deck`:  
 of type `CardsList<CardT>`.  
 This is the internal storage of the list of cards that are contained in this deck. It may be accessed ouotside this class via accessor/mutator `deck()`.
 - `_max_cards_count`:  
 of type `IndexType`.  
-This is an internal control on the max count of cards that can be actually contained within this deck. This value may evolve along the running of your application.
+This is an internal control on the max count of cards that can be actually contained within this deck. This value may evolve along the running of your application. It can be accessed via the not mutable accessor method `get_max_cards_count()`.
 
 
 ## Constructors / Destructor
 
 ### `StandardCardsDeck()`  
-The empty constructor. It automatically fills the deck with standard cards, each one only once, and prepares for further refillings of the deck with these cards.
-
-### `StandardCardsDeck(const unsigned int n)`  
-The multiple same cards constructor. It automatically fills the deck with standard cards, each one `n` times`, and prepares for further refillings of the deck with these cards.
+The empty constructor. It automatically fills the deck with standard cards, each one as many times as stated by template parameter `_DECKS_COUNT`, and prepares for further refillings of the deck with these cards.
 
 ### `StandardCardsDeck(const StandardCardsDeck&) noexcept`  
 The default copy constructor.
@@ -375,3 +382,73 @@ A static reference deck is initialized once for every specialization of template
 
 ### note 1
 Base class `pltr::cards::CardsDeck<>` uses internally and per default the (not-thread safe) **PlayTore** core class `pltr::core::Random`, defined in header file `pltr/core/random.h`. The curious reader will take benefit from looking at the implemented code of private method `CardsDeck<>::_get_random_index(const IndexType max_index)`.
+
+
+# Specializations
+Defined in file `include/pltr/playing_cards/standard_cards_deck.h`.
+
+## `CardsDeck54<>`
+
+This is a template class that defines 54 standard cards deck (i.e. all standard cards plus Jokers).
+
+It is declared as
+```
+template<
+    typename CardT,
+    const std::uint32_t START_VALUE = 2,
+    const std::uint32_t START_ORDERING_VALUE = 0,
+    const std::uint32_t _DECKS_COUNT = 1
+>
+using CardsDeck54 = StandardCardsDeck<CardT, 54, 0, START_VALUE, START_ORDERING_VALUE, _DECKS_COUNT>;
+```
+
+## `CardsDeck52<>`
+
+This is a template class that defines 52 standard cards deck (i.e. all standard cards without Jokers).
+
+It is declared as
+```
+template<
+    typename CardT,
+    const std::uint32_t START_VALUE = 2,
+    const std::uint32_t START_ORDERING_VALUE = 0,
+    const std::uint32_t _DECKS_COUNT = 1
+>
+using CardsDeck52 = StandardCardsDeck<CardT, 52, 0, START_VALUE, START_ORDERING_VALUE, _DECKS_COUNT>;
+```
+
+## `CardsDeck22<>`
+
+This is a template class that defines 22 standard cards deck (i.e. all standard cards without Jokers, 2's 3's 4's 5's and 6's).
+
+It is declared as
+```
+template<
+    typename CardT,
+    const std::uint32_t START_VALUE = 7,
+    const std::uint32_t START_ORDERING_VALUE = 0,
+    const std::uint32_t _DECKS_COUNT = 1
+>
+using CardsDeck32 = StandardCardsDeck<CardT, 32, 20, START_VALUE, START_ORDERING_VALUE, _DECKS_COUNT>;
+```
+
+
+# Type traits
+Defined in file `include/pltr/playing_cards/standard_cards_deck.h`.
+
+## `pltr::cards::is_standard_cards_deck<>`
+Declared as
+```
+template<typename DeckT, typename CardT = typename DeckT::CardType>
+struct is_standard_cards_deck
+```
+This *UnaryTypeTrait* checks whether type `T` is a `StandardCardDeck<>` type.  
+It provides the member contant value `value` which is equal to `true` if `T` is a `StandardCardDeck<>` type or `false` otherwise. Notice: returns true for all template specializations defined in here.
+
+## `pltr::cards::is_standard_cards_deck_v<>`
+Defined as
+```
+template<typename DeckT, typename CardT = typename DeckT::CardType>
+constexpr bool is_standard_cards_deck_v = is_standard_cards_deck<DeckT>::value;
+```
+This is the related helper variable template. It provides direct access to the value of the above *UnaryTypeTrait* checker.

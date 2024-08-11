@@ -180,44 +180,46 @@ namespace pltr::cards
     template<
         typename CardT,
         const std::uint32_t START_VALUE = 2,
-        const std::uint32_t START_ORDERING_VALUE = 0
+        const std::uint32_t START_ORDERING_VALUE = 0,
+        const std::uint32_t _DECKS_COUNT = 1
     >
-    using CardsDeck54 = StandardCardsDeck<CardT, 54, 0, START_VALUE, START_ORDERING_VALUE>;
+    using CardsDeck54 = StandardCardsDeck<CardT, 54, 0, START_VALUE, START_ORDERING_VALUE, _DECKS_COUNT>;
 
     //-----------------------------------------------------------------------
     /* \brief 52 standard cards decks. */
     template<
         typename CardT,
         const std::uint32_t START_VALUE = 2,
-        const std::uint32_t START_ORDERING_VALUE = 0
+        const std::uint32_t START_ORDERING_VALUE = 0,
+        const std::uint32_t _DECKS_COUNT = 1
     >
-    using CardsDeck52 = StandardCardsDeck<CardT, 52, 0, START_VALUE, START_ORDERING_VALUE>;
+    using CardsDeck52 = StandardCardsDeck<CardT, 52, 0, START_VALUE, START_ORDERING_VALUE, _DECKS_COUNT>;
 
     //-----------------------------------------------------------------------
     /* \brief 32 standard cards decks. */
     template<
         typename CardT,
         const std::uint32_t START_VALUE = 7,
-        const std::uint32_t START_ORDERING_VALUE = 0
+        const std::uint32_t START_ORDERING_VALUE = 0,
+        const std::uint32_t _DECKS_COUNT = 1
     >
-    using CardsDeck32 = StandardCardsDeck<CardT, 32, 20, START_VALUE, START_ORDERING_VALUE>;
-
+    using CardsDeck32 = StandardCardsDeck<CardT, 32, 20, START_VALUE, START_ORDERING_VALUE, _DECKS_COUNT>;
 
 
     //=======================================================================
     // Type traits concepts
     //
-    template<typename DeckT, typename CardT>
+    template<typename DeckT, typename CardT = typename DeckT::CardType>
     struct is_standard_cards_deck {
-        static inline constexpr bool value{ false };
+        static inline constexpr bool value{ pltr::cards::is_standard_card_v<CardT> && std::is_base_of_v<pltr::cards::CardsDeck<CardT>, DeckT> };
     };
 
-    template<typename DeckT, typename CardT>
-    inline constexpr bool is_standard_cards_deck_v = is_standard_cards_deck<CardT>::value;
+    template<typename DeckT, typename CardT = typename DeckT::CardType>
+    inline constexpr bool is_standard_cards_deck_v = is_standard_cards_deck<DeckT>::value;
 
 
     template<typename CardT>
-    struct is_standard_cards_deck<CardsDeck54<CardT>, CardT> {
+    struct is_standard_cards_deck<CardsDeck54<CardT>> {
         static inline constexpr bool value{ pltr::cards::is_standard_card_v<CardT> };
     };
 

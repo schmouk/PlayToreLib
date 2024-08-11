@@ -39,10 +39,10 @@ For decks that contain at most one same standard card and not more at a time, se
     - [`inline void clear()`](#inline-void-clear)
     - [`inline virtual const bool contains(const CardT& card)  const`](#inline-virtual-const-bool-containsconst-cardt-card--const)
     - [`inline const bool contains_all()  const`](#inline-const-bool-contains_all--const)
-    - [`template<typename` `FirstT, typename... RestT>`](#templatetypename-firstt-typename-restt)
+    - [`template<typename` `FirstT, typename... RestT>` `inline const bool contains_all(const FirstT& first, const RestT&... rest)`](#templatetypename-firstt-typename-restt-inline-const-bool-contains_allconst-firstt-first-const-restt-rest)
     - [`const inline bool contains_all(const CardsList<CardT>& cards) const`](#const-inline-bool-contains_allconst-cardslistcardt-cards-const)
     - [`inline const bool contains_any()  const`](#inline-const-bool-contains_any--const)
-    - [`template<typename` `FirstT, typename... RestT>`](#templatetypename-firstt-typename-restt-1)
+    - [`template<typename` `FirstT, typename... RestT>` `inline const bool contains_any(const FirstT& first, const RestT&... rest)`](#templatetypename-firstt-typename-restt-inline-const-bool-contains_anyconst-firstt-first-const-restt-rest)
     - [`const bool contains_any(const CardsList<CardT>& cards) const`](#const-bool-contains_anyconst-cardslistcardt-cards-const)
     - [`inline const CardT draw_card()`](#inline-const-cardt-draw_card)
     - [`inline const bool draw_card(const CardT& card)`](#inline-const-bool-draw_cardconst-cardt-card)
@@ -52,11 +52,11 @@ For decks that contain at most one same standard card and not more at a time, se
     - [`const IndexType get_index(const CardT& card) const`](#const-indextype-get_indexconst-cardt-card-const)
     - [`virtual const bool insert_card(const CardT& card)`](#virtual-const-bool-insert_cardconst-cardt-card)
     - [`inline void insert_cards()`](#inline-void-insert_cards)
-    - [`template<typename` `FirstT, typename... RestT>`](#templatetypename-firstt-typename-restt-2)
+    - [`template<typename` `FirstT, typename... RestT>` `void insert_cards(const FirstT& first, const RestT&... rest)`](#templatetypename-firstt-typename-restt-void-insert_cardsconst-firstt-first-const-restt-rest)
     - [`virtual void insert_cards(const CardsList<CardT>& cards)`](#virtual-void-insert_cardsconst-cardslistcardt-cards)
     - [`virtual const bool insert_nth_card(const IndexType index, const CardT& card)`](#virtual-const-bool-insert_nth_cardconst-indextype-index-const-cardt-card)
     - [`void insert_nth_cards(const IndexType index)`](#void-insert_nth_cardsconst-indextype-index)
-    - [`template<typename` `FirstT, typename... RestT>`](#templatetypename-firstt-typename-restt-3)
+    - [`template<typename` `FirstT, typename... RestT>` `void insert_nth_cards(const IndexType index, const FirstT& first, const RestT&... rest)`](#templatetypename-firstt-typename-restt-void-insert_nth_cardsconst-indextype-index-const-firstt-first-const-restt-rest)
     - [`virtual void insert_nth_cards(const IndexType index, const CardsList<CardT>& cards)`](#virtual-void-insert_nth_cardsconst-indextype-index-const-cardslistcardt-cards)
     - [`virtual const bool insert_rand_card(const CardT& card)`](#virtual-const-bool-insert_rand_cardconst-cardt-card)
     - [`inline const bool is_empty() const noexcept`](#inline-const-bool-is_empty-const-noexcept)
@@ -69,7 +69,7 @@ For decks that contain at most one same standard card and not more at a time, se
     - [`const CardsList<CardT> pop_up_n_cards(const IndexType n)`](#const-cardslistcardt-pop_up_n_cardsconst-indextype-n)
     - [`virtual void refill_deck() override`](#virtual-void-refill_deck-override)
     - [`void refill_deck(const CardsList<CardT>& filling_deck)`](#void-refill_deckconst-cardslistcardt-filling_deck)
-    - [`template<typename` `FirstT, typename... RestT>`](#templatetypename-firstt-typename-restt-4)
+    - [`template<typename` `FirstT, typename... RestT>` `void refill_deck(const FirstT& first, const RestT&... rest)`](#templatetypename-firstt-typename-restt-void-refill_deckconst-firstt-first-const-restt-rest)
     - [`void shuffle()`](#void-shuffle)
     - [`void shuffle(const IndexType low, const IndexType high)`](#void-shuffleconst-indextype-low-const-indextype-high)
     - [`void sort()`](#void-sort)
@@ -228,8 +228,7 @@ Returns true if the card ident is found in this deck.
 This is the end of the containment searching recursion in this deck of all listed cards. Should not be called by library user - always return true.  
 *Inherited from base class*.
 
-### `template<typename` `FirstT, typename... RestT>`
-`inline const bool contains_all(const FirstT& first, const RestT&... rest)`  
+### `template<typename` `FirstT, typename... RestT>` `inline const bool contains_all(const FirstT& first, const RestT&... rest)`  
 Returns true if all cards in list are contained in this deck.  
 *Inherited from base class*.
 
@@ -241,8 +240,7 @@ Returns true if all of the passed cards are contained in this deck.
 This is the end of the containment searching recursion in this deck of any listed card. Should not be called by library user - always return false.  
 *Inherited from base class*.
 
-### `template<typename` `FirstT, typename... RestT>`
-`inline const bool contains_any(const FirstT& first, const RestT&... rest)` 
+### `template<typename` `FirstT, typename... RestT>` `inline const bool contains_any(const FirstT& first, const RestT&... rest)` 
 Returns true if any card in list is contained in this deck.  
 *Inherited from base class*.
 
@@ -282,8 +280,7 @@ Inserts a card at top of this deck. Deck max capacity may grow up then. \see app
 This is the end of inserts recursion of cards in this deck. Should not be called by library user - does nothing.  
 *Inherited from base class*.
 
-### `template<typename` `FirstT, typename... RestT>`
-`void insert_cards(const FirstT& first, const RestT&... rest)`  
+### `template<typename` `FirstT, typename... RestT>` `void insert_cards(const FirstT& first, const RestT&... rest)`  
 Inserts a list of cards in this deck at top of deck.  
 *Inherited from base class*.
 
@@ -299,8 +296,7 @@ Inserts a card at n-th position in this deck. Deck max capacity may grow up then
 This is the end of inserts recursion of cards at some position in this deck. Should not be called by library user - does nothing.  
 *Inherited from base class*.
 
-### `template<typename` `FirstT, typename... RestT>`
-`void insert_nth_cards(const IndexType index, const FirstT& first, const RestT&... rest)`  
+### `template<typename` `FirstT, typename... RestT>` `void insert_nth_cards(const IndexType index, const FirstT& first, const RestT&... rest)`  
 Inserts a list of cards in this deck.  
 *Inherited from base class*.
 
@@ -351,8 +347,7 @@ Fills this deck with all related playing cards. Does nothing in this base class,
 Fills this deck according to a filling vector. Empties the deck first.  
 *Inherited from base class*.
 
-### `template<typename` `FirstT, typename... RestT>`
-`void refill_deck(const FirstT& first, const RestT&... rest)`  
+### `template<typename` `FirstT, typename... RestT>` `void refill_deck(const FirstT& first, const RestT&... rest)`  
 Fills this deck according to a variable length list of cards. Empties the deck first.  
 *Inherited from base class*.
 

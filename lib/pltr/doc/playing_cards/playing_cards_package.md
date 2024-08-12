@@ -1,6 +1,6 @@
 # `playing_cards` package - intro
 
-This package is declared and defined in directory `include/pltr/playing_cards.h`.
+This package is declared and defined in directory `include/pltr/playing_cards`.
 
 It defines what are playing cards, what are some of their specializations, 
 what are decks of cards and some of their specialization too.  

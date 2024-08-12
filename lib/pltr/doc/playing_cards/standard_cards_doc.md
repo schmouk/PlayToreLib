@@ -47,7 +47,7 @@ Standard cards are the one that are used for playing Poker, for instance, plus b
     - [`void set(const IdentT ident_, const ValueT value_, const ValueT ordering_value_, const std::filesystem::path& image_path_)`](#void-setconst-identt-ident_-const-valuet-value_-const-valuet-ordering_value_-const-stdfilesystempath-image_path_)
     - [`void _set_text()`](#void-_set_text)
     - [`virtual const std::string _get_object_name() const noexcept override`](#virtual-const-stdstring-_get_object_name-const-noexcept-override)
-- [Template Specialization](#template-specialization)
+- [Template Specializations](#template-specializations)
   - [`using StandardCardDe = StandardCard<"23456789XBDK1J", "RAHP", "RS">`](#using-standardcardde--standardcard23456789xbdk1j-rahp-rs)
   - [`using StandardClassEn = StandardCard<>`](#using-standardclassen--standardcard)
   - [`StandardCardEs = StandardCard<"23456789XJAR1J", "TDCE", "RN">`](#standardcardes--standardcard23456789xjar1j-tdce-rn)
@@ -256,7 +256,7 @@ Protected method. Returns the name of the object.
 As inherited from base class `PlayingCardT<>`, just returns the value of attribute `text`. This protected method is overridden from the inherited class `pltr::core::Object` and is internally called by method `pltr::core::Object::repr()` to provide a log string related to this playing card instance.
 
 
-# Template Specialization
+# Template Specializations
 Defined in file `include/pltr/playing_cards/standard_cards.h`.
 
 A few specialization are provided for help. They each relate to a localization specialization.

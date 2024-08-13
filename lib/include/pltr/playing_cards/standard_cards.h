@@ -248,6 +248,12 @@ namespace pltr::cards
 
 
     protected:
+        inline virtual const std::string _get_object_name() const noexcept override  //!< returns the name of the object. Overridden from base class pltr::core::Object.
+        {
+            return this->text;
+        }
+
+
         void _set_text() noexcept  //!< internally sets the text of this card
         {
             const char face_letter{ _CARDS_LETTERS[this->ident / COLORS_COUNT] };

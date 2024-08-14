@@ -28,6 +28,8 @@
 #include <random>
 #include <type_traits>
 
+#include "pltr/core/object.h"
+
 
 //===========================================================================
 namespace pltr::core
@@ -35,7 +37,7 @@ namespace pltr::core
     //=======================================================================
     // \brief  The base class for all pseudo random numbers generator, whatever the distribution function used. */
     template<typename PRNGT = std::mt19937_64>
-    class BaseRandom
+    class BaseRandom : public pltr::core::Object
     {
     public:
         inline BaseRandom() noexcept = default;     //!< default empty constructor.
@@ -63,9 +65,11 @@ namespace pltr::core
 
     //=======================================================================
     /* \brief The class for pseudo random numbers generator that relate to a specified distribution function. */
-    struct Random : protected BaseRandom<>
+    template<typename PRNGT = std::mt19937_64>
+    struct Random : protected pltr::core::BaseRandom<PRNGT>
     {
-    public:
+        using MyBaseClass = pltr::core::BaseRandom<PRNGT>;
+
         inline Random() noexcept = default;     //!< default empty constructor.
 
         virtual ~Random() noexcept = default;   //!< default destructor.
@@ -73,32 +77,32 @@ namespace pltr::core
         template<typename DistributionFunctionT>
         inline const DistributionFunctionT::result_type operator() (DistributionFunctionT& distribution_function)  //!< returns a random number according to the specified distribution function
         {
-            _check_init();
+            MyBaseClass::_check_init();
             return distribution_function(this->_rand_generator);
         }
 
         template<typename IntType>
             requires std::is_integral_v<IntType>
-        inline static const IntType urand(const IntType min, const IntType max)        //!< returns an random integer in range [min, max] with uniform distribution
+        inline static const IntType urand(const IntType min, const IntType max)        //!< returns a random integer in range [min, max] with uniform distribution
         {
-            _check_init();
-            return std::uniform_int_distribution<IntType>(min, max)(_rand_generator);
+            MyBaseClass::_check_init();
+            return std::uniform_int_distribution<IntType>(min, max)(MyBaseClass::_rand_generator);
         }
 
         template<typename FloatType>
             requires std::is_floating_point_v<FloatType>
         inline static const FloatType urand(const FloatType min, const FloatType max)  //!< returns a random float value in range [min, max] with uniform distribution
         {
-            _check_init();
-            return std::uniform_real_distribution<FloatType>(min, max)(_rand_generator);
+            MyBaseClass::_check_init();
+            return std::uniform_real_distribution<FloatType>(min, max)(MyBaseClass::_rand_generator);
         }
 
         template<typename FloatType>
             requires std::is_floating_point_v<FloatType>
         inline static const FloatType urand()                                          //!< returns a random float value in range [0.0, 1.0] with uniform distribution
         {
-            _check_init();
-            return std::uniform_real_distribution<FloatType>(FloatType(0), FloatType(1))(_rand_generator);
+            MyBaseClass::_check_init();
+            return std::uniform_real_distribution<FloatType>(FloatType(0), FloatType(1))(MyBaseClass::_rand_generator);
         }
 
         inline static const double urand()                                             //!< shortcut to return a double value in range [0.0, 1.0] with uniform distribution
@@ -111,7 +115,8 @@ namespace pltr::core
 
     //=======================================================================
     /* \brief The thread safe class for pseudo random numbers generator that relate to a specified distribution function. */
-    class RandomThreadSafe : protected BaseRandom<>
+    template<typename PRNGT = std::mt19937_64>
+    class RandomThreadSafe : public pltr::core::Object
     {
     public:
         inline RandomThreadSafe() noexcept = default;       //!< empty constructor.
@@ -122,17 +127,15 @@ namespace pltr::core
         inline const DistributionFunctionT::result_type operator() (DistributionFunctionT& distribution_function)
         {
             std::lock_guard<std::mutex> guard(this->_mutex);
-            _check_init();
-            return distribution_function(this->_rand_generator);
+            return this->_rand(distribution_function);
         }
 
         template<typename IntType>
             requires std::is_integral_v<IntType>
-        inline const IntType urand(const IntType min, const IntType max)        //!< returns an random integer in range [min, max] with uniform distribution
+        inline const IntType urand(const IntType min, const IntType max)        //!< returns a random integer in range [min, max] with uniform distribution
         {
             std::lock_guard<std::mutex> guard(this->_mutex);
-            _check_init();
-            return std::uniform_int_distribution<IntType>(min, max)(_rand_generator);
+            return this->_rand.urand(min, max);
         }
 
         template<typename FloatType>
@@ -140,19 +143,18 @@ namespace pltr::core
         inline const FloatType urand(const FloatType min, const FloatType max)  //!< returns a random float value in range [min, max] with uniform distribution
         {
             std::lock_guard<std::mutex> guard(this->_mutex);
-            _check_init();
-            return std::uniform_real_distribution<FloatType>(min, max)(_rand_generator);
+            return this->_rand.urand(min, max);
         }
 
         template<typename FloatType>
             requires std::is_floating_point_v<FloatType>
         inline const FloatType urand()                                          //!< returns a random float value in range [0.0, 1.0] with uniform distribution
         {
-            _check_init();
             std::lock_guard<std::mutex> guard(this->_mutex);
-            return std::uniform_real_distribution<FloatType>(FloatType(0), FloatType(1))(_rand_generator);
+            return this->_rand.urand<FloatType>();
         }
 
+        template<>
         inline const double urand()                                             //!< shortcut to return a double value in range [0.0, 1.0] with uniform distribution
         {
             return urand<double>();
@@ -160,7 +162,8 @@ namespace pltr::core
 
 
     private:
-        std::mutex _mutex;
+        std::mutex _mutex{};
+        pltr::core::Random<PRNGT> _rand{};
 
     };
 

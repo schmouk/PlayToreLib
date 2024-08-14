@@ -301,11 +301,12 @@ namespace pltr::cards
             return _get_random_index(this->get_current_cards_count());
         }
 
-        [[nodiscard]]
+        template<typename PRNGT = pltr::core::Random<>>
         inline const IndexType _get_random_index(const IndexType max_index) const
         {
             if (max_index > 1) [[likely]]
-                return pltr::core::Random::urand(IndexType(0), max_index-1);
+                return PRNGT::urand(IndexType(0), max_index - 1);
+                //return pltr::core::Random<>::urand(IndexType(0), max_index - 1);
             else [[unlikely]]
                 return IndexType(0);
         }

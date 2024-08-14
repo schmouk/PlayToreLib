@@ -53,13 +53,13 @@ TEST(TestSuiteCore, TestRandom) {
     }
 
     for (int i = 0; i < 100'000; ++i) {
-        const float rnd{ pltr::core::Random::urand(10.0f, 12.0f) };
+        const float rnd{ pltr::core::Random<>::urand<float>(10.0f, 12.0f) };
         EXPECT_LE(10.0f, rnd) << rnd;
         EXPECT_GT(12.0f, rnd) << rnd;
     }
 
     for (int i = 0; i < 100'000; ++i) {
-        const double rnd{ pltr::core::Random::urand() };
+        const double rnd{ pltr::core::Random<>::urand<double>() };
         EXPECT_LE(0.0, rnd) << rnd;
         EXPECT_GT(1.0, rnd) << rnd;
     }
@@ -92,13 +92,13 @@ TEST(TestSuiteCore, TestRandomThreadSafe) {
     }
 
     for (int i = 0; i < 100'000; ++i) {
-        const float rnd{ pltr::core::Random::urand(10.0f, 12.0f) };
+        const float rnd{ pltr::core::Random<>::urand<float>(10.0f, 12.0f) };
         EXPECT_LE(10.0f, rnd) << rnd;
         EXPECT_GT(12.0f, rnd) << rnd;
     }
 
     for (int i = 0; i < 100'000; ++i) {
-        const double rnd{ pltr::core::Random::urand() };
+        const double rnd{ pltr::core::Random<>::urand<double>() };
         EXPECT_LE(0.0, rnd) << rnd;
         EXPECT_GT(1.0, rnd) << rnd;
     }

@@ -34,6 +34,7 @@ namespace pltr::core
 {
     //=======================================================================
     // \brief  The base class for all pseudo random numbers generator, whatever the distribution function used. */
+    template<typename PRNGT = std::mt19937_64>
     class BaseRandom
     {
     public:
@@ -46,7 +47,7 @@ namespace pltr::core
 
 
     protected:
-        static inline std::mt19937_64 _rand_generator{};
+        static inline PRNGT _rand_generator{};
         static inline bool _already_inited{ false };
 
         inline static void _check_init()
@@ -59,9 +60,10 @@ namespace pltr::core
 
     };
 
+
     //=======================================================================
     /* \brief The class for pseudo random numbers generator that relate to a specified distribution function. */
-    struct Random : protected BaseRandom
+    struct Random : protected BaseRandom<>
     {
     public:
         inline Random() noexcept = default;     //!< default empty constructor.
@@ -109,7 +111,7 @@ namespace pltr::core
 
     //=======================================================================
     /* \brief The thread safe class for pseudo random numbers generator that relate to a specified distribution function. */
-    class RandomThreadSafe : protected BaseRandom
+    class RandomThreadSafe : protected BaseRandom<>
     {
     public:
         inline RandomThreadSafe() noexcept = default;       //!< empty constructor.
@@ -155,6 +157,7 @@ namespace pltr::core
         {
             return urand<double>();
         }
+
 
     private:
         std::mutex _mutex;

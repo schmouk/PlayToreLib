@@ -58,8 +58,17 @@ TEST(TestSuitePlayingCards, TestStandardCardsDeck) {
         EXPECT_EQ(i, deck54[i].ordering_value);
     }
 
-    for (int i = 0; i < 100; ++i)
+    int n{ 0 };
+    for (int i = 0; i < 100; ++i) {
+        int id;
         deck54.shuffle();
+        for (id = 0; id < 54; ++id)
+            if (deck54[id].ident != id)
+                break;
+        if (id == 54)
+            ++n;
+    }
+    EXPECT_GE(1, n);
 
     for (int i = 0; i < 54; ++i) {
         const CardFr card(i);

@@ -91,6 +91,8 @@ For decks that contain at most one same standard card and not more at a time, se
 Next subsections document the public and protected APIs of class `pltr::cards::StandardCardsDeck<>` and of the other declarations and definitions set in header file `include/pltr/playing_cards/standard_cards_deck.h`..
 
 
+---
+
 # class `StandardCardsDeck<>`
 Defined in file `include/pltr/playing_cards/standard_cards_deck.h`.
 
@@ -448,3 +450,5 @@ template<typename DeckT, typename CardT = typename DeckT::CardType>
 constexpr bool is_standard_cards_deck_v = is_standard_cards_deck<DeckT>::value;
 ```
 This is the related helper variable template. It provides direct access to the value of the above *UnaryTypeTrait* checker.
+
+---

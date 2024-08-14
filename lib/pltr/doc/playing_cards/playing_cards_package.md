@@ -20,6 +20,9 @@ About decks of playing cards:
 - `pltr/playing_cards/standard_cards_decks.h`
 - `pltr/playing_cards/unique_standard_cards_deck.h`
 
+
+---
+
 # Package classes and API documentation
 
 The documentation of this package is splitted into next files:
@@ -33,3 +36,5 @@ Documents templated class `CardsDeck<>`, the base class for all types of cards d
 Documents templated class `StandardCardsDeck<>`, the class of decks containing standard cards with maybe duplication of same cards in them;
 - [unique_standard_cards_deck_doc.h](./unique_standard_cards_deck_doc.h)  
 Documents templated class `UniqueStandardCardsDeck<>`, the same types of decks than right above but with no duplication of cards in them.
+
+---

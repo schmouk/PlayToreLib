@@ -68,16 +68,22 @@ Standard cards are the one that are used for playing Poker, for instance, plus b
 Next subsections document the public and protected APIs of class `pltr::cards::StandardCard<>`.
 
 
+---
+
 # enum class `EColor` : std::uint8_t
 Defined in file `include/pltr/playing_cards/standard_cards.h`.  
 The standard colors for standard playing cards. These are named (in their ordered declaration): `E_CLUB`, `E_DIAMOND`, `E_HEART`, `E_SPADE`, `E_RED` and `E_BLACK`.
 
+
+---
 
 # Exception(s)
 
 ## `struct StandardInvalidIdent : public std::exception`
 The StandardInvalidIdent exception for standard cards. Raised every time an ident value (used for the setting of standard cards identifiers) is out of bounds [0, 53]. Method `what()` returns an `std::string` which contains a message error that shows the invalid indentifier.
 
+
+---
 
 # class `StandardCard<>`
 Defined in file `include/pltr/playing_cards/standard_cards.h`.
@@ -256,6 +262,8 @@ Protected method. Returns the name of the object.
 As inherited from base class `PlayingCardT<>`, just returns the value of attribute `text`. This protected method is overridden from the inherited class `pltr::core::Object` and is internally called by method `pltr::core::Object::repr()` to provide a log string related to this playing card instance.
 
 
+---
+
 # Template Specializations
 Defined in file `include/pltr/playing_cards/standard_cards.h`.
 
@@ -304,3 +312,5 @@ It provides the member contant value `value` which is equal to `true` if `T` is 
 
 ## `template<typename T> inline constexpr bool is_standard_card_v = is_standard_card<T>::value
 This is the related helper variable template. It provides direct access to the value of the above *UnaryTypeTrait* checker.
+
+---

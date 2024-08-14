@@ -28,6 +28,8 @@ It defines what are playing cards and what are the actions that can be applied t
 Next subsections document the public and protected APIs of class `pltr::core::Object`.
 
 
+---
+
 # class `Object`
 Defined in file `include/pltr/core/object.h`.
 
@@ -72,3 +74,5 @@ Helps logging information related to the inheriting object, when debugging via l
 ### `protected: virtual const std::string _get_object_name() const`
 Returns the name of the object. To be overridden in inheriting classes if this makes sense.  
 See `pltr::cards::StandardCard<>` code for an example of an override.
+
+---

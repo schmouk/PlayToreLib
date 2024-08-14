@@ -79,6 +79,9 @@ It defines what are decks of playing cards and what are the actions that can be 
 # Code documentation <!-- omit in toc -->
 Next subsections document the public and protected APIs of class `pltr::cards::CardsDeck<>` and of the other declarations and definitions set in header file `include/pltr/playing_cards/cards_deck.h`..
 
+
+---
+
 # class type `CardsList<>`
 This type is used at many places within PlayTore code. It defines lists of playing cards and is declared as a template:
 ```
@@ -87,6 +90,8 @@ using CardsList = std::vector<CardT>;
 ```
 The `CardT` template argument should be of type or inherit from type `pltr::cards::PlayingCardT<>`. This condition is not checked at compilation time. It is your responsability to ensure it - well, you may use also `CardsList` to contain anything else if this fits your needs, but you should not.
 
+
+---
 
 # class `CardsDeck<>`
 Defined in file `include/pltr/playing_cards/cards_deck.h`.
@@ -311,3 +316,5 @@ Shuffles some part of this deck. Automaticcaly clips indexes to the min and max 
 
 ### note 1
 Class `pltr::cards::CardsDeck<>` uses internally and per default the (not-thread safe) **PlayTore** core class `pltr::core::Random`, defined in header file `pltr/core/random.h`. The curious reader will take benefit from looking at the implemented code of private method `CardsDeck<>::_get_random_index(const IndexType max_index)`.
+
+---

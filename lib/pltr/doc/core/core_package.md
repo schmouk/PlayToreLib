@@ -6,13 +6,15 @@ It defines core objects and classes for library **PlayTore**. Those are availabl
 
 All definitions are embedded in namespace `pltr::core`.
 
-
+---
 # list of header files
 
 - `pltr/core/object.h`
 - `pltr/core/random.h`
 - `pltr/core/template_utils.h`
 
+
+---
 
 # Package classes and API documentation
 
@@ -23,3 +25,5 @@ Documents base class `Object`, the base class for all type of objects defined in
 Documents base class `RandomBase`, the base class for randomness generation and two inheriting classes that generate pseudo random numbers according to a specified distribution function: `Random` which is not thread safe, and `RandomThreadSafe` which is thread safe but a little bit slower also;
 - [template_utils_doc.md](./template_utils_doc.md)  
 Documents utilities that can be used for template declarations and definitions.
+
+---

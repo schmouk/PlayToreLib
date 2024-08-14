@@ -25,3 +25,5 @@ and to get example of declarations of some specializations, for which an example
   template<const std::uint32_t START_INDEX = 0, const std::uint32_t LAST_INDEX = 54>
   using StandardCardFr = StandardCard<"23456789XVDR1J", "TKCP", "RN", 2, START_INDEX, LAST_INDEX>;
 ```
+
+---

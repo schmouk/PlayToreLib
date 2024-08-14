@@ -91,6 +91,8 @@ For decks that may contain more than one same standard card ocurence, see class 
 Next subsections document the public and protected APIs of class `pltr::cards::UniqueStandardCardsDeck<>` and of the other declarations and definitions set in header file `include/pltr/playing_cards/unique_standard_cards_deck.h`..
 
 
+---
+
 # class `UniqueStandardCardsDeck<>`
 Defined in file `include/pltr/playing_cards/unique_standard_cards_deck.h`.
 
@@ -363,6 +365,8 @@ A static reference deck is initialized once for every specialization of template
 Base class `pltr::cards::CardsDeck<>` uses internally and per default the (not-thread safe) **PlayTore** core class `pltr::core::Random`, defined in header file `pltr/core/random.h`. The curious reader will take benefit from looking at the implemented code of private method `CardsDeck<>::_get_random_index(const IndexType max_index)`.
 
 
+---
+
 # Specializations
 Defined in file `include/pltr/playing_cards/standard_cards_deck.h`.
 
@@ -428,3 +432,5 @@ template<typename UniqueStandardDeckT>
 constexpr bool is_unique_standard_cards_deck_v = is_standard_cards_deck<UniqueStandardDeckT>::value;
 ```
 This is the related helper variable template. It provides direct access to the value of the above *UnaryTypeTrait* checker.
+
+---

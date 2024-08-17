@@ -165,7 +165,6 @@ namespace pltr::cards
         inline void append_deck(const CardsDeck& other)                 //!< appends an other deck at end of this deck.
         {
             append_cards(other.deck());
-            return *this;
         }
 
         virtual void append_cards(const CardsList<CardT>& cards);       //!< appends cards in list at bottom of this deck. Deck max capacity may grow up then.

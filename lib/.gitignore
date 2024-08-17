@@ -8,6 +8,13 @@ x86
 Release
 Debug
 
+#---   Visual Studio Code  ---#
+.vscode
+
+#---  Google Tests  ---#
+packages
+packages.*
+
 #---  External Documentation  ---#
 docs
 

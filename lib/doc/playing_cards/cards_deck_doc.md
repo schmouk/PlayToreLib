@@ -15,9 +15,11 @@ It defines what are decks of playing cards and what are the actions that can be 
   - [Attributes](#attributes)
   - [Constructors / Destructor](#constructors--destructor)
     - [`CardsDeck ()`](#cardsdeck-)
-    - [`CardsDeck(const IndexType max_cards_count)`](#cardsdeckconst-indextype-max_cards_count)
+    - [`CardsDeck (const IndexType max_cards_count)`](#cardsdeck-const-indextype-max_cards_count)
     - [`CardsDeck(const CardsList<CardT>& cards)`](#cardsdeckconst-cardslistcardt-cards)
-    - [`template<typename FirstCardT, typename... NextCardsT> CardsDeck( const IndexType max_cards_count, const FirstCardT& first_card, const NextCardsT&... next_cards)`](#templatetypename-firstcardt-typename-nextcardst-cardsdeck-const-indextype-max_cards_count-const-firstcardt-first_card-const-nextcardst-next_cards)
+    - [`CardsDeck (const CardsList<CardT>& cards, std::filesystem::path& back_image_path_)`](#cardsdeck-const-cardslistcardt-cards-stdfilesystempath-back_image_path_)
+    - [`template<typename... NextCardsT> CardsDeck (const IndexType max_cards_count, const CardT& first_card, const NextCardsT&... next_cards)`](#templatetypename-nextcardst-cardsdeck-const-indextype-max_cards_count-const-cardt-first_card-const-nextcardst-next_cards)
+    - [`template<typename... NextCardsT> CardsDeck (const IndexType max_cards_count, const std::filesystem::path& back_image_path_, const CardT& first_card, const NextCardsT&... next_cards)`](#templatetypename-nextcardst-cardsdeck-const-indextype-max_cards_count-const-stdfilesystempath-back_image_path_-const-cardt-first_card-const-nextcardst-next_cards)
     - [`CardsDeck(const CardsDeck&)`](#cardsdeckconst-cardsdeck)
     - [`CardsDeck(CardsDeck&&)`](#cardsdeckcardsdeck)
     - [`virtual ~CardsDeck()`](#virtual-cardsdeck)
@@ -27,23 +29,27 @@ It defines what are decks of playing cards and what are the actions that can be 
   - [Indexing operators](#indexing-operators)
     - [`CardT& operator[] (const IndexType index)`](#cardt-operator-const-indextype-index)
     - [`const CardT& operator[] (const IndexType index) const`](#const-cardt-operator-const-indextype-index-const)
+  - [Other operator(s)](#other-operators)
+    - [`CardsDeck& operator+= (const CardsDeck& other)`](#cardsdeck-operator-const-cardsdeck-other)
   - [Accessors / Mutators](#accessors--mutators)
     - [`const IndexType get_current_cards_count() const`](#const-indextype-get_current_cards_count-const)
     - [`const IndexType get_max_cards_count() const noexcept`](#const-indextype-get_max_cards_count-const-noexcept)
     - [`CardsList<CardT>& deck()`](#cardslistcardt-deck)
     - [`const CardsList<CardT>& deck() const`](#const-cardslistcardt-deck-const)
   - [Operations](#operations)
-    - [`virtual const bool allowed_card(const CardT& card) const noexcept`](#virtual-const-bool-allowed_cardconst-cardt-card-const-noexcept)
-    - [`virtual const bool append_card(const CardT& card)`](#virtual-const-bool-append_cardconst-cardt-card)
+    - [`virtual const bool allowed_card (const CardT& card) const noexcept`](#virtual-const-bool-allowed_card-const-cardt-card-const-noexcept)
+    - [`virtual const bool append_card (const CardT& card)`](#virtual-const-bool-append_card-const-cardt-card)
     - [`virtual void append_cards(const CardsList<CardT>& cards)`](#virtual-void-append_cardsconst-cardslistcardt-cards)
+    - [`void append_deck (const CardsDeck& other)`](#void-append_deck-const-cardsdeck-other)
     - [`inline void clear()`](#inline-void-clear)
     - [`inline virtual const bool contains(const CardT& card)  const`](#inline-virtual-const-bool-containsconst-cardt-card--const)
     - [`inline const bool contains_all()  const`](#inline-const-bool-contains_all--const)
-    - [`template<typename` `FirstT, typename... RestT>` `inline const bool contains_all(const FirstT& first, const RestT&... rest)`](#templatetypename-firstt-typename-restt-inline-const-bool-contains_allconst-firstt-first-const-restt-rest)
+    - [`template<typename... RestT> inline const bool contains_all(const CardT& first, const RestT&... rest)`](#templatetypename-restt-inline-const-bool-contains_allconst-cardt-first-const-restt-rest)
     - [`const inline bool contains_all(const CardsList<CardT>& cards) const`](#const-inline-bool-contains_allconst-cardslistcardt-cards-const)
     - [`inline const bool contains_any()  const`](#inline-const-bool-contains_any--const)
-    - [`template<typename` `FirstT, typename... RestT>` `inline const bool contains_any(const FirstT& first, const RestT&... rest)`](#templatetypename-firstt-typename-restt-inline-const-bool-contains_anyconst-firstt-first-const-restt-rest)
+    - [`template<typename... RestT> inline const bool contains_any(const CardT& first, const RestT&... rest)`](#templatetypename-restt-inline-const-bool-contains_anyconst-cardt-first-const-restt-rest)
     - [`const bool contains_any(const CardsList<CardT>& cards) const`](#const-bool-contains_anyconst-cardslistcardt-cards-const)
+    - [`virtual inline void draw_back_image(const int x, const int y)`](#virtual-inline-void-draw_back_imageconst-int-x-const-int-y)
     - [`inline const CardT draw_card()`](#inline-const-cardt-draw_card)
     - [`inline const bool draw_card(const CardT& card)`](#inline-const-bool-draw_cardconst-cardt-card)
     - [`inline const CardsList<CardT> draw_n_cards(const IndexType n)`](#inline-const-cardslistcardt-draw_n_cardsconst-indextype-n)
@@ -52,11 +58,11 @@ It defines what are decks of playing cards and what are the actions that can be 
     - [`const IndexType get_index(const CardT& card) const`](#const-indextype-get_indexconst-cardt-card-const)
     - [`virtual const bool insert_card(const CardT& card)`](#virtual-const-bool-insert_cardconst-cardt-card)
     - [`inline void insert_cards()`](#inline-void-insert_cards)
-    - [`template<typename` `FirstT, typename... RestT>` `void insert_cards(const FirstT& first, const RestT&... rest)`](#templatetypename-firstt-typename-restt-void-insert_cardsconst-firstt-first-const-restt-rest)
+    - [`template<typename... RestT> void insert_cards(const CardT& first, const RestT&... rest)`](#templatetypename-restt-void-insert_cardsconst-cardt-first-const-restt-rest)
     - [`virtual void insert_cards(const CardsList<CardT>& cards)`](#virtual-void-insert_cardsconst-cardslistcardt-cards)
     - [`virtual const bool insert_nth_card(const IndexType index, const CardT& card)`](#virtual-const-bool-insert_nth_cardconst-indextype-index-const-cardt-card)
     - [`void insert_nth_cards(const IndexType index)`](#void-insert_nth_cardsconst-indextype-index)
-    - [`template<typename` `FirstT, typename... RestT>` `void insert_nth_cards(const IndexType index, const FirstT& first, const RestT&... rest)`](#templatetypename-firstt-typename-restt-void-insert_nth_cardsconst-indextype-index-const-firstt-first-const-restt-rest)
+    - [`template<typename... RestT> void insert_nth_cards(const IndexType index, const CardT& first, const RestT&... rest)`](#templatetypename-restt-void-insert_nth_cardsconst-indextype-index-const-cardt-first-const-restt-rest)
     - [`virtual void insert_nth_cards(const IndexType index, const CardsList<CardT>& cards)`](#virtual-void-insert_nth_cardsconst-indextype-index-const-cardslistcardt-cards)
     - [`virtual const bool insert_rand_card(const CardT& card)`](#virtual-const-bool-insert_rand_cardconst-cardt-card)
     - [`inline const bool is_empty() const noexcept`](#inline-const-bool-is_empty-const-noexcept)
@@ -69,7 +75,7 @@ It defines what are decks of playing cards and what are the actions that can be 
     - [`const CardsList<CardT> pop_up_n_cards(const IndexType n)`](#const-cardslistcardt-pop_up_n_cardsconst-indextype-n)
     - [`inline virtual void refill_deck()`](#inline-virtual-void-refill_deck)
     - [`void refill_deck(const CardsList<CardT>& filling_deck)`](#void-refill_deckconst-cardslistcardt-filling_deck)
-    - [`template<typename` `FirstT, typename... RestT>` `void refill_deck(const FirstT& first, const RestT&... rest)`](#templatetypename-firstt-typename-restt-void-refill_deckconst-firstt-first-const-restt-rest)
+    - [`template<typename... RestT> void refill_deck(const CardT& first, const RestT&... rest)`](#templatetypename-restt-void-refill_deckconst-cardt-first-const-restt-rest)
     - [`void shuffle()`](#void-shuffle)
     - [`void shuffle(const IndexType low, const IndexType high)`](#void-shuffleconst-indextype-low-const-indextype-high)
   - [Notes](#notes)
@@ -117,12 +123,15 @@ using IndexType = std::uint32_t;
 Notice: indexes are used to index cards in the deck.
 
 ## Attributes
-Cards deck have next attributes, all of them being **private** with accessors/mutators provided for some of them:
+Cards deck have next attributes, two of them being **private** with accessors/mutators provided for one or the other:
+- `back_image_path`:
+of type `std::filesystem::path`. *public*
+This is the file path to the image of the back of this deck of cards. May be specified at construction time or either directly set. Aims at being used when displaying this deck in graphical environment with card faces down.
 - `_deck`:  
-of type `CardsList<CardT>`.  
-This is the internal storage of the list of cards that are contained in this deck. It may be accessed ouotside this class via accessor/mutator `deck()`.
+of type `CardsList<CardT>`. *private*  
+This is the internal storage of the list of cards that are contained in this deck. It may be accessed outside this class via accessor/mutator `deck()`.
 - `_max_cards_count`:  
-of type `IndexType`.  
+of type `IndexType`. *private*  
 This is an internal control on the max count of cards that can be actually contained within this deck. This value may evolve along the running of your application.
 
 
@@ -132,17 +141,27 @@ This is an internal control on the max count of cards that can be actually conta
 The empty constructor.  
 `_deck` attribute is set as an empty list, `_max_cards_count` is set to 0, and the class random generation attributes are set if this is the very first instantiation of this class within your application. 
 
-### `CardsDeck(const IndexType max_cards_count)`  
+### `CardsDeck (const IndexType max_cards_count)`  
 The constructor with size argument.  
-`_deck` attribute is set as a list of cards of reserved length `max_cards_count` and is filled according to method `refill_deck()` - notice: this method does nothing in this base class and may (should) be overridden in inheriting classes. `_max_cards_count` is set to the specified size `max_cards_count`, and the class random generation attributes are set if this is the very first instantiation of this class within your application. 
+`_deck` attribute is set as a list of cards of reserved length `max_cards_count` and is filled according to method `refill_deck()` - notice: this method does nothing in this base class and may (should) be overridden in inheriting classes. Attribute `_max_cards_count` is set to the specified size `max_cards_count`, and the class random generation attributes are set if this is the very first instantiation of this class within your application. 
 
 ### `CardsDeck(const CardsList<CardT>& cards)`  
 The constructor with initialization vector.  
 Attribute `deck` is set as a copy of the specified list of cards (first card at bottom of deck, last card at top of deck), attribute `max_cards_count` is set to the count of cards in list, and the class random generation attributes are set if this is the very first instantiation of this class within your application.
 
-### `template<typename FirstCardT, typename... NextCardsT> CardsDeck( const IndexType max_cards_count, const FirstCardT& first_card, const NextCardsT&... next_cards)`  
+### `CardsDeck (const CardsList<CardT>& cards, std::filesystem::path& back_image_path_)`
+The constructor with initialization vector and file path to back image.  
+Attribute `deck` is set as a copy of the specified list of cards (first card at bottom of deck, last card at top of deck), attribute `max_cards_count` is set to the count of cards in list, and the class random generation attributes are set if this is the very first instantiation of this class within your application.  
+Attribute `back_image_path` is set with a copy of parameter `back_image_path_`.
+
+### `template<typename... NextCardsT> CardsDeck (const IndexType max_cards_count, const CardT& first_card, const NextCardsT&... next_cards)`  
 The constructor with an initialization list.  
 According to this signature of constructor, you can pass a list of cards as parameters. Attribute `deck` is set as containing the specified list of cards (first card at bottom of deck, last card at top of deck), attribute `max_cards_count` is set to the count of cards in parameters list, and the class random generation attributes are set if this is the very first instantiation of this class within your application. It can be accessed via the not mutable accessor method `get_max_cards_count()`.
+
+### `template<typename... NextCardsT> CardsDeck (const IndexType max_cards_count, const std::filesystem::path& back_image_path_, const CardT& first_card, const NextCardsT&... next_cards)`
+The constructor with initialization list and file path to back image.  
+According to this signature of constructor, you can pass a list of cards as parameters. Attribute `deck` is set as containing the specified list of cards (first card at bottom of deck, last card at top of deck), attribute `max_cards_count` is set to the count of cards in parameters list, and the class random generation attributes are set if this is the very first instantiation of this class within your application. It can be accessed via the not mutable accessor method `get_max_cards_count()`.  
+Attribute `back_image_path` is set with a copy of parameter `back_image_path_`.
 
 ### `CardsDeck(const CardsDeck&)`  
 The default copy constructor.
@@ -172,6 +191,12 @@ Mutable indexing operator. May throw exception on bad index.
 Not mutable indexing const operator. May throw exception on bad index.
 
 
+## Other operator(s)
+
+### `CardsDeck& operator+= (const CardsDeck& other)`
+Appends an other deck at end of this deck.
+
+
 ## Accessors / Mutators
 
 ### `const IndexType get_current_cards_count() const`  
@@ -189,14 +214,17 @@ Accessor to private deck content, not mutable: no modifications are allowed, so 
 
 ## Operations
 
-### `virtual const bool allowed_card(const CardT& card) const noexcept`  
+### `virtual const bool allowed_card (const CardT& card) const noexcept`  
 Returns true if the specified card is allowed to be contained in this deck.
 
-### `virtual const bool append_card(const CardT& card)`  
+### `virtual const bool append_card (const CardT& card)`  
 Appends a card at bottom of this deck. Deck max capacity may grow up then. See `insert_card()`.
 
 ### `virtual void append_cards(const CardsList<CardT>& cards)`  
 Appends a list of cards at bottom of this deck. Cards are appended in their order in the passed list of cards. Deck max capacity may grow up then.
+
+### `void append_deck (const CardsDeck& other)`
+Appends an other deck at end of this deck.
 
 ### `inline void clear()`  
 Empties the content of this deck. The value of `_max_cards_count` is not modified.
@@ -207,7 +235,7 @@ Returns true if the card ident is found in this deck.
 ### `inline const bool contains_all()  const`  
 This is the end of the containment searching recursion in this deck of all listed cards. Should not be called by library user - always return true.
 
-### `template<typename` `FirstT, typename... RestT>` `inline const bool contains_all(const FirstT& first, const RestT&... rest)`  
+### `template<typename... RestT> inline const bool contains_all(const CardT& first, const RestT&... rest)`  
 Returns true if all cards in list are contained in this deck.
 
 ### `const inline bool contains_all(const CardsList<CardT>& cards) const`  
@@ -216,11 +244,16 @@ Returns true if all of the passed cards are contained in this deck.
 ### `inline const bool contains_any()  const`  
 This is the end of the containment searching recursion in this deck of any listed card. Should not be called by library user - always return false.
 
-### `template<typename` `FirstT, typename... RestT>` `inline const bool contains_any(const FirstT& first, const RestT&... rest)` 
+### `template<typename... RestT> inline const bool contains_any(const CardT& first, const RestT&... rest)` 
 Returns true if any card in list is contained in this deck.
 
 ### `const bool contains_any(const CardsList<CardT>& cards) const`  
 Returns true if any of the passed cards is contained in this deck.
+
+### `virtual inline void draw_back_image(const int x, const int y)`
+Draws the back image of this deck at position (x, y) on display.  
+The `x` and `y` coordinates may follow any convention at your wish (e.g. top-left as well as bottom-left corner of card).  
+Notice: does nothing in this base class; to be overridden in inheriting classes if this gets meaning.
 
 ### `inline const CardT draw_card()`  
 Wrapper to `pop_up_card()`: removes and returns the card at the top of this deck.
@@ -246,7 +279,7 @@ Inserts a card at top of this deck. Deck max capacity may grow up then. \see app
 ### `inline void insert_cards()`  
 This is the end of inserts recursion of cards in this deck. Should not be called by library user - does nothing.
 
-### `template<typename` `FirstT, typename... RestT>` `void insert_cards(const FirstT& first, const RestT&... rest)`  
+### `template<typename... RestT> void insert_cards(const CardT& first, const RestT&... rest)`  
 Inserts a list of cards in this deck at top of deck.
 
 ### `virtual void insert_cards(const CardsList<CardT>& cards)`  
@@ -258,7 +291,7 @@ Inserts a card at n-th position in this deck. Deck max capacity may grow up then
 ### `void insert_nth_cards(const IndexType index)`  
 This is the end of inserts recursion of cards at some position in this deck. Should not be called by library user - does nothing.
 
-### `template<typename` `FirstT, typename... RestT>` `void insert_nth_cards(const IndexType index, const FirstT& first, const RestT&... rest)`  
+### `template<typename... RestT> void insert_nth_cards(const IndexType index, const CardT& first, const RestT&... rest)`  
 Inserts a list of cards in this deck.
 
 ### `virtual void insert_nth_cards(const IndexType index, const CardsList<CardT>& cards)`  
@@ -297,7 +330,7 @@ Fills this deck with all related playing cards. Does nothing in this base class,
 ### `void refill_deck(const CardsList<CardT>& filling_deck)`  
 Fills this deck according to a filling vector. Empties the deck first.
 
-### `template<typename` `FirstT, typename... RestT>` `void refill_deck(const FirstT& first, const RestT&... rest)`  
+### `template<typename... RestT> void refill_deck(const CardT& first, const RestT&... rest)`  
 Fills this deck according to a variable length list of cards. Empties the deck first.
 
 ### `void shuffle()`  

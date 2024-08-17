@@ -96,9 +96,9 @@
 * you as an exercice to display cards in a graphical environment if  you
 * wish and to add more interactions with user at your wish also.
 * 
-* Notice: this code uses c++20 standard and some of  its  new  concepts,
-* such as modules.  We hope this will be of interest to you, and that it
-* will help you get more informed on these concepts.
+* Notice: this code uses c++20 standard and some of  its  new  concepts.
+* We hope this will be of interest to you, and that it will help you get 
+* more informed on these concepts.
 */
 
 //===========================================================================

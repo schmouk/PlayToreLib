@@ -122,7 +122,7 @@ namespace pltr::cards
 
         inline CardsDeck& operator+= (const CardsDeck& other) noexcept  //!< appends an other deck at end of this deck.
         {
-            append_cards(other.deck());
+            append_deck(other);
             return *this;
         }
 
@@ -162,6 +162,12 @@ namespace pltr::cards
 
         virtual const bool append_card(const CardT& card);              //!< appends a card at bottom of this deck. Deck max capacity may grow up then. \see insert_card()
 
+        inline void append_deck(const CardsDeck& other)                 //!< appends an other deck at end of this deck.
+        {
+            append_cards(other.deck());
+            return *this;
+        }
+
         virtual void append_cards(const CardsList<CardT>& cards);       //!< appends cards in list at bottom of this deck. Deck max capacity may grow up then.
 
         inline void clear()                                             //!< empties the content of this deck
@@ -180,8 +186,8 @@ namespace pltr::cards
             return true;
         }
 
-        template<typename FirstT, typename... RestT>
-        inline const bool contains_all(const FirstT& first, const RestT&... rest)    //!< returns true if all cards in list are contained in this deck.
+        template<typename... RestT>
+        inline const bool contains_all(const CardT& first, const RestT&... rest)    //!< returns true if all cards in list are contained in this deck.
         {
             return contains(first) && contains_all(rest...);
         }
@@ -196,8 +202,8 @@ namespace pltr::cards
             return false;
         }
 
-        template<typename FirstT, typename... RestT>
-        inline const bool contains_any(const FirstT& first, const RestT&... rest)    //!< returns true if any card in list is contained in this deck.
+        template<typename... RestT>
+        inline const bool contains_any(const CardT& first, const RestT&... rest)    //!< returns true if any card in list is contained in this deck.
         {
             return contains(first) || contains_any(rest...);
         }
@@ -212,7 +218,7 @@ namespace pltr::cards
             // does nothing in this base class
             // to be overridden in inheriting classes if this gets meaning.
             // Notice: the x and y coordinates may follow any convention at
-            // your wish (i.e. top-left as well as bottom-left corner of card).
+            // your wish (e.g. top-left as well as bottom-left corner of card).
         }
 
         inline const CardT draw_card()                                  //!< wrapper to pop_up_card(): removes and returns the card at the top of this deck.
@@ -244,8 +250,8 @@ namespace pltr::cards
         inline void insert_cards()                                      //!< end of inserts recursion of cards in this deck. Should not be called by library user - does nothing.
         {}
 
-        template<typename FirstT, typename... RestT>
-        void insert_cards(const FirstT& first, const RestT&... rest)    //!< inserts a list of cards in this deck, at top of deck.
+        template<typename... RestT>
+        void insert_cards(const CardT& first, const RestT&... rest)    //!< inserts a list of cards in this deck, at top of deck.
         {
             insert_cards(rest...);
             insert_card(first);
@@ -261,8 +267,8 @@ namespace pltr::cards
         void insert_nth_cards(const IndexType index)                    //!< end of inserts recursion of cards at some position in this deck. Should not be called by library user - does nothing.
         {}
 
-        template<typename FirstT, typename... RestT>
-        void insert_nth_cards(const IndexType index, const FirstT& first, const RestT&... rest)   //!< inserts a list of cards in this deck.
+        template<typename... RestT>
+        void insert_nth_cards(const IndexType index, const CardT& first, const RestT&... rest)   //!< inserts a list of cards in this deck.
         {
             insert_nth_cards(index, rest...);
             insert_nth_card(index, first);
@@ -304,8 +310,8 @@ namespace pltr::cards
 
         void refill_deck(const CardsList<CardT>& filling_deck);         //!< fills this deck according to a filling vector. Empties the deck first.
 
-        template<typename FirstT, typename... RestT>
-        void refill_deck(const FirstT& first, const RestT&... rest)     //!< fills this deck according to a variable length list of cards. Empties the deck first.
+        template<typename... RestT>
+        void refill_deck(const CardT& first, const RestT&... rest)      //!< fills this deck according to a variable length list of cards. Empties the deck first.
         {
             if (sizeof...(rest) > 0) [[likely]] { // notice: necessary to not conflict with the virtual signature of refill() with no args
                 refill_deck(rest...);
@@ -350,7 +356,6 @@ namespace pltr::cards
         {
             if (max_index > 1) [[likely]]
                 return PRNGT::urand(IndexType(0), max_index - 1);
-                //return pltr::core::Random<>::urand(IndexType(0), max_index - 1);
             else [[unlikely]]
                 return IndexType(0);
         }

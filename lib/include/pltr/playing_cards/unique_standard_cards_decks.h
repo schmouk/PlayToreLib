@@ -117,7 +117,7 @@ namespace pltr::cards
     */
     template<
         typename CardType,
-        const std::uint32_t START_VALUE = 2,
+        const std::uint32_t START_VALUE = 7,
         const std::uint32_t START_ORDERING_VALUE = 0
     > requires pltr::cards::is_standard_card_v<CardType>
     using UniqueStandardCardsDeck32 = UniqueStandardCardsDeck<CardsDeck32<CardType, START_VALUE, START_ORDERING_VALUE, 1>>;
@@ -193,7 +193,7 @@ namespace pltr::cards
 
         for (auto& card : cards) {
             auto doubloon_it{
-                std::find_if(unique_cards.begin(), unique_cards.end(), [unique_cards, card](CardType& c) { return c.ident == card.ident; })
+                std::ranges::find_if(unique_cards, [card](CardType& c) { return c.ident == card.ident; })
             };
 
             if (doubloon_it == unique_cards.end() && _may_insert(card))

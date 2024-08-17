@@ -331,10 +331,12 @@ namespace pltr::cards
         }
 
 
-        virtual inline void draw()                                              //!< draws this card (caution: this is a drawing action on screen, not from a deck!)
+        virtual inline void draw_image(const int x, const int y)                //!< draws this card at position (x, y) on display
         {
             // does nothing in this base class
             // to be overridden in inheriting classes if this gets meaning.
+            // Notice: the x and y coordinates may follow any convention at
+            // your wish (i.e. top-left as well as bottom-left corner of card).
         }
 
 

@@ -25,6 +25,7 @@
 //===========================================================================
 #include <algorithm>
 #include <cstdint>
+#include <filesystem>
 #include <iterator>
 #include <random>
 #include <ranges>
@@ -56,18 +57,44 @@ namespace pltr::cards
         using IndexType = std::uint32_t;
 
 
+        //-----   Attributes   -----//
+        std::filesystem::path back_image_path{};                        //!< the file path to the image of the back of this deck of cards.
+
+
         //-----   Constructors / Desctructor   -----//
         CardsDeck();                                                    //!< empty constructor.
 
         CardsDeck(const IndexType max_cards_count);                     //!< constructor with size argument.
 
+        CardsDeck(                                                      //!< constructor with size argument and file path to back image.
+            const IndexType max_cards_count,
+            std::filesystem::path& back_image_path_);
+
         CardsDeck(const CardsList<CardT>& cards);                       //!< constructor with initialization vector.
 
-        template<typename FirstCardT, typename... NextCardsT>
+        CardsDeck(                                                      //!< constructor with initialization vector and file path to back image.
+            const CardsList<CardT>& cards,
+            std::filesystem::path& back_image_path_);
+
+        template<typename... NextCardsT>
         CardsDeck(
             const IndexType max_cards_count,
-            const FirstCardT& first_card,
+            const CardT& first_card,
             const NextCardsT&... next_cards)                            //!< constructor with initialization list
+        {
+            _set_deck(max_cards_count);
+            insert_cards(first_card, next_cards...);
+        }
+
+        template<typename... NextCardsT>
+        CardsDeck(
+            const IndexType max_cards_count,
+            const std::filesystem::path& back_image_path_,
+            const CardT& first_card,
+            const NextCardsT&... next_cards                             //!< constructor with initialization list and file path to back image
+        )
+            : pltr::core::Object()
+            , back_image_path(back_image_path_)
         {
             _set_deck(max_cards_count);
             insert_cards(first_card, next_cards...);
@@ -80,8 +107,8 @@ namespace pltr::cards
 
 
         //-----   Operators   -----//
-        CardsDeck& operator=(const CardsDeck&) noexcept = default;      //!< default copy operator.
-        CardsDeck& operator=(CardsDeck&&) noexcept = default;           //!< default move operator.
+        CardsDeck& operator= (const CardsDeck&) noexcept = default;     //!< default copy operator.
+        CardsDeck& operator= (CardsDeck&&) noexcept = default;          //!< default move operator.
 
         inline CardT& operator[] (const IndexType index)                //!< indexing operator. May throw exception on bad index.
         {
@@ -91,6 +118,12 @@ namespace pltr::cards
         inline const CardT& operator[] (const IndexType index) const    //!< indexing const operator. May throw exception on bad index.
         {
             return *_get_indexed_iterator(index);
+        }
+
+        inline CardsDeck& operator+= (const CardsDeck& other) noexcept  //!< appends an other deck at end of this deck.
+        {
+            append_cards(other.deck());
+            return *this;
         }
 
 
@@ -174,6 +207,14 @@ namespace pltr::cards
             return std::any_of(cards.cbegin(), cards.cend(), [this](const CardT& c) { return allowed_card(c) && contains(c); });
         }
 
+        virtual inline void draw_back_image(const int x, const int y)   //!< draws the back image of this deck at position (x, y) on display
+        {
+            // does nothing in this base class
+            // to be overridden in inheriting classes if this gets meaning.
+            // Notice: the x and y coordinates may follow any convention at
+            // your wish (i.e. top-left as well as bottom-left corner of card).
+        }
+
         inline const CardT draw_card()                                  //!< wrapper to pop_up_card(): removes and returns the card at the top of this deck.
         {
             return pop_up_card();
@@ -210,7 +251,10 @@ namespace pltr::cards
             insert_card(first);
         }
 
-        virtual void insert_cards(const CardsList<CardT>& cards);       //!< inserts n cards at top of this deck. Deck max capacity may grow up then.
+        virtual inline void insert_cards(const CardsList<CardT>& cards) //!< inserts n cards at top of this deck. Deck max capacity may grow up then.
+        {
+            insert_nth_cards(0, cards);
+        }
 
         virtual const bool insert_nth_card(const IndexType index, const CardT& card); //!< inserts a card at n-th position in this deck. Deck max capacity may grow up then.
 
@@ -343,8 +387,32 @@ namespace pltr::cards
 
     //-----------------------------------------------------------------------
     template<typename CardT>
+    CardsDeck<CardT>::CardsDeck(
+        const IndexType max_cards_count,
+        std::filesystem::path& back_image_path_
+    )
+        : pltr::core::Object()
+        , back_image_path(back_image_path_)
+    {
+        _set_deck(max_cards_count);
+    }
+
+    //-----------------------------------------------------------------------
+    template<typename CardT>
     CardsDeck<CardT>::CardsDeck(const pltr::cards::CardsList<CardT>& cards)
         : pltr::core::Object()
+    {
+        append_cards(cards);
+    }
+
+    //-----------------------------------------------------------------------
+    template<typename CardT>
+    CardsDeck<CardT>::CardsDeck(
+        const pltr::cards::CardsList<CardT>& cards,
+        std::filesystem::path& back_image_path_
+    )
+        : pltr::core::Object()
+        , back_image_path(back_image_path_)
     {
         append_cards(cards);
     }
@@ -413,16 +481,6 @@ namespace pltr::cards
             this->_max_cards_count = std::max(this->_max_cards_count, std::uint32_t(this->_deck.size()));
         }
         return allowed;
-    }
-
-    //-----------------------------------------------------------------------
-    template<typename CardT>
-    void CardsDeck<CardT>::insert_cards(const CardsList<CardT>& cards)
-    {
-        // reminder: inserts n cards at top of this deck. Deck max capacity may grow up then.
-        // notice: very simple but not optimized implementation
-        for (auto& card : cards)
-            insert_card(card);
     }
 
     //-----------------------------------------------------------------------

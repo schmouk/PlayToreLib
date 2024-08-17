@@ -23,6 +23,8 @@
 //===========================================================================
 #include "gtest/gtest.h"
 
+#include <filesystem>
+
 #include "pltr/playing_cards/cards_deck.h"
 #include "pltr/playing_cards/playing_cards.h"
 
@@ -312,9 +314,9 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
     EXPECT_EQ(9, deck3bis.get_max_cards_count());
     EXPECT_EQ(9, deck3bis.deck().size());
     EXPECT_LE(deck3bis.get_max_cards_count(), deck3bis.deck().capacity());
-    EXPECT_EQ(33, deck3bis[0].ident);
+    EXPECT_EQ(31, deck3bis[0].ident);
     EXPECT_EQ(32, deck3bis[1].ident);
-    EXPECT_EQ(31, deck3bis[2].ident);
+    EXPECT_EQ(33, deck3bis[2].ident);
     EXPECT_EQ(23, deck3bis[3].ident);
     EXPECT_EQ(24, deck3bis[4].ident);
     EXPECT_EQ(25, deck3bis[5].ident);
@@ -329,9 +331,9 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
     EXPECT_EQ(10, deck3bis.deck().size());
     EXPECT_LE(deck3bis.get_max_cards_count(), deck3bis.deck().capacity());
     EXPECT_EQ(40, deck3bis[0].ident);
-    EXPECT_EQ(33, deck3bis[1].ident);
+    EXPECT_EQ(31, deck3bis[1].ident);
     EXPECT_EQ(32, deck3bis[2].ident);
-    EXPECT_EQ(31, deck3bis[3].ident);
+    EXPECT_EQ(33, deck3bis[3].ident);
     EXPECT_EQ(23, deck3bis[4].ident);
     EXPECT_EQ(24, deck3bis[5].ident);
     EXPECT_EQ(25, deck3bis[6].ident);
@@ -345,9 +347,9 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
     EXPECT_EQ(11, deck3bis.deck().size());
     EXPECT_LE(deck3bis.get_max_cards_count(), deck3bis.deck().capacity());
     EXPECT_EQ(40, deck3bis[0].ident);
-    EXPECT_EQ(33, deck3bis[1].ident);
+    EXPECT_EQ(31, deck3bis[1].ident);
     EXPECT_EQ(32, deck3bis[2].ident);
-    EXPECT_EQ(31, deck3bis[3].ident);
+    EXPECT_EQ(33, deck3bis[3].ident);
     EXPECT_EQ(23, deck3bis[4].ident);
     EXPECT_EQ(24, deck3bis[5].ident);
     EXPECT_EQ(25, deck3bis[6].ident);
@@ -363,9 +365,9 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
     EXPECT_LE(deck3bis.get_max_cards_count(), deck3bis.deck().capacity());
     EXPECT_EQ(40, deck3bis[0].ident);
     EXPECT_EQ(41, deck3bis[1].ident);
-    EXPECT_EQ(33, deck3bis[2].ident);
+    EXPECT_EQ(31, deck3bis[2].ident);
     EXPECT_EQ(32, deck3bis[3].ident);
-    EXPECT_EQ(31, deck3bis[4].ident);
+    EXPECT_EQ(33, deck3bis[4].ident);
     EXPECT_EQ(23, deck3bis[5].ident);
     EXPECT_EQ(24, deck3bis[6].ident);
     EXPECT_EQ(25, deck3bis[7].ident);
@@ -384,9 +386,9 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
     EXPECT_EQ(52, deck3bis[1].ident);
     EXPECT_EQ(40, deck3bis[2].ident);
     EXPECT_EQ(41, deck3bis[3].ident);
-    EXPECT_EQ(33, deck3bis[4].ident);
+    EXPECT_EQ(31, deck3bis[4].ident);
     EXPECT_EQ(32, deck3bis[5].ident);
-    EXPECT_EQ(31, deck3bis[6].ident);
+    EXPECT_EQ(33, deck3bis[6].ident);
     EXPECT_EQ(23, deck3bis[7].ident);
     EXPECT_EQ(24, deck3bis[8].ident);
     EXPECT_EQ(25, deck3bis[9].ident);
@@ -404,9 +406,9 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
     EXPECT_EQ(52, deck3bis[1].ident);
     EXPECT_EQ(40, deck3bis[2].ident);
     EXPECT_EQ(41, deck3bis[3].ident);
-    EXPECT_EQ(33, deck3bis[4].ident);
+    EXPECT_EQ(31, deck3bis[4].ident);
     EXPECT_EQ(32, deck3bis[5].ident);
-    EXPECT_EQ(31, deck3bis[6].ident);
+    EXPECT_EQ(33, deck3bis[6].ident);
     EXPECT_EQ(23, deck3bis[7].ident);
     EXPECT_EQ(24, deck3bis[8].ident);
     EXPECT_EQ(25, deck3bis[9].ident);
@@ -426,12 +428,12 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
     EXPECT_EQ(52, deck3bis[1].ident);
     EXPECT_EQ(40, deck3bis[2].ident);
     EXPECT_EQ(41, deck3bis[3].ident);
-    EXPECT_EQ(33, deck3bis[4].ident);
+    EXPECT_EQ(31, deck3bis[4].ident);
     EXPECT_EQ(55, deck3bis[5].ident);
     EXPECT_EQ(56, deck3bis[6].ident);
     EXPECT_EQ(57, deck3bis[7].ident);
     EXPECT_EQ(32, deck3bis[8].ident);
-    EXPECT_EQ(31, deck3bis[9].ident);
+    EXPECT_EQ(33, deck3bis[9].ident);
     EXPECT_EQ(23, deck3bis[10].ident);
     EXPECT_EQ(24, deck3bis[11].ident);
     EXPECT_EQ(25, deck3bis[12].ident);
@@ -453,12 +455,12 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
     EXPECT_EQ(52, deck3bis[3].ident);
     EXPECT_EQ(40, deck3bis[4].ident);
     EXPECT_EQ(41, deck3bis[5].ident);
-    EXPECT_EQ(33, deck3bis[6].ident);
+    EXPECT_EQ(31, deck3bis[6].ident);
     EXPECT_EQ(55, deck3bis[7].ident);
     EXPECT_EQ(56, deck3bis[8].ident);
     EXPECT_EQ(57, deck3bis[9].ident);
     EXPECT_EQ(32, deck3bis[10].ident);
-    EXPECT_EQ(31, deck3bis[11].ident);
+    EXPECT_EQ(33, deck3bis[11].ident);
     EXPECT_EQ(23, deck3bis[12].ident);
     EXPECT_EQ(24, deck3bis[13].ident);
     EXPECT_EQ(25, deck3bis[14].ident);
@@ -483,12 +485,12 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
     EXPECT_EQ(52, deck3bis[6].ident);
     EXPECT_EQ(40, deck3bis[7].ident);
     EXPECT_EQ(41, deck3bis[8].ident);
-    EXPECT_EQ(33, deck3bis[9].ident);
+    EXPECT_EQ(31, deck3bis[9].ident);
     EXPECT_EQ(55, deck3bis[10].ident);
     EXPECT_EQ(56, deck3bis[11].ident);
     EXPECT_EQ(57, deck3bis[12].ident);
     EXPECT_EQ(32, deck3bis[13].ident);
-    EXPECT_EQ(31, deck3bis[14].ident);
+    EXPECT_EQ(33, deck3bis[14].ident);
     EXPECT_EQ(23, deck3bis[15].ident);
     EXPECT_EQ(24, deck3bis[16].ident);
     EXPECT_EQ(25, deck3bis[17].ident);
@@ -513,12 +515,12 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
     EXPECT_EQ(52, deck3bis[6].ident);
     EXPECT_EQ(40, deck3bis[7].ident);
     EXPECT_EQ(41, deck3bis[8].ident);
-    EXPECT_EQ(33, deck3bis[9].ident);
+    EXPECT_EQ(31, deck3bis[9].ident);
     EXPECT_EQ(55, deck3bis[10].ident);
     EXPECT_EQ(56, deck3bis[11].ident);
     EXPECT_EQ(57, deck3bis[12].ident);
     EXPECT_EQ(32, deck3bis[13].ident);
-    EXPECT_EQ(31, deck3bis[14].ident);
+    EXPECT_EQ(33, deck3bis[14].ident);
     EXPECT_EQ(23, deck3bis[15].ident);
     EXPECT_EQ(24, deck3bis[16].ident);
     EXPECT_EQ(25, deck3bis[17].ident);
@@ -695,6 +697,21 @@ TEST(TestSuitePlayingCards, TestCardsDeck) {
     EXPECT_EQ(7, deck4[6].ident);
     for (int i = 2; i < 7; ++i)
         EXPECT_TRUE(deck4.contains(DefaultCardT(i)));
+
+    // tests most complex declaration with back image path
+    DefaultDeckT deck_back(5, std::filesystem::path("my_back.jpg"), DefaultCardT(11), DefaultCardT(22), DefaultCardT(33), DefaultCardT(44));
+
+    EXPECT_EQ(4, deck_back.get_current_cards_count());
+    EXPECT_EQ(5, deck_back.get_max_cards_count());
+    EXPECT_EQ(4, deck_back.deck().size());
+    EXPECT_EQ(5, deck_back.deck().capacity());
+    EXPECT_STREQ(std::filesystem::path("my_back.jpg").c_str(), deck_back.back_image_path.c_str());
+
+    EXPECT_EQ(11, deck_back[0].ident);
+    EXPECT_EQ(22, deck_back[1].ident);
+    EXPECT_EQ(33, deck_back[2].ident);
+    EXPECT_EQ(44, deck_back[3].ident);
+
 
     // notice: next methods have been already tested via the former tests of their insert_card() related callers
     // - clear()

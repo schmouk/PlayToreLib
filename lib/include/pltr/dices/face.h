@@ -37,7 +37,7 @@ namespace pltr::dices
     /* \brief The generic template for faces of dices.
     */
     template<typename ValueT = std::int8_t>
-        requires std::equality_comparable<ValueT>
+        requires std::totally_ordered<ValueT>
     struct Face : public pltr::core::Object
     {
         //-----   Types wrappers   -----//
@@ -71,9 +71,39 @@ namespace pltr::dices
             return this->value == other.value;
         }
 
+        [[nodiscard]]
+        inline const bool operator!= (const Face& other) const noexcept //!< non equality operator
+        {
+            return this->value != other.value;
+        }
+
+        [[nodiscard]]
+        const bool operator< (const Face& other) const noexcept         //!< less-than comparison operator
+        {
+            return this->value < other.value;
+        }
+
+        [[nodiscard]]
+        const bool operator<= (const Face& other) const noexcept        //!< less-than-or-equal comparison operator
+        {
+            return this->value <= other.value;
+        }
+
+        [[nodiscard]]
+        const bool operator> (const Face& other) const noexcept         //!< greater-than comparison operator
+        {
+            return this->value > other.value;
+        }
+
+        [[nodiscard]]
+        const bool operator>= (const Face& other) const noexcept        //!< greater-than-or-equal comparison operator
+        {
+            return this->value >= other.value;
+        }
+
 
         //-----   Operations   -----//
-        virtual inline void action()                                    //!< actions to be processed that are associated with this face of dise
+        virtual inline void action()                                    //!< actions to be processed that are associated with this face of dice
         {
             // does nothing in this base class
             // to be overridden in inheriting classes if this gets meaning.

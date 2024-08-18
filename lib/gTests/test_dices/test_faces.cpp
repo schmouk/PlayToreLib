@@ -30,7 +30,7 @@
 
 
 //===========================================================================
-TEST(TestSuiteDicess, TestFaces) {
+TEST(TestSuiteDices, TestFaces) {
 
     pltr::dices::Face<> face_int;
     EXPECT_EQ(0, face_int.value);
@@ -42,5 +42,15 @@ TEST(TestSuiteDicess, TestFaces) {
     pltr::dices::Face<std::string> face_str("Joker");
     EXPECT_STREQ("Joker", face_str.value.c_str());
     EXPECT_STRNE("joker", face_str.value.c_str());
+
+    pltr::dices::Face<> face1(1);
+    EXPECT_EQ(1, face1.value);
+    EXPECT_TRUE(face_int < face1);
+    EXPECT_TRUE(face_int <= face1);
+    EXPECT_TRUE(face1 > face_int);
+    EXPECT_TRUE(face1 >= face_int);
+    EXPECT_FALSE(face1 < face_int);
+    EXPECT_FALSE(face_int == face1);
+    EXPECT_TRUE(face_int != face1);
 
 }

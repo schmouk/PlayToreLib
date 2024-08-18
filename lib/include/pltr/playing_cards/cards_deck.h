@@ -48,8 +48,7 @@ namespace pltr::cards
     //=======================================================================
     /* \brief The base class for decks of cards.
     */
-    template<typename CardT, typename PRNGT = pltr::core::Random<>>
-        requires std::is_base_of_v<pltr::core::BaseRandom, PRNGT>
+    template<typename CardT, typename PRNGT = std::mt19937_64>
     class CardsDeck : pltr::core::Object
     {
     public:
@@ -357,7 +356,7 @@ namespace pltr::cards
         inline virtual const IndexType _get_random_index(const IndexType max_index) const
         {
             if (max_index > 1) [[likely]]
-                return PRNGT::urand(IndexType(0), max_index - 1);
+                return pltr::core::Random<PRNGT>::urand(IndexType(0), max_index - 1);
             else [[unlikely]]
                 return IndexType(0);
         }

@@ -107,6 +107,19 @@ void Gameplay::start_new_game() noexcept
         if (player_index >= players_count())
             player_index = 0;
     }
+
+    // prints cards count per player
+    const int n{ 1 };
+    for (Player& player : this->_players_list) {
+        const int cards_count{ player.get_owned_cards_count() };
+        std::cout << player.name << ": " << cards_count << " card";
+        if (cards_count > 1)
+            std::cout << 's';
+        if (n < this->_players_list.size())
+            std::cout << ", ";
+    }
+    std::cout << std::endl;
+
 }
 
 //---------------------------------------------------------------------------
@@ -198,6 +211,7 @@ void Gameplay::_next_round() noexcept
                     // this player can't play
                     std::cout << player->name << ": leaves";
                     player->already_left = true;
+                    player->resigned = true;
                     player->resigned_round = this->_round;
                 }
 
@@ -232,6 +246,7 @@ void Gameplay::_next_round() noexcept
                     if (!player->already_left) {
                         std::cout << player->name << ": leaves";
                         player->already_left = true;
+                        player->resigned = true;
                         player->resigned_round = this->_round;
                     }
                 }
@@ -276,6 +291,7 @@ void Gameplay::_next_round() noexcept
                         // this player can't play, she meaves the game
                         std::cout << player->name << ": leaves";
                         player->already_left = true;
+                        player->resigned = true;
                         player->resigned_round = this->_round;
                     }
 
@@ -333,7 +349,7 @@ void Gameplay::_next_round() noexcept
 
     //-- if game has not completed, prints each player's status
     if (_ends()) {
-        std::cout << "-- Game has completed!" << std::endl;
+        std::cout << std::endl << "-- Game has completed!" << std::endl;
     }
     else {
         std::cout << std::endl;

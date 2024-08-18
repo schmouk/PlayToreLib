@@ -26,6 +26,8 @@
 //===========================================================================
 #include <concepts>
 #include <cstdint>
+#include <exception>
+#include <format>
 #include <random>
 
 #include "pltr/dices/face.h"
@@ -36,6 +38,25 @@
 //===========================================================================
 namespace pltr::dices
 {
+    //=======================================================================
+    /* \brief The InvalidFaceIndex exception for dices. Raised when face index is out of range.
+    */
+    struct InvalidFaceIndex : public std::exception
+    {
+        std::string _msg;
+
+        inline InvalidFaceIndex(const std::uint32_t face_index, const std::uint32_t max_index)
+            : _msg{ std::format("out of bounds indexing of dice ({} > {})", face_index, std::int32_t(max_index) - 1) }
+        {}
+
+        std::string& what()
+        {
+            return this->_msg;
+        }
+
+    };
+
+
     //=======================================================================
     /* \brief The generic template for dices.
     */
@@ -52,62 +73,64 @@ namespace pltr::dices
 
 
         //-----   Constructors / Desctructor   -----//
-        inline Dice() noexcept = default;                                   //!< default empty constructor.
+        inline Dice() noexcept = default;                                       //!< default empty constructor.
 
-        inline Dice(const std::vector<FaceT>& faces) noexcept;              //!< initialization constructor.
+        inline Dice(const std::vector<FaceT>& faces) noexcept;                  //!< initialization constructor.
 
         template<typename... RestT>
-        inline Dice(const FaceT& first, const RestT&... rest) noexcept;     //!< constructor with variable arguments length.
+        inline Dice(const FaceT& first, const RestT&... rest) noexcept;         //!< constructor with variable arguments length.
 
-        inline Dice(const Dice&) noexcept = default;                        //!< default copy constructor.
-        inline Dice(Dice&&) noexcept = default;                             //!< default move constructor.
+        inline Dice(const Dice&) noexcept = default;                            //!< default copy constructor.
+        inline Dice(Dice&&) noexcept = default;                                 //!< default move constructor.
 
-        virtual inline ~Dice() noexcept = default;                          //!< default destructor.
+        virtual inline ~Dice() noexcept = default;                              //!< default destructor.
 
 
         //-----   Operators   -----//
-        inline Dice& operator= (const Dice&) noexcept = default;            //!< default copy assignment.
-        inline Dice& operator= (Dice&&) noexcept = default;                 //!< default copy assignment.
+        inline Dice& operator= (const Dice&) noexcept = default;                //!< default copy assignment.
+        inline Dice& operator= (Dice&&) noexcept = default;                     //!< default copy assignment.
 
         [[nodiscard]]
-        inline ValueType& operator[] (const int num_face);                  //!< mutable indexing operator. Face numbers start at 0. Throws exception if out of bound.
+        inline ValueType& operator[] (const std::uint32_t num_face);              //!< mutable indexing operator. Face numbers start at 0. Throws exception if out of bound.
 
         [[nodiscard]]
-        inline const ValueType& operator[] (const int num_face) const;      //!< not mutable indexing operator. Face numbers start at 0. Throws exception if out of bound.
+        inline const ValueType& operator[] (const std::uint32_t num_face) const;  //!< not mutable indexing operator. Face numbers start at 0. Throws exception if out of bound.
 
         [[nodiscard]]
-        inline const bool operator== (const Dice& other) const noexcept;    //!< equality operator.
+        inline const bool operator== (const Dice& other) const noexcept;        //!< equality operator.
 
         [[nodiscard]]
-        inline const bool operator!= (const Dice& other) const noexcept;    //!< non equality operator.
+        inline const bool operator!= (const Dice& other) const noexcept;        //!< non equality operator.
 
         [[nodiscard]]
-        inline const bool operator< (const Dice& other) const noexcept;     //!< less-than comparison operator.
+        inline const bool operator< (const Dice& other) const noexcept;         //!< less-than comparison operator.
 
         [[nodiscard]]
-        inline const bool operator<= (const Dice& other) const noexcept;    //!< less-than-or-equal comparison operator.
+        inline const bool operator<= (const Dice& other) const noexcept;        //!< less-than-or-equal comparison operator.
 
         [[nodiscard]]
-        inline const bool operator> (const Dice& other) const noexcept;     //!< greater-than comparison operator.
+        inline const bool operator> (const Dice& other) const noexcept;         //!< greater-than comparison operator.
 
         [[nodiscard]]
-        inline const bool operator>= (const Dice& other) const noexcept;    //!< greater-than-or-equal comparison operator.
+        inline const bool operator>= (const Dice& other) const noexcept;        //!< greater-than-or-equal comparison operator.
 
 
         //-----   Accessors / Mutators   -----//
-        inline const std::uint32_t faces_count() const noexcept;            //!< returns the number of faces for this dice.
+        inline const std::uint32_t faces_count() const noexcept;                //!< returns the number of faces for this dice.
 
-        inline const float get_last_rotation_angle() const noexcept;        //!< returns the rotation angle of the dice got on last roll_with_angle call.
+        inline const FaceT& force_upper_face(const std::uint32_t num_face);       //!< forces the upper face of this dice.  Throws exception if out of bound.
 
-        inline const FaceT& get_upper_face() const noexcept;                //!< returns the current upper face of this dice.
+        inline const float get_last_rotation_angle() const noexcept;            //!< returns the rotation angle of the dice got on last roll_with_angle call.
+
+        inline const FaceT& get_upper_face() const noexcept;                    //!< returns the current upper face of this dice.
 
 
         //-----   Operations   -----//
-        const FaceT& roll();                                                //!< rolls this dice and returns the new upper face. Throws error if dice is not initialized.
+        const FaceT& roll();                                                    //!< rolls this dice and returns the new upper face. Throws error if dice is not initialized.
 
-        const FaceT& roll_with_angle();                                     //!< rolls this dice, returns the new upper face and sets a rotation angle Throws error if dice is not initialized.
+        const FaceT& roll_with_angle();                                         //!< rolls this dice, returns the new upper face and sets a rotation angle Throws error if dice is not initialized.
 
-        const FaceT& roll_with_angle(float& angle);                         //!< rolls this dice, returns the new upper face and gets a rotation angle Throws error if dice is not initialized.
+        const FaceT& roll_with_angle(float& angle);                             //!< rolls this dice, returns the new upper face and gets a rotation angle Throws error if dice is not initialized.
 
 
     protected:
@@ -132,9 +155,10 @@ namespace pltr::dices
     //-----------------------------------------------------------------------
     template<typename FaceT, typename PRNGT>
     template<typename... RestT>
-    inline Dice<FaceT, PRNGT>::Dice(const FaceT& first, const RestT&... rest) noexcept        //!< constructor with variable arguments length
+    inline Dice<FaceT, PRNGT>::Dice(const FaceT& first, const RestT&... rest) noexcept
         : pltr::core::Object()
     {
+        // reminder: constructor with variable arguments length.
         if (sizeof...(RestT) == 0) {
             // ensures that dices have at least two faces
             _set(first, first);
@@ -146,17 +170,32 @@ namespace pltr::dices
 
     //-----------------------------------------------------------------------
     template<typename FaceT, typename PRNGT>
-    inline Dice<FaceT, PRNGT>::ValueType& Dice<FaceT, PRNGT>::operator[] (const int num_face)
+    inline Dice<FaceT, PRNGT>::ValueType& Dice<FaceT, PRNGT>::operator[] (const std::uint32_t num_face)
     {
         // reminder: mutable indexing operator.
+        if (num_face >= this->faces_count())
+            throw pltr::dices::InvalidFaceIndex(num_face, this->faces_count());
         return this->_faces[num_face].value;
     }
 
     //-----------------------------------------------------------------------
     template<typename FaceT, typename PRNGT>
-    inline const Dice<FaceT, PRNGT>::ValueType& Dice<FaceT, PRNGT>::operator[] (const int num_face) const
+    inline const FaceT& Dice<FaceT, PRNGT>::force_upper_face(const std::uint32_t num_face)
+    {
+        // reminder: forces the upper face of this dice.  Throws exception if out of bound.
+        if (num_face >= this->faces_count())
+            throw pltr::dices::InvalidFaceIndex(num_face, this->faces_count());
+        this->_upper_face = this->_faces[num_face];
+        return this->_upper_face;
+    }
+
+    //-----------------------------------------------------------------------
+    template<typename FaceT, typename PRNGT>
+    inline const Dice<FaceT, PRNGT>::ValueType& Dice<FaceT, PRNGT>::operator[] (const std::uint32_t num_face) const
     {
         // reminder: not mutable indexing operator.
+        if (num_face >= this->faces_count())
+            throw pltr::dices::InvalidFaceIndex(num_face, this->faces_count());
         return this->faces[num_face].value;
     }
 
@@ -164,7 +203,7 @@ namespace pltr::dices
     template<typename FaceT, typename PRNGT>
     inline const bool Dice<FaceT, PRNGT>::operator== (const Dice& other) const noexcept
     {
-        // reminder: equality operator
+        // reminder: equality operator.
         return this->_upper_face == other._upper_face;
     }
 
@@ -172,7 +211,7 @@ namespace pltr::dices
     template<typename FaceT, typename PRNGT>
     inline const bool Dice<FaceT, PRNGT>::operator!= (const Dice& other) const noexcept
     {
-        // reminder: non equality operator
+        // reminder: non equality operator.
         return this->_upper_face != other._upper_face;
     }
 
@@ -180,7 +219,7 @@ namespace pltr::dices
     template<typename FaceT, typename PRNGT>
     inline const bool Dice<FaceT, PRNGT>::operator< (const Dice& other) const noexcept
     {
-        // reminder: less-than comparison operator
+        // reminder: less-than comparison operator.
         return this->_upper_face < other._upper_face;
     }
 
@@ -188,7 +227,7 @@ namespace pltr::dices
     template<typename FaceT, typename PRNGT>
     inline const bool Dice<FaceT, PRNGT>::operator<= (const Dice& other) const noexcept
     {
-        // reminder: less-than-or-equal comparison operator
+        // reminder: less-than-or-equal comparison operator.
         return this->_upper_face <= other._upper_face;
     }
 
@@ -196,7 +235,7 @@ namespace pltr::dices
     template<typename FaceT, typename PRNGT>
     inline const bool Dice<FaceT, PRNGT>::operator> (const Dice& other) const noexcept
     {
-        // reminder: greater-than comparison operator
+        // reminder: greater-than comparison operator.
         return this->_upper_face > other._upper_face;
     }
 
@@ -204,7 +243,7 @@ namespace pltr::dices
     template<typename FaceT, typename PRNGT>
     inline const bool Dice<FaceT, PRNGT>::operator>= (const Dice& other) const noexcept
     {
-        // reminder: greater-than-or-equal comparison operator
+        // reminder: greater-than-or-equal comparison operator.
         return this->_upper_face >= other._upper_face;
     }
 
@@ -212,7 +251,7 @@ namespace pltr::dices
     template<typename FaceT, typename PRNGT>
     inline const std::uint32_t Dice<FaceT, PRNGT>::faces_count() const noexcept
     {
-        // reminder: returns the number of faces for this dice
+        // reminder: returns the number of faces for this dice.
         return std::uint32_t(this->_faces.size());
     }
 
@@ -220,15 +259,22 @@ namespace pltr::dices
     template<typename FaceT, typename PRNGT>
     inline const float Dice<FaceT, PRNGT>::get_last_rotation_angle() const noexcept
     {
-        // reminder: returns the rotation angle of the dice got on last roll_with_angle call
+        // reminder: returns the rotation angle of the dice got on last roll_with_angle call.
         return this->_rotation_angle;
+    }
+    //-----------------------------------------------------------------------
+    template<typename FaceT, typename PRNGT>
+    inline const FaceT& Dice<FaceT, PRNGT>::get_upper_face() const noexcept
+    {
+        // reminder: returns the current upper face of this dice.
+        return this->_upper_face;
     }
 
     //-----------------------------------------------------------------------
     template<typename FaceT, typename PRNGT>
     const FaceT& Dice<FaceT, PRNGT>::roll()
     {
-        // reminder: rolls this dice
+        // reminder: rolls this dice.
         const std::uint32_t index{ pltr::core::Random<PRNGT>::urand<std::uint32_t>(0, this->faces_count - 1) };
 
         return this->upper_face = this->_faces[index];
@@ -238,7 +284,7 @@ namespace pltr::dices
     template<typename FaceT, typename PRNGT>
     const FaceT& Dice<FaceT, PRNGT>::roll_with_angle()
     {
-        // reminder: rolls this dice and gets a rotation angle 
+        // reminder: rolls this dice and gets a rotation angle.
         // so, rolls the dice to get its upper face
         roll();
         // then evaluates its rotation angle
@@ -250,7 +296,7 @@ namespace pltr::dices
     template<typename FaceT, typename PRNGT>
     const FaceT& Dice<FaceT, PRNGT>::roll_with_angle(float& angle)
     {
-        // reminder: rolls this dice, returns the new upper face and gets a rotation angle
+        // reminder: rolls this dice, returns the new upper face and gets a rotation angle.
         roll_with_angle();
         angle = this->_rotation_angle;
         return this->upper_face;
@@ -268,7 +314,7 @@ namespace pltr::dices
     template<typename... RestT>
     void Dice<FaceT, PRNGT>::_set(const FaceT& first, const RestT&... rest) noexcept
     {
-        // reminder: sets faces according to variable length of arguments
+        // reminder: sets faces according to variable length of arguments.
         this->_faces.push_back(first);
         _set(rest...);
     }

@@ -96,6 +96,8 @@ using CardsList = std::vector<CardT>;
 ```
 The `CardT` template argument should be of type or inherit from type `pltr::cards::PlayingCardT<>`. This condition is not checked at compilation time. It is your responsability to ensure it - well, you may use also `CardsList` to contain anything else if this fits your needs, but you should not.
 
+The `PRNGT` template argument describes a type that must conform with 
+
 
 ---
 
@@ -105,15 +107,20 @@ Defined in file `include/pltr/playing_cards/cards_deck.h`.
 `CardsDeck<>` is the base class for all decks that contain playing cards and is defined as a template:
 
 ```
-template<typename CardT>
-class CardsDeck
+template<typename CardT, typename PRNGT = pltr::core::Random<>>
+    requires std::is_base_of_v<pltr::core::BaseRandom, PRNGT>
+class CardsDeck : pltr::core::Object
  ```
 
-The template argument is:
+This class inherits from `pltr::core::Object`.
+
+The template arguments are:
 - `CardT`:  
 the type of playing cards that are contained in this type of deck. It gets no default value.
+- `PRNGT`:  
+the type of the pseudo random numbers generator that is used to shuffle the deck, to draw a random card from deck, or to insert cards at random position in deck. It defaults to `std::mt19337_64`, the STL Mersenne Twister 64 bits algorithm. See [https://en.cppreference.com/w/cpp/numeric/random](https://en.cppreference.com/w/cpp/numeric/random) to get an overview of all the random number generators that are predefined in the STL (since c++11).  
+Notice: external library **CppRandLib** will eventually be used at some time in place of the STL `<random>` package. Actually, this is not the case.
 
-This class inherits from `pltr::core::Object`.
 
 ## Types Wrappers
 ```

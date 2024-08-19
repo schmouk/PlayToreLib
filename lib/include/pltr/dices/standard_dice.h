@@ -25,10 +25,10 @@
 
 //===========================================================================
 #include <cstdint>
-#include <exception>
-#include <format>
 #include <random>
 
+
+#include "pltr/dices/dices_exceptions.h"
 #include "pltr/core/object.h"
 #include "pltr/core/random.h"
 
@@ -36,46 +36,6 @@
 //===========================================================================
 namespace pltr::dices
 {
-    //=======================================================================
-    /* \brief The InvalidDice exception. Raised when a dice is initalized with less than 2 faces.
-    */
-    struct InvalidDice : public std::exception
-    {
-        std::string _msg;
-
-        inline InvalidDice(const std::int32_t faces_count)
-            : _msg{ std::format("dices must be declared with at least two faces, '{}' is an invalid value", faces_count) }
-        {}
-
-        std::string& what()
-        {
-            return this->_msg;
-        }
-
-    };
-
-
-    //=======================================================================
-    /* \brief The InvalidDiceValue exception for dices. Raised when forced value for dice is invalid.
-    */
-    template<typename ValueT = std::int32_t>
-        requires std::is_integral_v<ValueT>
-    struct InvalidDiceValue : public std::exception
-    {
-        std::string _msg;
-
-        inline InvalidDiceValue(const ValueT dice_value)
-            : _msg{ std::format("'{}' is an invalid value for dice", dice_value) }
-        {}
-
-        std::string& what()
-        {
-            return this->_msg;
-        }
-
-    };
-
-
     //=======================================================================
     /* \brief The generic template for standard dices - i.e. with numbers on faces.
     */

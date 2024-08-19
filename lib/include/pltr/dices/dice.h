@@ -25,10 +25,9 @@
 
 //===========================================================================
 #include <cstdint>
-#include <exception>
-#include <format>
 #include <random>
 
+#include "pltr/dices/dices_exceptions.h"
 #include "pltr/dices/face.h"
 #include "pltr/core/object.h"
 #include "pltr/core/random.h"
@@ -37,25 +36,6 @@
 //===========================================================================
 namespace pltr::dices
 {
-    //=======================================================================
-    /* \brief The InvalidFaceIndex exception for dices. Raised when face index is out of range.
-    */
-    struct InvalidFaceIndex : public std::exception
-    {
-        std::string _msg;
-
-        inline InvalidFaceIndex(const std::uint32_t face_index, const std::uint32_t max_index)
-            : _msg{ std::format("out of bounds indexing of dice ({} > {})", face_index, std::int32_t(max_index) - 1) }
-        {}
-
-        std::string& what()
-        {
-            return this->_msg;
-        }
-
-    };
-
-
     //=======================================================================
     /* \brief The generic template for dices.
     */
@@ -150,6 +130,14 @@ namespace pltr::dices
 
     //=======================================================================
     // Local implementations
+
+    //-----------------------------------------------------------------------
+    template<typename FaceT, typename PRNGT>
+    inline Dice<FaceT, PRNGT>::Dice(const std::vector<FaceT>& faces) noexcept
+    {
+        // reminder: initialization constructor.
+
+    }
 
     //-----------------------------------------------------------------------
     template<typename FaceT, typename PRNGT>

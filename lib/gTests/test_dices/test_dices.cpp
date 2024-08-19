@@ -27,6 +27,7 @@
 #include <string>
 
 #include "pltr/dices/dice.h"
+#include "pltr/dices/dices_exceptions.h"
 
 
 //===========================================================================
@@ -74,6 +75,50 @@ TEST(TestSuiteDices, TestDices) {
     EXPECT_EQ(22, dice_list[1]);
     EXPECT_EQ(333, dice_list[2]);
     EXPECT_EQ(4444, dice_list[3]);
+
+    const std::vector<DefaultFace> init_vect( { DefaultFace(1), DefaultFace(22), DefaultFace(333), DefaultFace(4444) } );
+    DefaultDice dice_vect(init_vect);
+    EXPECT_EQ(4, dice_list.faces_count());
+    EXPECT_FLOAT_EQ(0.0f, dice_list.get_last_rotation_angle());
+    EXPECT_EQ(0, dice_list.get_upper_face().value);
+
+    EXPECT_EQ(1, dice_list[0]);
+    EXPECT_EQ(22, dice_list[1]);
+    EXPECT_EQ(333, dice_list[2]);
+    EXPECT_EQ(4444, dice_list[3]);
+
+
+    // Tests dices with not enough faces in initialization list
+    EXPECT_THROW({
+        try {
+            std::vector<DefaultFace> vect{ DefaultFace(0) };
+            DefaultDice dice_err(vect);
+        }
+        catch (pltr::dices::InvalidDice& e) {
+            EXPECT_STREQ("dices must be declared with at least two faces, '1' is an invalid value", e.what().c_str());
+            throw e;
+        }
+    }, pltr::dices::InvalidDice);
+
+    EXPECT_THROW({
+        try {
+            DefaultDice dice_err({ DefaultFace(0) });
+        }
+        catch (pltr::dices::InvalidDice& e) {
+            EXPECT_STREQ("dices must be declared with at least two faces, '1' is an invalid value", e.what().c_str());
+            throw e;
+        }
+    }, pltr::dices::InvalidDice);
+
+    EXPECT_THROW({
+        try {
+            DefaultDice dice_err(DefaultFace(10));
+        }
+        catch (pltr::dices::InvalidDice& e) {
+            EXPECT_STREQ("dices must be declared with at least two faces, '1' is an invalid value", e.what().c_str());
+            throw e;
+        }
+    }, pltr::dices::InvalidDice);
 
 
     // Tests initialized dice with variable arguments list
@@ -161,5 +206,26 @@ TEST(TestSuiteDices, TestDices) {
     EXPECT_TRUE(dice == dice2);
     EXPECT_TRUE(dice2 == dice);
 
+
+    // Tests dices with initialization vector
+    DefaultFace face1(1);
+    DefaultFace face2(2);
+    DefaultFace face3(3);
+    DefaultDice dice_v6(std::vector<DefaultFace>({ face1, face2, face3, face1, face2, face1 }));
+    EXPECT_EQ(6, dice_v6.faces_count());
+    EXPECT_EQ(1, dice_v6[0]);
+    EXPECT_EQ(2, dice_v6[1]);
+    EXPECT_EQ(3, dice_v6[2]);
+    EXPECT_EQ(1, dice_v6[3]);
+    EXPECT_EQ(2, dice_v6[4]);
+    EXPECT_EQ(1, dice_v6[5]);
+
+    for (int i = 0; i < 10'000; ++i) {
+        dice_v6.roll_with_angle();
+        EXPECT_LE(1, dice_v6.get_upper_face().value);
+        EXPECT_GE(3, dice_v6.get_upper_face().value);
+        EXPECT_LE(0.0f, dice_v6.get_last_rotation_angle());
+        EXPECT_GE(360.0f, dice_v6.get_last_rotation_angle());
+    }
 
 }

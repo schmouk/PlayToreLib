@@ -54,10 +54,10 @@ namespace pltr::dices
         //-----   Constructors / Desctructor   -----//
         inline Dice() noexcept = default;                                       //!< default empty constructor.
 
-        inline Dice(const std::vector<FaceT>& faces) noexcept;                  //!< initialization constructor.
+        inline Dice(const std::vector<FaceT>& faces);                           //!< initialization constructor. Throws exception if vector size is less than 2.
 
         template<typename... RestT>
-        inline Dice(const FaceT& first, const RestT&... rest) noexcept;         //!< constructor with variable arguments length.
+        inline Dice(const FaceT& first, const RestT&... rest);                  //!< constructor with variable arguments length. Throws exception if size of rest is 0.
 
         inline Dice(const Dice&) noexcept = default;                            //!< default copy constructor.
         inline Dice(Dice&&) noexcept = default;                                 //!< default move constructor.
@@ -107,9 +107,11 @@ namespace pltr::dices
         //-----   Operations   -----//
         const FaceT& roll();                                                    //!< rolls this dice and returns the new upper face. Throws error if dice is not initialized.
 
-        const FaceT& roll_with_angle();                                         //!< rolls this dice, returns the new upper face and sets a rotation angle Throws error if dice is not initialized.
+        const FaceT& roll_with_angle();                                         //!< rolls this dice, returns the new upper face and sets a rotation angle. Throws error if dice is not initialized.
 
-        const FaceT& roll_with_angle(float& angle);                             //!< rolls this dice, returns the new upper face and gets a rotation angle Throws error if dice is not initialized.
+        const FaceT& roll_with_angle(float& angle);                             //!< rolls this dice, returns the new upper face and gets a rotation angle. Throws error if dice is not initialized.
+
+        void set(const std::vector<FaceT>& faces);                              //!< sets this dice faces with an initialization vector. Throws exception if less than 2 faces.
 
 
     private:
@@ -133,22 +135,23 @@ namespace pltr::dices
 
     //-----------------------------------------------------------------------
     template<typename FaceT, typename PRNGT>
-    inline Dice<FaceT, PRNGT>::Dice(const std::vector<FaceT>& faces) noexcept
+    inline Dice<FaceT, PRNGT>::Dice(const std::vector<FaceT>& faces)
+        : pltr::core::Object()
     {
-        // reminder: initialization constructor.
-
+        // reminder: initialization constructor. Throws exception if vector size is less than 2.
+        set(faces);
     }
 
     //-----------------------------------------------------------------------
     template<typename FaceT, typename PRNGT>
     template<typename... RestT>
-    inline Dice<FaceT, PRNGT>::Dice(const FaceT& first, const RestT&... rest) noexcept
+    inline Dice<FaceT, PRNGT>::Dice(const FaceT& first, const RestT&... rest)
         : pltr::core::Object()
     {
-        // reminder: constructor with variable arguments length.
+        // reminder: constructor with variable arguments length. Throws exception if size of rest is 0.
         if (sizeof...(RestT) == 0) {
-            // ensures that dices have at least two faces
-            _set(first, first);
+            // dices with only 1 face are invalid
+            throw pltr::dices::InvalidDice(1);
         }
         else {
             _set(first, rest...);
@@ -264,7 +267,7 @@ namespace pltr::dices
         // reminder: rolls this dice.
         const std::uint32_t index{ pltr::core::Random<PRNGT>::urand<std::uint32_t>(0, this->faces_count() - 1)};
 
-        return this->upper_face = this->_faces[index];
+        return this->_upper_face = this->_faces[index];
     }
 
     //-----------------------------------------------------------------------
@@ -276,7 +279,7 @@ namespace pltr::dices
         roll();
         // then evaluates its rotation angle
         this->_rotation_angle = pltr::core::Random<PRNGT>::urand(0.0f, 360.0f);
-        return this->upper_face;
+        return this->_upper_face;
     }
 
     //-----------------------------------------------------------------------
@@ -286,7 +289,7 @@ namespace pltr::dices
         // reminder: rolls this dice, returns the new upper face and gets a rotation angle.
         roll_with_angle();
         angle = this->_rotation_angle;
-        return this->upper_face;
+        return this->_upper_face;
     }
 
     //-----------------------------------------------------------------------
@@ -304,6 +307,20 @@ namespace pltr::dices
         // reminder: sets faces according to variable length of arguments.
         this->_faces.push_back(first);
         _set(rest...);
+    }
+
+    //-----------------------------------------------------------------------
+    template<typename FaceT, typename PRNGT>
+    void Dice<FaceT, PRNGT>::set(const std::vector<FaceT>& faces)
+    {
+        // reminder: sets this dice faces with an initialization vector. Throws exception if less than 2 faces.
+        const std::int32_t faces_count{ std::int32_t(faces.size()) };
+        if (faces_count < 2) {
+            throw pltr::dices::InvalidDice(faces_count);
+        }
+        else {
+            this->_faces = faces;
+        }
     }
 
 }

@@ -24,7 +24,6 @@
 
 
 //===========================================================================
-#include <concepts>
 #include <cstdint>
 #include <exception>
 #include <format>
@@ -120,7 +119,7 @@ namespace pltr::dices
 
         inline const FaceT& force_upper_face(const std::uint32_t num_face);       //!< forces the upper face of this dice.  Throws exception if out of bound.
 
-        inline const float get_last_rotation_angle() const noexcept;            //!< returns the rotation angle of the dice got on last roll_with_angle call.
+        inline const float get_last_rotation_angle() const noexcept;            //!< returns the rotation angle of the dice got on last roll_with_angle call (degrees, [0.0, 360.0]).
 
         inline const FaceT& get_upper_face() const noexcept;                    //!< returns the current upper face of this dice.
 
@@ -133,7 +132,7 @@ namespace pltr::dices
         const FaceT& roll_with_angle(float& angle);                             //!< rolls this dice, returns the new upper face and gets a rotation angle Throws error if dice is not initialized.
 
 
-    protected:
+    private:
         //-----   Attributes   -----//
         std::vector<FaceT> _faces{};    //!< the list of faces for this dice.
         FaceT _upper_face{};            //!< the upper face of this dice once rolled.
@@ -259,7 +258,7 @@ namespace pltr::dices
     template<typename FaceT, typename PRNGT>
     inline const float Dice<FaceT, PRNGT>::get_last_rotation_angle() const noexcept
     {
-        // reminder: returns the rotation angle of the dice got on last roll_with_angle call.
+        // reminder: returns the rotation angle of the dice got on last roll_with_angle call (degrees, [0.0, 360.0]).
         return this->_rotation_angle;
     }
     //-----------------------------------------------------------------------
@@ -275,7 +274,7 @@ namespace pltr::dices
     const FaceT& Dice<FaceT, PRNGT>::roll()
     {
         // reminder: rolls this dice.
-        const std::uint32_t index{ pltr::core::Random<PRNGT>::urand<std::uint32_t>(0, this->faces_count - 1) };
+        const std::uint32_t index{ pltr::core::Random<PRNGT>::urand<std::uint32_t>(0, this->faces_count() - 1)};
 
         return this->upper_face = this->_faces[index];
     }

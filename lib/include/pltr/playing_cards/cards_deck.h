@@ -610,8 +610,8 @@ namespace pltr::cards
     void CardsDeck<CardT, PRNGT>::shuffle()
     {
         // reminder: shuffles this whole deck.
-        for (IndexType n = IndexType(this->_deck.size() - 1); n > 0; --n) {
-            const IndexType i{ _get_random_index(n) };
+        for (IndexType n = IndexType(this->_deck.size()-1); n > 0; --n) {
+            const IndexType i{ _get_random_index(n + 1) };
             if (i != n)
                 std::swap(this->_deck[n], this->_deck[i]);
         }

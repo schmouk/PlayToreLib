@@ -32,6 +32,7 @@
 void Gameplay::play() noexcept
 {
     // reminder: runs the whole game
+
     while (!_ends()) {
         _next_round();
     }
@@ -41,6 +42,7 @@ void Gameplay::play() noexcept
 void Gameplay::print_ranks() noexcept
 {
     // reminder: prints players' ranks
+
     std::cout << std::endl << "Final Rankings:" << std::endl;
 
     std::ranges::sort(this->_players_list, [](const Player& left, const Player& right) { return left < right; });
@@ -66,16 +68,12 @@ void Gameplay::print_ranks() noexcept
             std::cout << "  " << rank;
             prev_rank = rank;
         }
-        std::cout << ". " << player.name << " - " << player.get_owned_cards_count();
-
-        if (player.owns_cards()) {
-            std::cout << " card";
-            if (player.get_owned_cards_count() > 1)
-                std::cout << 's';
-        }
+        std::cout << ". " << player.name << " - " << player.get_owned_cards_count() << " card";
 
         if (player.resigned)
             std::cout << " (" << player.resigned_round << " rounds)";
+        else if (player.get_owned_cards_count() > 1)
+            std::cout << 's';
 
         std::cout << std::endl;
 
@@ -115,7 +113,7 @@ void Gameplay::start_new_game() noexcept
         std::cout << player.name << ": " << cards_count << " card";
         if (cards_count > 1)
             std::cout << 's';
-        if (n < this->_players_list.size())
+        if (n < players_count())
             std::cout << ", ";
     }
     std::cout << std::endl;
@@ -126,15 +124,17 @@ void Gameplay::start_new_game() noexcept
 const bool Gameplay::_ends() const noexcept
 {
     // reminder: returns true if this game is completed
+
     if (this->_round == this->_MAX_ROUNDS)
         // all rounfs completed!
         return true;
 
-    if (std::ranges::any_of(this->_players_list,
+    if (std::ranges::any_of(
+        this->_players_list,
         [this](const Player& p) {
             return p.get_owned_cards_count() == this->_game_deck.get_max_cards_count();
         })
-        )
+    )
         // one of the players owns all the original deck cards!
         return true;
 
@@ -159,7 +159,7 @@ void Gameplay::_next_round() noexcept
     //-- players draw their top-deck card
     int highest_value{ -1 };
     std::vector<Player*> winners{};
-    winners.reserve(4);
+    winners.reserve(players_count());
 
     for (Player& player : this->_players_list) {
         if (player.owns_cards()) {
@@ -196,23 +196,20 @@ void Gameplay::_next_round() noexcept
         if (std::ranges::any_of(winners, [](const Player* p) { return p->get_owned_cards_count() >= 2; })) {
             int new_highest_value{ -1 };
             std::vector<Player*> new_winners{};
-            new_winners.reserve(4);
+            new_winners.reserve(players_count());
 
             // yes, let all players play one more card face down, if they can
             int n{ 1 };
             for (Player* player : winners) {
                 if (player->owns_cards()) {
-                    const BatailleCards hidden_card{ player->draw_top_card() };
-                    this->_hidden_deck.insert_card(hidden_card);
-                    player->hidden_played_cards.insert_card(hidden_card);
+                    const BatailleCards hidden_card{ player->draw_top_card() };  // draws the card at top of player's deck
+                    this->_hidden_deck.insert_card(hidden_card);                 // puts it in current round pool of hidden cards
+                    player->hidden_played_cards.insert_card(hidden_card);        // remember it also as played hidden for player
                     std::cout << player->name << ": xx";
                 }
                 else {
                     // this player can't play
-                    std::cout << player->name << ": leaves";
-                    player->already_left = true;
-                    player->resigned = true;
-                    player->resigned_round = this->_round;
+                    _player_is_leaving(*player);
                 }
 
                 if (n < winners.size())
@@ -244,10 +241,7 @@ void Gameplay::_next_round() noexcept
                 else {
                     // this player can't play, she leaves the game
                     if (!player->already_left) {
-                        std::cout << player->name << ": leaves";
-                        player->already_left = true;
-                        player->resigned = true;
-                        player->resigned_round = this->_round;
+                        _player_is_leaving(*player);
                     }
                 }
 
@@ -288,11 +282,8 @@ void Gameplay::_next_round() noexcept
                         }
                     }
                     else {
-                        // this player can't play, she meaves the game
-                        std::cout << player->name << ": leaves";
-                        player->already_left = true;
-                        player->resigned = true;
-                        player->resigned_round = this->_round;
+                        // this player can't play, she leaves the game
+                        _player_is_leaving(*player);
                     }
 
                     if (n < this->_players_list.size())
@@ -356,16 +347,17 @@ void Gameplay::_next_round() noexcept
         int n{ 1 };
         for (auto& player : this->_players_list) {
             const int cards_count{ player.get_owned_cards_count() };
-            std::cout << player.name << ": " << cards_count << " card";
-            if (cards_count > 1)
-                std::cout << 's';
 
+            if (cards_count == 0 && !player.resigned) {
+                _player_is_leaving(player);
+                player.clear_round_decks();
+            }
+            else {
+                std::cout << player.name << ": " << cards_count << " card";
+                if (cards_count > 1)
+                    std::cout << 's';
+            }
             if (cards_count == 0) {
-                if (!player.resigned) {
-                    player.resigned_round = this->_round;
-                    player.resigned = true;
-                    player.clear_round_decks();
-                }
                 std::cout << " (" << player.resigned_round << " rounds)";
             }
 
@@ -383,4 +375,17 @@ void Gameplay::_next_round() noexcept
         std::cin.ignore(1);
     }
 
+}
+
+
+//---------------------------------------------------------------------------
+void Gameplay::_player_is_leaving(Player& player)
+{
+    if (!player.resigned) {
+        std::cout << player.name << ": leaves";
+        player.already_left = true;
+        player.resigned = true;
+        player.resigned_round = this->_round;
+        player.clear_round_decks();
+    }
 }

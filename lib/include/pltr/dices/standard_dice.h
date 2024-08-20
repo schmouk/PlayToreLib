@@ -106,9 +106,9 @@ namespace pltr::dices
 
     private:
         //-----   Attributes   -----//
-        const std::int32_t _faces_count{};
-        const ValueT _min_value{};
-        const ValueT _step_value{};
+        std::int32_t _faces_count{};
+        ValueT _min_value{};
+        ValueT _step_value{};
         float _rotation_angle{};  // once rolled, the rotation angle of the upper face of this standard dice.
 
     };

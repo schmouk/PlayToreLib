@@ -49,7 +49,7 @@ TEST(TestSuiteDices, TestDices) {
             const int value = empty_dice[0];
         }
         catch (pltr::dices::InvalidFaceIndex& e) {
-            EXPECT_STREQ("out of bounds indexing of dice (0 > -1)", e.what().c_str());
+            EXPECT_STREQ("out of range indexing of dice (0 > -1)", e.what().c_str());
             throw e;
         }
     }, pltr::dices::InvalidFaceIndex);
@@ -59,7 +59,7 @@ TEST(TestSuiteDices, TestDices) {
             const int value = empty_dice[1];
         }
         catch (pltr::dices::InvalidFaceIndex& e) {
-            EXPECT_STREQ("out of bounds indexing of dice (1 > -1)", e.what().c_str());
+            EXPECT_STREQ("out of range indexing of dice (1 > -1)", e.what().c_str());
             throw e;
         }
     }, pltr::dices::InvalidFaceIndex);
@@ -138,7 +138,7 @@ TEST(TestSuiteDices, TestDices) {
             const int value = dice[5];
         }
         catch (pltr::dices::InvalidFaceIndex& e) {
-            EXPECT_STREQ("out of bounds indexing of dice (5 > 4)", e.what().c_str());
+            EXPECT_STREQ("out of range indexing of dice (5 > 4)", e.what().c_str());
             throw e;
         }
     }, pltr::dices::InvalidFaceIndex);
@@ -148,7 +148,7 @@ TEST(TestSuiteDices, TestDices) {
             const int value = dice[6];
         }
         catch (pltr::dices::InvalidFaceIndex& e) {
-            EXPECT_STREQ("out of bounds indexing of dice (6 > 4)", e.what().c_str());
+            EXPECT_STREQ("out of range indexing of dice (6 > 4)", e.what().c_str());
             throw e;
         }
     }, pltr::dices::InvalidFaceIndex);

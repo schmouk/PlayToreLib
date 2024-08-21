@@ -124,8 +124,8 @@ void BattleSimulation::solve() noexcept
         int blue_wins{ 0 };
         std::cout << "          winner:";
         for (std::tuple<int&, int&> cmp_elem : std::views::zip(red_dices, blue_dices)) {
-            int red_value{ std::get<0>(cmp_elem) };
-            int blue_value{ std::get<1>(cmp_elem) };
+            const int red_value{ std::get<0>(cmp_elem) };
+            const int blue_value{ std::get<1>(cmp_elem) };
 
             if (red_value > blue_value) {
                 ++red_wins;

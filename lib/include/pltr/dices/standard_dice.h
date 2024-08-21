@@ -91,17 +91,17 @@ namespace pltr::dices
 
 
         //-----   Accessors / Mutators   -----//
-        inline const std::int32_t faces_count() const noexcept;                    //!< returns the number of faces for this dice.
+        inline const std::int32_t faces_count() const noexcept;                     //!< returns the number of faces for this dice.
 
         inline const float get_last_rotation_angle() const noexcept;                //!< returns the rotation angle of the dice got on last roll_with_angle call (degrees, [0.0, 360.0]).
 
 
         //-----   Operations   -----//
-        const ValueT& roll();                                                       //!< rolls this dice and returns the new upper face. Throws error if dice is not initialized.
+        const ValueT& roll() noexcept;                                              //!< rolls this dice and returns the new upper face. Throws error if dice is not initialized.
 
-        const ValueT& roll_with_angle();                                            //!< rolls this dice, returns the new value of dice and sets a rotation angle. Throws error if dice is not initialized.
+        const ValueT& roll_with_angle() noexcept;                                   //!< rolls this dice, returns the new value of dice and sets a rotation angle. Throws error if dice is not initialized.
 
-        const ValueT& roll_with_angle(float& angle);                                //!< rolls this dice, returns the new value of dice and gets a rotation angle. Throws error if dice is not initialized.
+        const ValueT& roll_with_angle(float& angle) noexcept;                       //!< rolls this dice, returns the new value of dice and gets a rotation angle. Throws error if dice is not initialized.
 
 
     private:
@@ -228,7 +228,7 @@ namespace pltr::dices
     //-----------------------------------------------------------------------
     template<typename ValueT, typename PRNGT>
         requires std::is_integral_v<ValueT>
-    const ValueT& StandardDice<ValueT, PRNGT>::roll()
+    const ValueT& StandardDice<ValueT, PRNGT>::roll() noexcept
     {
         // reminder: rolls this dice.
         const std::int32_t index{ pltr::core::Random<PRNGT>::urand(std::int32_t(0), std::int32_t(this->_faces_count - 1)) };
@@ -239,7 +239,7 @@ namespace pltr::dices
     //-----------------------------------------------------------------------
     template<typename ValueT, typename PRNGT>
         requires std::is_integral_v<ValueT>
-    const ValueT& StandardDice<ValueT, PRNGT>::roll_with_angle()
+    const ValueT& StandardDice<ValueT, PRNGT>::roll_with_angle() noexcept
     {
         // reminder: rolls this dice, returns the new value of dice and sets a rotation angle. Throws error if dice is not initialized.
         // so, rolls the dice to get its upper face
@@ -252,7 +252,7 @@ namespace pltr::dices
     //-----------------------------------------------------------------------
     template<typename ValueT, typename PRNGT>
         requires std::is_integral_v<ValueT>
-    const ValueT& StandardDice<ValueT, PRNGT>::roll_with_angle(float& angle)
+    const ValueT& StandardDice<ValueT, PRNGT>::roll_with_angle(float& angle) noexcept
     {
         // reminder: rolls this dice, returns the new value of dice and gets a rotation angle. Throws error if dice is not initialized.
         roll_with_angle();

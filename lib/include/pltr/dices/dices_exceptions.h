@@ -33,7 +33,7 @@
 namespace pltr::dices
 {
     //=======================================================================
-    /* \brief The InvalidDice exception. Raised when a dice is initalized with less than 2 faces.
+    /* \brief The InvalidDice exception. Thrown when a dice is initalized with less than 2 faces.
     */
     struct InvalidDice : public std::exception
     {
@@ -52,7 +52,7 @@ namespace pltr::dices
 
 
     //=======================================================================
-    /* \brief The InvalidDiceValue exception for dices. Raised when forced value for dice is invalid.
+    /* \brief The InvalidDiceValue exception for dices. Thrown when forced value for dice is invalid.
     */
     template<typename ValueT = std::int32_t>
         requires std::is_integral_v<ValueT>
@@ -73,14 +73,14 @@ namespace pltr::dices
 
 
     //=======================================================================
-    /* \brief The InvalidFaceIndex exception for dices. Raised when face index is out of range.
+    /* \brief The InvalidFaceIndex exception for dices. Thrown when face index is out of range.
     */
     struct InvalidFaceIndex : public std::exception
     {
         std::string _msg;
 
-        inline InvalidFaceIndex(const std::uint32_t face_index, const std::uint32_t max_index)
-            : _msg{ std::format("out of bounds indexing of dice ({} > {})", face_index, std::int32_t(max_index) - 1) }
+        inline InvalidFaceIndex(const std::uint32_t face_index, const std::uint32_t faces_count)
+            : _msg{ std::format("out of range indexing of dice ({} > {})", face_index, std::int32_t(faces_count) - 1) }
         {}
 
         std::string& what()

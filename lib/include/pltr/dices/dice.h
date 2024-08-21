@@ -70,10 +70,10 @@ namespace pltr::dices
         inline Dice& operator= (Dice&&) noexcept = default;                     //!< default copy assignment.
 
         [[nodiscard]]
-        inline ValueType& operator[] (const std::uint32_t num_face);              //!< mutable indexing operator. Face numbers start at 0. Throws exception if out of bound.
+        inline ValueType& operator[] (const std::uint32_t num_face);            //!< mutable indexing operator. Face numbers start at 0. Throws exception if out of range.
 
         [[nodiscard]]
-        inline const ValueType& operator[] (const std::uint32_t num_face) const;  //!< not mutable indexing operator. Face numbers start at 0. Throws exception if out of bound.
+        inline const ValueType& operator[] (const std::uint32_t num_face) const;  //!< not mutable indexing operator. Face numbers start at 0. Throws exception if out of range.
 
         [[nodiscard]]
         inline const bool operator== (const Dice& other) const noexcept;        //!< equality operator.
@@ -97,7 +97,7 @@ namespace pltr::dices
         //-----   Accessors / Mutators   -----//
         inline const std::uint32_t faces_count() const noexcept;                //!< returns the number of faces for this dice.
 
-        inline const FaceT& force_upper_face(const std::uint32_t num_face);       //!< forces the upper face of this dice.  Throws exception if out of bound.
+        inline const FaceT& force_upper_face(const std::uint32_t num_face);     //!< forces the upper face of this dice.  Throws exception if out of bound.
 
         inline const float get_last_rotation_angle() const noexcept;            //!< returns the rotation angle of the dice got on last roll_with_angle call (degrees, [0.0, 360.0]).
 
@@ -122,10 +122,10 @@ namespace pltr::dices
 
 
         //-----   Operations   -----//
-        inline void _set() noexcept;                                        //!< end of faces list for this deck. Should not be called by library user - does nothing.
+        inline void _set() noexcept;                                        // end of faces list for this deck.
 
         template<typename... RestT>
-        void _set(const FaceT& first, const RestT&... rest) noexcept;       //!< sets faces according to variable length of arguments.
+        void _set(const FaceT& first, const RestT&... rest) noexcept;       // sets faces according to variable length of arguments.
 
     };
 
@@ -172,7 +172,7 @@ namespace pltr::dices
     template<typename FaceT, typename PRNGT>
     inline const FaceT& Dice<FaceT, PRNGT>::force_upper_face(const std::uint32_t num_face)
     {
-        // reminder: forces the upper face of this dice.  Throws exception if out of bound.
+        // reminder: forces the upper face of this dice.  Throws exception if out of range.
         if (num_face >= this->faces_count())
             throw pltr::dices::InvalidFaceIndex(num_face, this->faces_count());
         this->_upper_face = this->_faces[num_face];

@@ -1,9 +1,9 @@
 # `stantard_cards_deck_doc.md` - intro
 
 This file documents the implementation of the class of decks that contain standard playing cards: `pltr::cards::StandardCardsDeck<>`.  
-This class is defined within namespace `pltr::cards`. It inherits from base class `pltr::cards::CardsDeck<>`.
+This class is defined within namespace `pltr::cards`. It inherits from base class [`pltr::cards::CardsDeck<>`](./cards_deck_doc.md).
 
-The related header file is `include/pltr/playing_cards/standard_cards_deck.h`.
+The related header file is [`include/pltr/playing_cards/standard_cards_deck.h`](../../include/pltr/playing_cards/standard_cards_decks.h).
 
 It defines what are decks of standard playing cards and what are the actions that can be applied to them.
 
@@ -88,13 +88,13 @@ For decks that contain at most one same standard card and not more at a time, se
 
 
 # Code documentation <!-- omit in toc -->
-Next subsections document the public and protected APIs of class `pltr::cards::StandardCardsDeck<>` and of the other declarations and definitions set in header file `include/pltr/playing_cards/standard_cards_deck.h`..
+Next subsections document the public and protected APIs of class `pltr::cards::StandardCardsDeck<>` and of the other declarations and definitions set in header file [`include/pltr/playing_cards/standard_cards_deck.h`](../../include/pltr/playing_cards/standard_cards_decks.h).
 
 
 ---
 
 # class `StandardCardsDeck<>`
-Defined in file `include/pltr/playing_cards/standard_cards_deck.h`.
+Defined in file [`include/pltr/playing_cards/standard_cards_deck.h`](../../include/pltr/playing_cards/standard_cards_decks.h).
 
 `StandardCardsDeck<>` is the class for all decks that contain standard playing cards. It can be used to simulate players decks in hand as well, in which case the different sorting methods defined in this class will be useful for displaying hands.
 

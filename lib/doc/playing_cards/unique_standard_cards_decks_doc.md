@@ -1,9 +1,9 @@
 # `unique_stantard_cards_deck_doc.md` - intro
 
 This file documents the implementation of the class of decks that contain standard playing cards: `pltr::cards::UniqueStandardCardsDeck<>`.  
-This class is defined within namespace `pltr::cards`. It inherits from its template class argument which must be of type `pltr::cards::StandardCardsDeck<>`.
+This class is defined within namespace `pltr::cards`. It inherits from its template class argument which must be of type [`pltr::cards::StandardCardsDeck<>`](./standard_cards_decks_doc.md).
 
-The related header file is `include/pltr/playing_cards/unique_standard_cards_deck.h`.
+The related header file is [`include/pltr/playing_cards/unique_standard_cards_deck.h`](../../include/pltr/playing_cards/standard_cards_decks.h).
 
 It defines what are decks of standard playing cards and what are the actions that can be applied to them.
 
@@ -88,13 +88,13 @@ For decks that may contain more than one same standard card ocurence, see class 
 
 
 # Code documentation <!-- omit in toc -->
-Next subsections document the public and protected APIs of class `pltr::cards::UniqueStandardCardsDeck<>` and of the other declarations and definitions set in header file `include/pltr/playing_cards/unique_standard_cards_deck.h`..
+Next subsections document the public and protected APIs of class `pltr::cards::UniqueStandardCardsDeck<>` and of the other declarations and definitions set in header file [`include/pltr/playing_cards/unique_standard_cards_deck.h`](../../include/pltr/playing_cards/unique_standard_cards_decks.h).
 
 
 ---
 
 # class `UniqueStandardCardsDeck<>`
-Defined in file `include/pltr/playing_cards/unique_standard_cards_deck.h`.
+Defined in file [`include/pltr/playing_cards/unique_standard_cards_deck.h`](../../include/pltr/playing_cards/unique_standard_cards_decks.h).
 
 `UniqueStandardCardsDeck<>` is the class for all decks that contain standard playing cards, and each card no more than once. It can be used to simulate players decks in hand as well, in which case the different sorting methods defined in this class will be useful for displaying hands.
 
@@ -110,7 +110,7 @@ The template argument is:
 - `StandardDeckT`:  
 the type of standard cards deck from which `UniqueStandardCardsDeck<>` inherits. It gets no default value. It MUST conform to the `is_standard_cards_deck` requirement: see [`StandardCardsDeck<>`](./standard_cards_deck_doc.md) documentation to get an overview of what it is and for some localized specialization types that are provided with library **PlayTore**.
 
-This class inherits from base class `pltr::cards::StandardCardsDeck<>` and as such, from `pltr::core::Object` also.
+This class inherits from base class [`pltr::cards::StandardCardsDeck<>`](./standard_cards_decks_doc.md) and as such, from [`pltr::core::Object`](../core/object_doc.md) also.
 
 
 ## Types Wrappers
@@ -124,7 +124,7 @@ Notice: indexes are used to index cards in the deck.
 
 
 ## Attributes
-Cards deck have next attributes, all of them being **private** with accessors/mutators provided for some of them, each of them being inherited from base class `cards::CardsDeck<>`:
+Cards deck have next attributes, all of them being **private** with accessors/mutators provided for some of them, each of them being inherited from base class [`cards::CardsDeck<>`](./cards_deck_doc.md):
 - `_deck`:  
 of type `CardsList<CardType>`.  
 This is the internal storage of the list of cards that are contained in this deck. It may be accessed ouotside this class via accessor/mutator `deck()`.
@@ -368,7 +368,7 @@ Base class `pltr::cards::CardsDeck<>` uses internally and per default the (not-t
 ---
 
 # Specializations
-Defined in file `include/pltr/playing_cards/standard_cards_deck.h`.
+Defined in file [`include/pltr/playing_cards/standard_cards_deck.h`](../../include/pltr/playing_cards/standard_cards_decks.h).
 
 ## `UniqueStandardCardsDeck54<>`
 
@@ -414,7 +414,7 @@ using UniqueStandardCardsDeck32 = UniqueStandardCardsDeck<CardsDeck32<CardType, 
 
 
 # Type traits
-Defined in file `include/pltr/playing_cards/unique_standard_cards_deck.h`.
+Defined in file [`include/pltr/playing_cards/unique_standard_cards_deck.h`](../../include/pltr/playing_cards/unique_standard_cards_decks.h).
 
 ## `pltr::cards::is_unique_standard_cards_deck<>`
 Declared as

@@ -2,7 +2,7 @@
 
 This file documents the implementation of the class of standard playing cards: `pltr::cards::StandardCards<>`. This class is defined within namespace `pltr::cards`.
 
-The related header file is `include/pltr/playing_cards/standard_cards.h`.
+The related header file is [`include/pltr/playing_cards/standard_cards.h`](../../include/pltr/playing_cards/standard_cards.h).
 
 Standard cards are the one that are used for playing Poker, for instance, plus both red and black jokers.
 
@@ -71,7 +71,7 @@ Next subsections document the public and protected APIs of class `pltr::cards::S
 ---
 
 # enum class `EColor` : std::uint8_t
-Defined in file `include/pltr/playing_cards/standard_cards.h`.  
+Defined in file [`include/pltr/playing_cards/standard_cards.h`](../../include/pltr/playing_cards/standard_cards.h).  
 The standard colors for standard playing cards. These are named (in their ordered declaration): `E_CLUB`, `E_DIAMOND`, `E_HEART`, `E_SPADE`, `E_RED` and `E_BLACK`.
 
 
@@ -86,7 +86,7 @@ The StandardInvalidIdent exception for standard cards. Raised every time an iden
 ---
 
 # class `StandardCard<>`
-Defined in file `include/pltr/playing_cards/standard_cards.h`.
+Defined in file [`include/pltr/playing_cards/standard_cards.h`](../../include/pltr/playing_cards/standard_cards.h).
 
 `StandardCard<>` is the base class for all standard playing cards and is defined as a template:
 
@@ -110,7 +110,7 @@ the letters associated with each color of jokers, red first, black then. Default
 - `_START_VALUE`:  
 the starting value to be associated with cards. Defaults to the `2` as associated with cards "2". Value is then increased per one: `3` for cards "3", ..., `10` for cards "10", `11` for cards "Jack", ..., `14` for Aces and `15` for Jokers.
 
-This class inherits from `pltr::cards::PlayingCardT<std::uint8_t, std::uint32_t>`. As such, it inherits also from `pltr::core::Object`.
+This class inherits from [`pltr::cards::PlayingCardT<std::uint8_t, std::uint32_t>`](./playing_cards_doc.md). As such, it inherits also from [`pltr::core::Object`](../core/object_doc.md).
 
 ## Types Wrappers
 ```
@@ -135,7 +135,7 @@ to be accessible outside of the class.
 ```
 
 ## Attributes
-Standard cards have next attributes, all of them being inherited from base class `pltr::cards::PlayingCardT<std::uint8_t, std::uint32_t>`:
+Standard cards have next attributes, all of them being inherited from base class [`pltr::cards::PlayingCardT<std::uint8_t, std::uint32_t>`](./playing_cards_doc.md):
 - `ident` :  
 of type `IdentT`.  
 The identifier of this card. Must be contained in intervall [0, 53];
@@ -259,13 +259,13 @@ Notice: the attributes of base class `pltr::core::Object` are set also with clas
 
 ### `virtual const std::string _get_object_name() const noexcept override`
 Protected method. Returns the name of the object.  
-As inherited from base class `PlayingCardT<>`, just returns the value of attribute `text`. This protected method is overridden from the inherited class `pltr::core::Object` and is internally called by method `pltr::core::Object::repr()` to provide a log string related to this playing card instance.
+As inheriting from base class [`PlayingCardT<>`](./playing_cards_doc.md), just returns the value of attribute `text`. This protected method is overridden from the inherited class [`pltr::core::Object`](../core/object_doc.md) and is internally called by method `pltr::core::Object::repr()` to provide a log string related to this playing card instance.
 
 
 ---
 
 # Template Specializations
-Defined in file `include/pltr/playing_cards/standard_cards.h`.
+Defined in file [`include/pltr/playing_cards/standard_cards.h`](../../include/pltr/playing_cards/standard_cards.h).
 
 A few specialization are provided for help. They each relate to a localization specialization.
 
@@ -304,7 +304,7 @@ Italian specialization with Windows Console characters for resp. Club, Diamond, 
 
 
 # Type traits
-Defined in file `include/pltr/playing_cards/standard_cards.h`.
+Defined in file [`include/pltr/playing_cards/standard_cards.h`](../../include/pltr/playing_cards/standard_cards.h).
 
 ## `template<typename T> struct is_standard_card`
 This *UnaryTypeTrait* checks whether type `T` is a `StandardCard` type.  

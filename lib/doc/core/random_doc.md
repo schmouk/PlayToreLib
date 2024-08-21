@@ -2,7 +2,7 @@
 
 This file documents the implementation of randomness in library **PlayTore**. It is part of namespace `pltr::core`.
 
-The related header file is `include/pltr/core/random.h`.
+The related header file is [`include/pltr/core/random.h`](../../include/pltr/core/random.h).
 
 
 ## `random.h` header file - table of content <!-- omit in toc -->
@@ -50,7 +50,7 @@ Next subsections document the public and protected APIs of templated class `pltr
 ---
 
 # class `BaseRandom<>`
-Defined in file `include/pltr/core/random.h`.
+Defined in file [`include/pltr/core/random.h`](../../include/pltr/core/random.h).
 
 `pltr::core::BaseRandom<>` is the base class for all randomness objects that are defined in library **PlayTore**. 
 
@@ -64,11 +64,11 @@ The template argument is:
 - `PRNGT`:  
 the type of the Pseudo Random Numbers Generator that is internally set and used to generate pseudo random suites of numbers. It defaults to the STL PRNG `std::mt19937_64`, the 64-bits Mersenne-Twister algorithm.
 
-Templated class `BaseRandom<>` inherits from class `pltr::core::Object`.
+Templated class `BaseRandom<>` inherits from class [`pltr::core::Object`](./object_doc.md).
 
 Notice: The Mersenne-Twister algorithm is the mostly and widely used generator in most programming languages. It gets a very long period and is known to be a very good pseudo-ransom numbers generators.  
 It gets a few drawbacks nevertheless. First, its internal states needs a memory storage of about 5 kBytes. Second, it is relatively slow because of all the bits shifts computations done on numbers. Third, it fails two main tests in the famous testing suite [TestU01](https://simul.iro.umontreal.ca/testu01/tu01.html) from P. L'Ecuyer and R. Simard - see also the freely avaiable PDF version of the paper [here](https://simul.iro.umontreal.ca/testu01/guideshorttestu01.pdf). Finally, it may take up to 700,000 draws before ensuring the escape from zero-land.  
-So, **PlayTore** will soon replace this default algorithm, and maybe the whole content of file `plt::core::random.h` either, with the help of library **CppRandLib** which provides the implementation of better PRNGs, notably the WELLs ones which currently are not available with the c++ STL.
+So, **PlayTore** will soon replace this default algorithm, and maybe the whole content of file [`plt::core::random.h`](../../include/pltr/core/random.h) either, with the help of library **CppRandLib** which provides the implementation of better PRNGs, notably the WELLs ones which currently are not available with the c++ STL.
 
 
 ## Attributes
@@ -107,7 +107,7 @@ This protected method internally checks the inited status of the internal PRNG s
 ---
 
 # class `Random<>`
-Defined in file `include/pltr/core/random.h`.
+Defined in file [`include/pltr/core/random.h`](../../include/pltr/core/random.h).
 
 `pltr::core::Random<>` is a not thread safe class for randomness objects that are used in conjunction with distribution functions, in library **PlayTore**.  
 If your application uses randomness generation in one and only one thread (for instance, the main thread of the application) then this class is the one to use.  
@@ -123,7 +123,7 @@ The template argument is:
 - `PRNGT`:  
 the type of the Pseudo Random Numbers Generator that is internally set and used to generate pseudo random suites of numbers. It defaults to the STL PRNG `std::mt19937_64`, the 64-bits Mersenne-Twister algorithm.
 
-Templated class `Random<>` inherits from class `pltr::core::BaseRandom` and, as such, from class `pltr::core::Object` also.
+Templated class `Random<>` inherits from class `pltr::core::BaseRandom` and, as such, from class [`pltr::core::Object`](./object_doc.md) also.
 
 Notice: The Mersenne-Twister algorithm is the mostly and widely used generator in most programming languages. It gets a very long period and is known to be a very good pseudo-ransom numbers generators.  
 It gets a few drawbacks nevertheless. First, its internal states needs a memory storage of about 5 kBytes. Second, it is relatively slow because of all the bits shifts computations done on numbers. Third, it fails two main tests in the famous testing suite [TestU01](https://simul.iro.umontreal.ca/testu01/tu01.html) from P. L'Ecuyer and R. Simard - see also the freely avaiable PDF version of the paper [here](https://simul.iro.umontreal.ca/testu01/guideshorttestu01.pdf). Finally, it may take up to 700,000 draws before ensuring the escape from zero-land.  
@@ -193,7 +193,7 @@ Shortcut to return a double value in range [0.0, 1.0] with uniform distribution:
 ---
 
 # class `RandomThreadSafe<>`
-Defined in file `include/pltr/core/random.h`.
+Defined in file [`include/pltr/core/random.h`](../../include/pltr/core/random.h).
 
 `pltr::core::RandomThreadSafe<>` is the thread safe version of class `pltr::core::Random`. 
 If your application generates randomness in multiple threads, this is the class to use to generate random values according to specified distribution functions.

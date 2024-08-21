@@ -2,7 +2,7 @@
 
 This file documents the implementation of the base class for all types decks that contain playing cards: `pltr::cards::CardsDeck<>`. This class is defined within namespace `pltr::cards`.
 
-The related header file is `include/pltr/playing_cards/cards_deck.h`.
+The related header file is [`include/pltr/playing_cards/cards_deck.h`](../../include/pltr/playing_cards/cards_deck.h).
 
 It defines what are decks of playing cards and what are the actions that can be applied to them.
 
@@ -83,7 +83,7 @@ It defines what are decks of playing cards and what are the actions that can be 
 
 
 # Code documentation <!-- omit in toc -->
-Next subsections document the public and protected APIs of class `pltr::cards::CardsDeck<>` and of the other declarations and definitions set in header file `include/pltr/playing_cards/cards_deck.h`..
+Next subsections document the public and protected APIs of class `pltr::cards::CardsDeck<>` and of the other declarations and definitions set in header file [`include/pltr/playing_cards/cards_deck.h`](../../include/pltr/playing_cards/playing_cards.h).
 
 
 ---
@@ -94,15 +94,15 @@ This type is used at many places within PlayTore code. It defines lists of playi
 template<typename CardT>
 using CardsList = std::vector<CardT>;
 ```
-The `CardT` template argument should be of type or inherit from type `pltr::cards::PlayingCardT<>`. This condition is not checked at compilation time. It is your responsability to ensure it - well, you may use also `CardsList` to contain anything else if this fits your needs, but you should not.
+The `CardT` template argument should be of type or inherit from type [`pltr::cards::PlayingCardT<>`](./playing_cards_doc.md). This condition is not checked at compilation time. It is your responsability to ensure it - well, you may use also `CardsList` to contain anything else than playing cards if this fits your needs, but you avoid to.
 
-The `PRNGT` template argument describes a type that must conform with 
+The `PRNGT` template argument describes a type that must conform with the pseudo random numbers generators actually available with the STL.
 
 
 ---
 
 # class `CardsDeck<>`
-Defined in file `include/pltr/playing_cards/cards_deck.h`.
+Defined in file [`include/pltr/playing_cards/cards_deck.h`](../../include/pltr/playing_cards/cards_deck.h).
 
 `CardsDeck<>` is the base class for all decks that contain playing cards and is defined as a template:
 
@@ -112,7 +112,7 @@ template<typename CardT, typename PRNGT = pltr::core::Random<>>
 class CardsDeck : pltr::core::Object
  ```
 
-This class inherits from `pltr::core::Object`.
+This class inherits from [`pltr::core::Object`](../core/object_doc.md).
 
 The template arguments are:
 - `CardT`:  
@@ -350,6 +350,6 @@ Shuffles some part of this deck. Automaticcaly clips indexes to the min and max 
 ## Notes
 
 ### note 1
-Class `pltr::cards::CardsDeck<>` uses internally and per default the (not-thread safe) **PlayTore** core class `pltr::core::Random`, defined in header file `pltr/core/random.h`. The curious reader will take benefit from looking at the implemented code of private method `CardsDeck<>::_get_random_index(const IndexType max_index)`.
+Class `pltr::cards::CardsDeck<>` uses internally and per default the (not-thread safe) **PlayTore** core class [`pltr::core::Random`](../core/random_doc.md), defined in header file [`pltr/core/random.h`](../../include/pltr/core/random.h). The curious reader will take benefit from looking at the implemented code of private method `CardsDeck<>::_get_random_index(const IndexType max_index)`.
 
 ---

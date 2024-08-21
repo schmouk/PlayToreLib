@@ -48,7 +48,7 @@ namespace pltr::cards
     //=======================================================================
     /* \brief The base class for decks of cards.
     */
-    template<typename CardT>
+    template<typename CardT, typename PRNGT = std::mt19937_64>
     class CardsDeck : pltr::core::Object
     {
     public:
@@ -327,6 +327,9 @@ namespace pltr::cards
         void shuffle(const IndexType low, const IndexType high);        //!< shuffles some part of this deck. Automaticcaly clips indexes to the min and max values for this deck.
 
 
+    protected:
+
+
     private:
         CardsList<CardT> _deck{};
         IndexType _max_cards_count{ 0 };
@@ -350,11 +353,10 @@ namespace pltr::cards
             return _get_random_index(this->get_current_cards_count());
         }
 
-        template<typename PRNGT = pltr::core::Random<>>
-        inline const IndexType _get_random_index(const IndexType max_index) const
+        inline virtual const IndexType _get_random_index(const IndexType max_index) const
         {
             if (max_index > 1) [[likely]]
-                return PRNGT::urand(IndexType(0), max_index - 1);
+                return pltr::core::Random<PRNGT>::urand(IndexType(0), max_index - 1);
             else [[unlikely]]
                 return IndexType(0);
         }
@@ -374,24 +376,24 @@ namespace pltr::cards
     // local implementations
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    CardsDeck<CardT>::CardsDeck()
+    template<typename CardT, typename PRNGT>
+    CardsDeck<CardT, PRNGT>::CardsDeck()
         : pltr::core::Object()
     {
         _set_deck(0);
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    CardsDeck<CardT>::CardsDeck(const IndexType max_cards_count)
+    template<typename CardT, typename PRNGT>
+    CardsDeck<CardT, PRNGT>::CardsDeck(const IndexType max_cards_count)
         : pltr::core::Object()
     {
         _set_deck(max_cards_count);
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    CardsDeck<CardT>::CardsDeck(
+    template<typename CardT, typename PRNGT>
+    CardsDeck<CardT, PRNGT>::CardsDeck(
         const IndexType max_cards_count,
         std::filesystem::path& back_image_path_
     )
@@ -402,16 +404,16 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    CardsDeck<CardT>::CardsDeck(const pltr::cards::CardsList<CardT>& cards)
+    template<typename CardT, typename PRNGT>
+    CardsDeck<CardT, PRNGT>::CardsDeck(const pltr::cards::CardsList<CardT>& cards)
         : pltr::core::Object()
     {
         append_cards(cards);
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    CardsDeck<CardT>::CardsDeck(
+    template<typename CardT, typename PRNGT>
+    CardsDeck<CardT, PRNGT>::CardsDeck(
         const pltr::cards::CardsList<CardT>& cards,
         std::filesystem::path& back_image_path_
     )
@@ -422,8 +424,8 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    const bool CardsDeck<CardT>::append_card(const CardT& card)
+    template<typename CardT, typename PRNGT>
+    const bool CardsDeck<CardT, PRNGT>::append_card(const CardT& card)
     {
         // reminder: appends a card at bottom of this deck. Deck max capacity may grow up then.
         const bool allowed{ allowed_card(card) };
@@ -435,8 +437,8 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    void CardsDeck<CardT>::append_cards(const CardsList<CardT>& cards)
+    template<typename CardT, typename PRNGT>
+    void CardsDeck<CardT, PRNGT>::append_cards(const CardsList<CardT>& cards)
     {
         // reminder: appends n cards at bottom of this deck. Deck max capacity may grow up then.
         this->_deck.insert_range(
@@ -448,8 +450,8 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    const bool CardsDeck<CardT>::draw_card(const CardT& card)
+    template<typename CardT, typename PRNGT>
+    const bool CardsDeck<CardT, PRNGT>::draw_card(const CardT& card)
     {
         // reminder: if present in deck, removes the card and returns true; returns false else.
         auto found_it = std::find_if(_deck.cbegin(), _deck.cend(), [&](const CardT& c) { return card.ident == c.ident; });
@@ -464,8 +466,8 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    const CardsDeck<CardT>::IndexType CardsDeck<CardT>::get_index(const CardT& card) const
+    template<typename CardT, typename PRNGT>
+    const CardsDeck<CardT, PRNGT>::IndexType CardsDeck<CardT, PRNGT>::get_index(const CardT& card) const
     {
         // reminder: returns the index of this card in deck if found, or -1 if not found
         auto start_it{ this->_deck.crbegin() };
@@ -475,8 +477,8 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    const bool CardsDeck<CardT>::insert_card(const CardT& card)
+    template<typename CardT, typename PRNGT>
+    const bool CardsDeck<CardT, PRNGT>::insert_card(const CardT& card)
     {
         // reminder: inserts a card at top of this deck. Deck max capacity may grow up then.
         const bool allowed{ allowed_card(card) };
@@ -488,8 +490,8 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    const bool CardsDeck<CardT>::insert_nth_card(const IndexType index, const CardT& card)
+    template<typename CardT, typename PRNGT>
+    const bool CardsDeck<CardT, PRNGT>::insert_nth_card(const IndexType index, const CardT& card)
     {
         // reminder! inserts a card at n-th position in this deck. Deck max capacity may grow up then.
         const bool allowed{ allowed_card(card) };
@@ -504,8 +506,8 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    void CardsDeck<CardT>::insert_nth_cards(const IndexType index, const CardsList<CardT>& cards)
+    template<typename CardT, typename PRNGT>
+    void CardsDeck<CardT, PRNGT>::insert_nth_cards(const IndexType index, const CardsList<CardT>& cards)
     {
         // reminder: inserts n cards at n-th position in this deck. Deck max capacity may grow up then.
         auto indexed_it{ _get_indexed_iterator(index) };
@@ -522,8 +524,8 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    const bool CardsDeck<CardT>::insert_rand_card(const CardT& card)
+    template<typename CardT, typename PRNGT>
+    const bool CardsDeck<CardT, PRNGT>::insert_rand_card(const CardT& card)
     {
         // reminder: inserts a card at a random position in this deck. Deck max capacity may grow up then.
         const bool allowed{ allowed_card(card) };
@@ -535,8 +537,8 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    const CardT CardsDeck<CardT>::pop_bottom_card()
+    template<typename CardT, typename PRNGT>
+    const CardT CardsDeck<CardT, PRNGT>::pop_bottom_card()
     {
         // reminder: removes and returns the card at the bottom of this deck. May be considered as an optimized wrapper to pop_card(_current_cards_count - 1).
         const CardT popped_card{ this->_deck.front() };
@@ -545,8 +547,8 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    const pltr::cards::CardsList<CardT> CardsDeck<CardT>::pop_bottom_n_cards(const IndexType n)
+    template<typename CardT, typename PRNGT>
+    const pltr::cards::CardsList<CardT> CardsDeck<CardT, PRNGT>::pop_bottom_n_cards(const IndexType n)
     {
         // reminder: removes and returns n cards from the bottom of this deck. May return less than n cards if n > current deck size.
         CardsList<CardT> returned_list;
@@ -556,8 +558,8 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    const CardT CardsDeck<CardT>::pop_indexed_card(const IndexType index)
+    template<typename CardT, typename PRNGT>
+    const CardT CardsDeck<CardT, PRNGT>::pop_indexed_card(const IndexType index)
     {
         // reminder: removes and returns the n-th card from top in this deck. calls pop_bottom_card() if n > current deck size.
         auto it{ _get_indexed_iterator(index) };
@@ -567,8 +569,8 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    const CardT CardsDeck<CardT>::pop_up_card()
+    template<typename CardT, typename PRNGT>
+    const CardT CardsDeck<CardT, PRNGT>::pop_up_card()
     {
         // reminder: removes and returns the card at the top of this deck. May be considered as an optimized wrapper to pop_indexed_card(0).
         const CardT popped_card{ this->_deck.back() };
@@ -577,8 +579,8 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    const CardsList<CardT> CardsDeck<CardT>::pop_up_n_cards(const IndexType n)
+    template<typename CardT, typename PRNGT>
+    const CardsList<CardT> CardsDeck<CardT, PRNGT>::pop_up_n_cards(const IndexType n)
     {
         // reminder: removes and returns n cards from top of this deck. May return less than n cards if n > current deck size.
         CardsList<CardT> returned_list;
@@ -588,8 +590,8 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    void CardsDeck<CardT>::refill_deck(const CardsList<CardT>& filling_deck)
+    template<typename CardT, typename PRNGT>
+    void CardsDeck<CardT, PRNGT>::refill_deck(const CardsList<CardT>& filling_deck)
     {
         // reminder: fills this deck according to a filling vector. Empties the deck first.
         clear();
@@ -604,20 +606,20 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    void CardsDeck<CardT>::shuffle()
+    template<typename CardT, typename PRNGT>
+    void CardsDeck<CardT, PRNGT>::shuffle()
     {
         // reminder: shuffles this whole deck.
-        for (IndexType n = IndexType(this->_deck.size() - 1); n > 0; --n) {
-            const IndexType i{ _get_random_index(n) };
+        for (IndexType n = IndexType(this->_deck.size()-1); n > 0; --n) {
+            const IndexType i{ _get_random_index(n + 1) };
             if (i != n)
                 std::swap(this->_deck[n], this->_deck[i]);
         }
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    void CardsDeck<CardT>::shuffle(const IndexType low, const IndexType high)
+    template<typename CardT, typename PRNGT>
+    void CardsDeck<CardT, PRNGT>::shuffle(const IndexType low, const IndexType high)
     {
         // reminder: shuffles some part of this deck. Automaticcaly clips indexes to the min and max values for this deck.
         const IndexType low_{ std::min(low, get_current_cards_count()) };
@@ -631,8 +633,8 @@ namespace pltr::cards
     }
 
     //-----------------------------------------------------------------------
-    template<typename CardT>
-    void CardsDeck<CardT>::_set_deck(const IndexType max_cards_count)
+    template<typename CardT, typename PRNGT>
+    void CardsDeck<CardT, PRNGT>::_set_deck(const IndexType max_cards_count)
     {
         this->_max_cards_count = max_cards_count;
         this->_deck.reserve(max_cards_count);

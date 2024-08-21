@@ -2,7 +2,7 @@
 
 This file documents the implementation of the base class for all types of objects in library **PlayTore**: `pltr::core::Object`. This class is defined within namespace `pltr::core`.
 
-The related header file is `include/pltr/core/object.h`.
+The related header file is [`include/pltr/core/object.h`](../../include/pltr/core/object.h).
 
 It defines what are playing cards and what are the actions that can be applied to them.
 
@@ -31,7 +31,7 @@ Next subsections document the public and protected APIs of class `pltr::core::Ob
 ---
 
 # class `Object`
-Defined in file `include/pltr/core/object.h`.
+Defined in file [`include/pltr/core/object.h`](../../include/pltr/core/object.h).
 
 `pltr::core::Object` is the base class for all objects that are defined in library **PlayTore**. As such, every defined class in library **PlayTore** should inherit from class `pltr::core::Object`. But this might not be the case for some of them.
 
@@ -73,6 +73,6 @@ Helps logging information related to the inheriting object, when debugging via l
 
 ### `protected: virtual const std::string _get_object_name() const`
 Returns the name of the object. To be overridden in inheriting classes if this makes sense.  
-See `pltr::cards::StandardCard<>` code for an example of an override.
+See [`pltr::cards::StandardCard<>`](../../include/pltr/playing_cards/standard_cards.h) code for an example of an override.
 
 ---

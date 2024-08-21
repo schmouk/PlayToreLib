@@ -25,9 +25,6 @@
 //===========================================================================
 #include <vector>
 
-//#include "pltr/playing_cards/standard_cards.h"
-//#include "pltr/playing_cards/unique_standard_cards_decks.h"
-
 #include "decks.h"
 #include "player.h"
 
@@ -82,7 +79,9 @@ private:
     //-----   Operations   -----//
     const bool _ends() const noexcept;              //!< returns true if this game is completed
 
-    void _next_round() noexcept;                    //! plays next round
+    void _next_round() noexcept;                    //!< plays next round
+
+    void _player_is_leaving(Player& player);        //!!< actions taken when a player has to leave the game
 
 };
 

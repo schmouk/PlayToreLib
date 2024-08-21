@@ -27,7 +27,7 @@
 * No tactics, no strategy, just randomness with very simple rules.  This
 * game  is traditionnally the first one played with cards that is tought 
 * to French kids.  It gets the tremendeous advantage that kids  get  the
-* same opportunities to win as adults  get(well, if these do not cheat).
+* same opportunities to win as adults get (well, until these cheat).
 * 
 * This program is proposed in directory examples/playing_cards  to  show
 * the  use  of  PlayTore  library code.  A Visual Studio 2022 project is

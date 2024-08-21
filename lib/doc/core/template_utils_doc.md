@@ -3,9 +3,9 @@
 This file documents the template used to declare arrays of chars (i.e. null-terminated C strings) as template constant parameters: `pltr::core::StringTemplateParameter<>`.  
 This class is defined within namespace `pltr::core`.
 
-The related header file is `include/pltr/core/template_utils.h`.
+The related header file is [`include/pltr/core/template_utils.h`](../../include/pltr/core/template_utils.h).
 
-See `include/pltr/playing_cards/standard_playing_cards.h` to get an example of use :
+See [`include/pltr/playing_cards/standard_cards.h`](../../include/pltr/playing_cards/standard_cards.h) to get an example of use:
 ```
 template<
     const pltr::core::StringTemplateParameter _CARDS_LETTERS = "23456789XJQKAJ",

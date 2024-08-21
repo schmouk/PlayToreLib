@@ -2,7 +2,7 @@
 
 This file documents the implementation of the base class for all types of playing cards: `pltr::cards::PlayingCardsT<>`. This class is defined within namespace `pltr::cards`.
 
-The related header file is `include/pltr/playing_cards/playing_cards.h`.
+The related header file is [`include/pltr/playing_cards/playing_cards.h`](../../include/pltr/playing_cards/playing_cards.h).
 
 It defines what are playing cards and what are the actions that can be applied to them.
 
@@ -57,7 +57,7 @@ Next subsections document the public and protected APIs of class `pltr::cards::P
 ---
 
 # class `PlayingCardT<>`
-Defined in file `include/pltr/playing_cards/playing_cards.h`.
+Defined in file [`include/pltr/playing_cards/playing_cards.h`](../../include/pltr/playing_cards/playing_cards.h).
 
 `PlayingCardsT<>` is the base class for all playing cards and is defined as a template:
 
@@ -74,7 +74,7 @@ the type of the identifiers of the cards, defaults to `char`;
 - `ValueT`:  
 the type of the values of the cards, defaults to unsigned 32-bits integers.
 
-This class inherits from `pltr::core::Object`.
+This class inherits from [`pltr::core::Object`](../core/object_doc.md).
 
 ## Types Wrappers
 ```

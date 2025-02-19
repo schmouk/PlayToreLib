@@ -284,7 +284,7 @@ namespace pltr::cards
     /* \brief The class for standard cards - English localization.
     */
     template<const std::uint32_t START_INDEX = 0, const std::uint32_t LAST_INDEX = 54>
-    using StandardClassEn = StandardCard<"23456789XJQKAJ", "CDHS", "RB", 2, START_INDEX, LAST_INDEX>;
+    using StandardClassEn = StandardCard<"23456789XJQKAJ", "cdhs", "rb", 2, START_INDEX, LAST_INDEX>;
 
 
     //=======================================================================
